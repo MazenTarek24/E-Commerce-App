@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="small_icons">@dimen/_25sdp</dimen>
+    <dimen name="tiny_text">@dimen/_12sdp</dimen>
+    <dimen name="small_text">@dimen/_15sdp</dimen>
+    <dimen name="mid_text">@dimen/_18sdp</dimen>
+    <dimen name="big_text">@dimen/_22sdp</dimen>
+
+    <dimen name="small_item_drawable_padding">@dimen/_8sdp</dimen>
+
+    <dimen name="tiny_margin">@dimen/_6sdp</dimen>
+    <dimen name="small_margin">@dimen/_10sdp</dimen>
+    <dimen name="mid_margin">@dimen/_12sdp</dimen>
+    <dimen name="big_margin">@dimen/_18sdp</dimen>
+
+</resources>
