@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Settings.View.SettingsActivity">
+
+
+    <ImageView
+        android:id="@+id/back_arrow_img"
+        android:layout_width="@dimen/mid_icons"
+        android:layout_height="@dimen/mid_icons"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginStart="@dimen/small_margin"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/profile_card_view"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        app:cardCornerRadius="@dimen/big_margin"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow_img">
+
+        <ImageView
+            android:id="@+id/profile_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profiletest" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            app:cardCornerRadius="@dimen/tiny_margin"
+            app:cardElevation="@dimen/small_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/tiny_margin"
+                android:layout_marginBottom="@dimen/tiny_margin"
+                android:background="@color/white"
+                android:src="@drawable/edit" />
+
+        </androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginTop="@dimen/double_big_margin"
+        android:text="Name"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/mid_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_card_view" />
+
+    <EditText
+        android:id="@+id/name_edit_text"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@id/name_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/name_text"
+        app:layout_constraintTop_toTopOf="@id/name_text" />
+
+
+    <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_big_margin"
+        android:text="Email"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/mid_text"
+        app:layout_constraintEnd_toEndOf="@id/name_text"
+        app:layout_constraintStart_toStartOf="@id/name_text"
+        app:layout_constraintTop_toBottomOf="@id/name_text" />
+
+    <EditText
+        android:id="@+id/email_edit_text"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:inputType="none"
+        app:layout_constraintBottom_toBottomOf="@id/email_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/email_text"
+        app:layout_constraintTop_toTopOf="@id/email_text"
+        tools:ignore="TextFields" />
+
+    <TextView
+        android:id="@+id/age_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_big_margin"
+        android:text="Age"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/mid_text"
+        app:layout_constraintEnd_toEndOf="@id/email_text"
+        app:layout_constraintStart_toStartOf="@id/email_text"
+        app:layout_constraintTop_toBottomOf="@id/email_text" />
+
+    <EditText
+        android:id="@+id/age_edit_text"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@id/age_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/age_text"
+        app:layout_constraintTop_toTopOf="@id/age_text" />
+
+    <TextView
+        android:id="@+id/settings_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_big_margin"
+        android:text="Settings"
+        android:textColor="@color/black"
+        android:textSize="@dimen/big_text"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/name_text"
+        app:layout_constraintTop_toBottomOf="@id/age_text" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/mid_margin"
+        android:background="@drawable/card_background"
+        app:cardCornerRadius="@dimen/big_margin"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintBottom_toTopOf="@id/logout_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_text">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/small_margin"
+                android:padding="@dimen/big_margin"
+                android:text="Language"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_baseline_arrow_right"
+                app:drawableStartCompat="@drawable/edit" />
+
+            <TextView
+                android:id="@+id/currency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/small_margin"
+                android:padding="@dimen/big_margin"
+                android:text="Currency"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold"
+                app:drawableEndCompat="@drawable/ic_baseline_arrow_right"
+                app:drawableStartCompat="@drawable/edit" />
+
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/edit"
+                android:drawableEnd="@drawable/ic_baseline_arrow_right"
+                android:drawablePadding="@dimen/small_margin"
+                android:padding="@dimen/big_margin"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/help_center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/edit"
+                android:drawableEnd="@drawable/ic_baseline_arrow_right"
+                android:drawablePadding="@dimen/small_margin"
+                android:padding="@dimen/big_margin"
+                android:text="Help Center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/logout_btn"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/mid_margin"
+        android:layout_marginEnd="@dimen/mid_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:backgroundTint="@color/black"
+        app:cardCornerRadius="@dimen/small_margin"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:drawableStart="@drawable/logout"
+            android:drawablePadding="@dimen/tiny_margin"
+            android:gravity="center"
+            android:text="Log Out"
+            android:textColor="@color/white"
+            android:textSize="@dimen/mid_text"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

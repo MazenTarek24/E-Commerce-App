@@ -6,4 +6,103 @@
     android:layout_height="match_parent"
     tools:context=".Cart.View.CartActivity">
 
+    <ImageView
+        android:id="@+id/back_arrow_img"
+        android:layout_width="@dimen/mid_icons"
+        android:layout_height="@dimen/mid_icons"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/my_cart_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/double_big_margin"
+        android:text="My Cart"
+        android:textColor="@color/black"
+        android:textSize="@dimen/big_text"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/back_arrow_img"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow_img" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_130sdp"
+        android:layout_margin="@dimen/mid_margin"
+        android:layout_marginTop="@dimen/mid_margin"
+        app:cardCornerRadius="@dimen/big_margin"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_cart_text">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/small_margin"
+            android:padding="@dimen/mid_margin">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/item_img_card"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                app:cardCornerRadius="@dimen/big_margin"
+                app:cardElevation="@dimen/small_margin">
+
+                <ImageView
+                    android:id="@+id/item_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/profiletest" />
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="Item Title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/item_brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_title"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="Item Brand"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/mid_text" />
+
+
+            <TextView
+                android:id="@+id/item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="$250.00"
+                android:textColor="@color/black"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold" />
+
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

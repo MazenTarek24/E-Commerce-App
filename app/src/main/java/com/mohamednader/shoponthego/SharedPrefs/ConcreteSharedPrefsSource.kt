@@ -1,4 +1,6 @@
 package com.mohamednader.shoponthego.SharedPrefs
 
-class ConcreteSharedPrefsSource {
+import android.content.Context
+
+class ConcreteSharedPrefsSource(context: Context) : SharedPrefsSource {
 }

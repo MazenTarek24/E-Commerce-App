@@ -3,6 +3,10 @@
 
 
     <dimen name="small_icons">@dimen/_25sdp</dimen>
+    <dimen name="mid_icons">@dimen/_35sdp</dimen>
+
+
+
     <dimen name="tiny_text">@dimen/_12sdp</dimen>
     <dimen name="small_text">@dimen/_15sdp</dimen>
     <dimen name="mid_text">@dimen/_18sdp</dimen>
@@ -14,5 +18,6 @@
     <dimen name="small_margin">@dimen/_10sdp</dimen>
     <dimen name="mid_margin">@dimen/_12sdp</dimen>
     <dimen name="big_margin">@dimen/_18sdp</dimen>
+    <dimen name="double_big_margin">@dimen/_30sdp</dimen>
 
 </resources>
