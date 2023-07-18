@@ -22,4 +22,11 @@
     <style name="Theme.ShopOnTheGo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.ShopOnTheGo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="android:textStyle">bold</item>
+        <!-- Add other style attributes here as needed -->
+    </style>
+
+
 </resources>

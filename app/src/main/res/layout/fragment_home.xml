@@ -17,6 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             app:titleCentered="true"
             app:title="home"
+            app:titleTextColor="#000000"
             app:menu="@menu/appar_menu"
             />
     </com.google.android.material.appbar.AppBarLayout>
@@ -48,7 +49,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/adss_image"
         app:cardCornerRadius="@dimen/_70sdp"
-        android:background="#F3F4F5"
+        app:cardBackgroundColor="#E6E4E4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="@dimen/_20sdp"
@@ -76,6 +77,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="#AAAAAA"/>
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
 
@@ -84,6 +86,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="brands"
+        android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="@dimen/big_text"
         app:layout_constraintTop_toBottomOf="@+id/card_search"
@@ -93,12 +96,15 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_brand"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/brands_text"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        tools:listitem="@layout/item_brand"
+
         />
 
 
