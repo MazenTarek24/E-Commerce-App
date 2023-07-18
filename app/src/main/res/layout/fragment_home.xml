@@ -1,14 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home.View.HomeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appar_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="#fff"
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleCentered="true"
+            app:title="home"
+            app:menu="@menu/appar_menu"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
 
-</FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_view"
+        android:src="@drawable/title"
+        app:layout_constraintTop_toBottomOf="@+id/appar_home"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginStart="@dimen/_20sdp"/>
+
+    <ImageView
+        android:id="@+id/adss_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/img_view"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:src="@drawable/features"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/adss_image"
+        app:cardCornerRadius="@dimen/_70sdp"
+        android:background="#F3F4F5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="@dimen/_230sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/search"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_10sdp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="search"
+                android:textSize="@dimen/_18sdp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:textColor="#AAAAAA"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/brands_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="brands"
+        android:textColor="#000000"
+        android:textSize="@dimen/big_text"
+        app:layout_constraintTop_toBottomOf="@+id/card_search"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/brands_text"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
