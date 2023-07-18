@@ -19,5 +19,11 @@
     <string name="password">Password</string>
     <string name="or">Or</string>
     <string name="login">Login</string>
+    <string name="SignIn">Sign in</string>
+    <string name="DoYouhaveAnAccout">Do You have An Accout</string>
     <string name="continuewithgoogle">Continue with Google</string>
+    <string name="signup">Sign Up</string>
+    <string name="createnewaccount">Create an new account</string>
+    <string name="username">User Name</string>
+    <string name="confrimpassword">confirm Password</string>
 </resources>
