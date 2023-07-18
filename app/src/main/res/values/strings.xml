@@ -5,10 +5,25 @@
     <string name="title_activity_intro">IntroActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
+    <string name="donothavaaccount">Don\'t have an account?</string>
+    <string name="Createanewaccount">Create a new account</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
+    <string name="forgetpasswod">Did you forget the password?</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="welcome">Welcome !</string>
+    <string name="pleaseloginorsignuptocontuinieourapp">Please login or sign up to continue our app</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">Or</string>
+    <string name="login">Login</string>
+    <string name="SignIn">Sign in</string>
+    <string name="DoYouhaveAnAccout">Do You have An Accout</string>
+    <string name="continuewithgoogle">Continue with Google</string>
+    <string name="signup">Sign Up</string>
+    <string name="createnewaccount">Create an new account</string>
+    <string name="username">User Name</string>
+    <string name="confrimpassword">confirm Password</string>
 </resources>

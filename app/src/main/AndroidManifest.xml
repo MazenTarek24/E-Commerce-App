@@ -42,6 +42,7 @@
         </activity>
         <activity
             android:name=".Auth.SignUp.View.SignUpActivity"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
