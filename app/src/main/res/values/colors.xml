@@ -9,7 +9,9 @@
     <color name="white">#FFFFFFFF</color>
 
 
-    <color name="transparent">#00000000</color>
+    <color name="full_transparent">#00000000</color>
+    <color name="semi_full_transparent">#80808080</color>
     <color name="gray">#666666</color>
+    <color name="lite_gray">#E6E4E4</color>
 
 </resources>
