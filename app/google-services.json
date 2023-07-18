@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "927040806262",
+    "project_id": "shop-on-the-go-43b0b",
+    "storage_bucket": "shop-on-the-go-43b0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927040806262:android:92052916ba5703a9166e57",
+        "android_client_info": {
+          "package_name": "com.mohamednader.shoponthego"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927040806262-uc1gv176fibv5iqe8rv00cj9v2d73buq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mohamednader.shoponthego",
+            "certificate_hash": "80871c8f356bebfb2e82a7a4bf1d08d862df8448"
+          }
+        },
+        {
+          "client_id": "927040806262-1v04sdmab02d180atfita1j1nkdmuv5k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8pyH70LlBRKwnT5PKevRQAqXYOe9H0MY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "927040806262-1v04sdmab02d180atfita1j1nkdmuv5k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
