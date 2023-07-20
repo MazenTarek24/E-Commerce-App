@@ -27,9 +27,10 @@ class SignUpActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         val currentUser = firebaseAuth.currentUser
-        println(firebaseAuth.currentUser!!.uid)
+
         if (currentUser != null) {
-            startActivity(Intent(this, MainHomeActivity::class.java))
+            println(firebaseAuth.currentUser!!.uid)
+//            startActivity(Intent(this, MainHomeActivity::class.java))
         }
         progressDialog = ProgressDialog(this)
         binding.signup.setOnClickListener {
@@ -43,9 +44,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val name: String = binding.userEditText.text.toString().trim { it <= ' ' }
-        val email: String = binding.emailEditText.text.toString().trim { it <= ' ' }
-        val password: String = binding.passwordEditText.text.toString().trim { it <= ' ' }
+        val name: String = binding.usernameedtxt.text.toString().trim { it <= ' ' }
+        val email: String = binding.emaileditText2.text.toString().trim { it <= ' ' }
+        val password: String = binding.passwordeditText3.text.toString().trim { it <= ' ' }
         val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(this, "Please enter the name", Toast.LENGTH_SHORT).show()

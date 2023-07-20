@@ -101,6 +101,10 @@ dependencies {
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
 
 
+    implementation 'com.tbuonomo:dotsindicator:4.2'
+
+
+
 
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {

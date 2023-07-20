@@ -20,7 +20,15 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingsActivity"
+
+            android:name=".ProductInfo"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Settings.View.SettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -49,6 +57,7 @@
         </activity>
         <activity
             android:name=".Auth.SignUp.View.SignUpActivity"
+
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
