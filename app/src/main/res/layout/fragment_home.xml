@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -66,26 +65,77 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_view"
-        android:src="@drawable/title"
-        app:layout_constraintTop_toBottomOf="@+id/constraint"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:layout_marginStart="@dimen/_20sdp"/>
 
-    <ImageView
-        android:id="@+id/adss_image"
+    <TextView
+        android:id="@+id/coupon_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/img_view"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:src="@drawable/features"
+        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginTop="@dimen/big_margin"
+        android:text="Welcome,"
+        android:textColor="@color/black"
+        android:textSize="@dimen/big_text"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appar_home" />
+
+
+    <TextView
+        android:id="@+id/coupon_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Our Fashon App"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/small_text"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/coupon_value"
+        app:layout_constraintTop_toBottomOf="@id/coupon_value" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/coupon_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/coupon_description" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        app:cardBackgroundColor="#E6E4E4"
+        app:cardCornerRadius="@dimen/_70sdp"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coupon_view_pager">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="@dimen/_230sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:src="@drawable/search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:hint="search"
+                android:textColor="#AAAAAA"
+                android:textSize="@dimen/_18sdp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/brands_text"
@@ -95,7 +145,7 @@
         android:textStyle="bold"
         android:textColor="#000000"
         android:textSize="@dimen/big_text"
-        app:layout_constraintTop_toBottomOf="@+id/adss_image"
+        app:layout_constraintTop_toBottomOf="@+id/card_search"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_10sdp"
@@ -108,8 +158,10 @@
         app:layout_constraintTop_toBottomOf="@+id/brands_text"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         tools:listitem="@layout/item_brand"
 
         />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

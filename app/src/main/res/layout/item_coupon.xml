@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_180sdp"
+        android:layout_margin="@dimen/mid_margin"
+         app:cardCornerRadius="@dimen/big_margin"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/add_image"
+                android:scaleType="fitXY"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/coupon_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_marginStart="@dimen/big_margin"
+                android:text="50% Off"
+                android:textColor="@color/black"
+                android:textSize="@dimen/double_big_margin"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/coupon_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/coupon_value"
+                app:layout_constraintTop_toBottomOf="@id/coupon_value"
+                android:text="On Everything Today"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mid_text"
+                />
+
+
+            <TextView
+                android:id="@+id/coupon_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/coupon_description"
+                app:layout_constraintTop_toBottomOf="@id/coupon_description"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="with code: Summer40"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/tiny_text"
+                android:textStyle="bold"
+                />
+
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/coupon_get_now_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttonstyle"
+                app:layout_constraintStart_toStartOf="@id/coupon_code"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="@dimen/big_margin"
+                android:text="Get Now"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/mid_text"
+                app:backgroundTint="@color/black"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,12 +11,11 @@
         android:id="@+id/back_arrow_img"
         android:layout_width="@dimen/mid_icons"
         android:layout_height="@dimen/mid_icons"
-        android:src="@drawable/back_arrow"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="@dimen/small_margin"
         android:layout_marginStart="@dimen/small_margin"
-        />
+        android:layout_marginTop="@dimen/small_margin"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/profile_card_view"
@@ -235,4 +234,6 @@
             android:textSize="@dimen/mid_text"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
