@@ -1,7 +1,10 @@
 package com.mohamednader.shoponthego.Network
 
 import android.util.Log
+import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
+import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
+import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -28,7 +31,7 @@ class ApiClient : RemoteSource {
 
     override suspend fun getAllProducts(): Flow<List<Product>> {
         val response = apiService.getAllProducts()
-        val productsList : Flow<List<Product>>
+        val productsList: Flow<List<Product>>
         Log.i(TAG, "getAllProducts: API-Client")
         if (response.isSuccessful) {
             productsList = flowOf(response.body()!!.products)
@@ -42,14 +45,13 @@ class ApiClient : RemoteSource {
 
     override suspend fun getAllBrands(): Flow<List<SmartCollection>> {
         val response = apiService.getAllBrands()
-        val brandList : Flow<List<SmartCollection>>
+        val brandList: Flow<List<SmartCollection>>
         Log.i(TAG, "getAllBrands: API-Client")
-        if (response.isSuccessful)
-        {
+        if (response.isSuccessful) {
             brandList = flowOf(response.body()!!.smart_collections)
             Log.i(TAG, "getAllBrands: Done")
 
-        }else{
+        } else {
             brandList = emptyFlow()
             Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
 
@@ -59,14 +61,13 @@ class ApiClient : RemoteSource {
 
     override suspend fun getAllProductBrands(id: String): Flow<List<Product>> {
         val response = apiService.getAllBrandsProduct(id)
-        val productList : Flow<List<Product>>
+        val productList: Flow<List<Product>>
         Log.i(TAG, "getAllProducts API-Client")
-        if (response.isSuccessful)
-        {
+        if (response.isSuccessful) {
             productList = flowOf(response.body()!!.products)
             Log.i(TAG, "getAllBrandsProducts: Done")
 
-        }else{
+        } else {
             productList = emptyFlow()
             Log.i(TAG, "getAllBrandsProducts: ${response.errorBody().toString()}")
         }
@@ -75,7 +76,7 @@ class ApiClient : RemoteSource {
 
     override suspend fun getDiscountCodesByPriceRuleID(priceRuleId: Long): Flow<List<DiscountCodes>> {
         val response = apiService.getDiscountCodesByPriceRuleID(priceRuleId)
-        val discountCodesList : Flow<List<DiscountCodes>>
+        val discountCodesList: Flow<List<DiscountCodes>>
         Log.i(TAG, "getDiscountCodesByPriceRuleID: API-Client")
         if (response.isSuccessful) {
             discountCodesList = flowOf(response.body()!!.discountCodesList)
@@ -89,7 +90,7 @@ class ApiClient : RemoteSource {
 
     override suspend fun getAllPriceRules(): Flow<List<PriceRules>> {
         val response = apiService.getAllPriceRules()
-        val priceRulesList : Flow<List<PriceRules>>
+        val priceRulesList: Flow<List<PriceRules>>
         Log.i(TAG, "getAllPriceRules: API-Client")
         if (response.isSuccessful) {
             priceRulesList = flowOf(response.body()!!.priceRulesList)
@@ -100,6 +101,8 @@ class ApiClient : RemoteSource {
         }
         return priceRulesList
     }
+
+
 
 
 }
