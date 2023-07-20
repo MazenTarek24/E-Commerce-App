@@ -97,6 +97,10 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.5.3'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
 
+    //View Pager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+
 
     constraints {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {

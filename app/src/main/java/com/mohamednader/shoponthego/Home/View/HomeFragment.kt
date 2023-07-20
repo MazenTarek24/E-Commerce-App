@@ -48,7 +48,6 @@ class HomeFragment : Fragment(), OnGetNowClickListener{
 
     //RecyclerViews
     lateinit var couponAdapter: CouponAdapter
-    private lateinit var couponLinearLayoutManager: LinearLayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -76,15 +75,12 @@ class HomeFragment : Fragment(), OnGetNowClickListener{
 
         homeViewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
-        //RecyclerViews Components
-        couponLinearLayoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+        //ViewPager Components
         couponAdapter = CouponAdapter(requireContext(), this)
 
 
-        binding.couponRecyclerView.apply {
+        binding.couponViewPager.apply {
             adapter = couponAdapter
-            layoutManager = couponLinearLayoutManager
         }
 
 

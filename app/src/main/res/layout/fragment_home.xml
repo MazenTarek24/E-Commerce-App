@@ -48,8 +48,8 @@
         app:layout_constraintTop_toBottomOf="@id/coupon_value" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/coupon_recycler_view"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/coupon_view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
          app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
         app:cardCornerRadius="@dimen/_70sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/coupon_recycler_view">
+        app:layout_constraintTop_toBottomOf="@+id/coupon_view_pager">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="@dimen/_230sdp"
