@@ -13,6 +13,13 @@
         android:theme="@style/Theme.ShopOnTheGo"
         tools:targetApi="31">
         <activity
+            android:name=".Order.OrderActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:exported="false">
             <meta-data
@@ -42,7 +49,6 @@
         </activity>
         <activity
             android:name=".Auth.SignUp.View.SignUpActivity"
-
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

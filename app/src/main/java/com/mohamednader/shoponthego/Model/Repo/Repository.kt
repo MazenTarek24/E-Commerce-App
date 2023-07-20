@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Model.Repo
 import android.util.Log
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
+import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Network.RemoteSource
 import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,11 @@ class Repository constructor(
     override suspend fun getAllProducts(): Flow<List<Product>> {
         Log.i(TAG, "getAllProducts: REPO")
         return remoteSource.getAllProducts()
+    }
+
+    override suspend fun getAllBrands(): Flow<List<SmartCollection>> {
+        Log.i(TAG, "getAllBrands: REPO")
+        return remoteSource.getAllBrands()
     }
 
 

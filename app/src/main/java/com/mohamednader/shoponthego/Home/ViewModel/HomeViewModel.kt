@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
+import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,10 @@ class HomeViewModel (private val repo: RepositoryInterface) : ViewModel() {
     val productList : StateFlow<ApiState<List<Product>>>
         get() = _productsList
 
+    private var _brandList : MutableStateFlow<ApiState<List<SmartCollection>>> =
+        MutableStateFlow(ApiState.Loading)
+
+    val brandList : StateFlow<ApiState<List<SmartCollection>>> get() = _brandList
 
     fun getAllProductsFromNetwork(){
         viewModelScope.launch(Dispatchers.IO){
@@ -31,5 +36,19 @@ class HomeViewModel (private val repo: RepositoryInterface) : ViewModel() {
                 }
         }
     }
+
+    fun getAllBrands()
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG , "fetchBrandsFromApi")
+            repo.getAllBrands().catch { error->
+                _brandList.value = ApiState.Failure(error)
+            }.collect { brand ->
+                _brandList.value = ApiState.Success(brand)
+            }
+        }
+    }
+
+
 
 }

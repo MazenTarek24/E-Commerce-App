@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_add_alert_dialog"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/_160sdp"
+    android:layout_height="@dimen/_150sdp"
     android:background="#F3F2F7"
     android:focusableInTouchMode="false"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="13dp"
+    app:cardCornerRadius="@dimen/_15sdp"
+    app:cardElevation="@dimen/_5sdp"
     app:cardUseCompatPadding="true">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -18,11 +18,13 @@
         android:layout_margin="10sp"
         >
         <ImageView
+            android:id="@+id/brand_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/category"
             />
         <TextView
+            android:id="@+id/brand_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="adidas"
@@ -32,8 +34,6 @@
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 
 
 </androidx.cardview.widget.CardView>
