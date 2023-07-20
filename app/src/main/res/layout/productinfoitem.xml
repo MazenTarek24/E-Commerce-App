@@ -1,0 +1,12 @@
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/image_viewproductinfo"
+    android:adjustViewBounds="true"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

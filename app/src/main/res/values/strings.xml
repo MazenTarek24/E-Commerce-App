@@ -26,4 +26,9 @@
     <string name="createnewaccount">Create an new account</string>
     <string name="username">User Name</string>
     <string name="confrimpassword">confirm Password</string>
+    <string name="enteryouremail">Enter Your Email</string>
+    <string name="enterusername">Enter Username</string>
+    <string name="enterpassword">Enter Password</string>
+    <string name="description">Description</string>
+    <string name="addtocart">Add To Cart</string>
 </resources>
