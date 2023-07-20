@@ -2,6 +2,8 @@ package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
 import com.mohamednader.shoponthego.Database.LocalSource
+import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
+import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Network.RemoteSource
 import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
@@ -42,6 +44,16 @@ class Repository constructor(
     override suspend fun getAllProducts(): Flow<List<Product>> {
         Log.i(TAG, "getAllProducts: REPO")
         return remoteSource.getAllProducts()
+    }
+
+    override suspend fun getDiscountCodesByPriceRuleID(priceRuleId: Long): Flow<List<DiscountCodes>> {
+        Log.i(TAG, "getDiscountCodesByPriceRuleID: REPO")
+        return remoteSource.getDiscountCodesByPriceRuleID(priceRuleId)
+    }
+
+    override suspend fun getAllPriceRules(): Flow<List<PriceRules>> {
+        Log.i(TAG, "getAllPriceRules: REPO")
+        return remoteSource.getAllPriceRules()
     }
 
 
