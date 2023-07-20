@@ -16,21 +16,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="10sp"
+        android:layout_gravity="center"
         >
         <ImageView
             android:id="@+id/brand_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/category"
+            android:layout_gravity="center"
             />
         <TextView
             android:id="@+id/brand_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="adidas"
             android:textStyle="bold"
             android:textColor="#000000"
-            android:textSize="@dimen/big_text"
+            android:textSize="@dimen/_20sdp"
             />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

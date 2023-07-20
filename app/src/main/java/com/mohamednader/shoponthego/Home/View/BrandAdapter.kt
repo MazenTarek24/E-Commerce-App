@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Home.View
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,12 @@ class BrandAdapter() : ListAdapter<SmartCollection , BrandAdapter.ViewHolder>(Br
         val currentBrand = getItem(position)
         Picasso.get().load(currentBrand.image.src).into(holder.binding.brandImage)
         holder.binding.brandTitle.text = currentBrand.title
+
+        val brandString = currentBrand.id.toString()
+        holder.itemView.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragment2ToBrandProductFragment(brandString)
+            it.findNavController().navigate(action)
+        }
     }
 
 }

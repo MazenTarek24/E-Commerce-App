@@ -2,9 +2,11 @@ package com.mohamednader.shoponthego.Network
 
 import android.util.Log
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
+import com.mohamednader.shoponthego.Model.Pojo.Products.ProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class ApiClient : RemoteSource {
@@ -56,6 +58,22 @@ class ApiClient : RemoteSource {
 
         }
         return brandList
+    }
+
+    override suspend fun getAllProductBrands(id: String): Flow<List<Product>> {
+        val response = apiService.getAllBrandsProduct(id)
+        val productList : Flow<List<Product>>
+        Log.i(TAG, "getAllProducts API-Client")
+        if (response.isSuccessful)
+        {
+            productList = flowOf(response.body()!!.products)
+            Log.i(TAG, "getAllBrandsProducts: Done")
+
+        }else{
+            productList = emptyFlow()
+            Log.i(TAG, "getAllBrandsProducts: ${response.errorBody().toString()}")
+        }
+        return productList
     }
 
 

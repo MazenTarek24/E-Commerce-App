@@ -8,7 +8,11 @@
         android:id="@+id/homeFragment2"
         android:name="com.mohamednader.shoponthego.Home.View.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment2_to_brandProductFragment"
+            app:destination="@id/brandProductFragment" />
+    </fragment>
     <fragment
         android:id="@+id/categoriesFragment"
         android:name="com.mohamednader.shoponthego.Categories.View.CategoriesFragment"
@@ -19,4 +23,15 @@
         android:name="com.mohamednader.shoponthego.Profile.View.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/brandProductFragment"
+        android:name="com.mohamednader.shoponthego.BranProduct.view.BrandProductFragment"
+        android:label="fragment_brand_product"
+        tools:layout="@layout/fragment_brand_product" >
+        <argument
+            android:name="brandId"
+            app:argType="string" />
+    </fragment>
+
+
 </navigation>

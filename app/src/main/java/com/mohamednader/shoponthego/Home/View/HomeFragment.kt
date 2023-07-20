@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         initRvBrands()
         initViews()
 
-        }
+    }
 
     private fun initRvBrands() {
         brandAdapter = BrandAdapter()
@@ -78,6 +78,8 @@ class HomeFragment : Fragment() {
         requestBrands()
 
     }
+
+
 
     private fun requestProducts() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
