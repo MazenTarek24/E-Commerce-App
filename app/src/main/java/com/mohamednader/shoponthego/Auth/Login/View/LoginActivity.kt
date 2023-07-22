@@ -6,10 +6,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.example.example.Addresses
+import com.example.example.Customerre
+import com.example.example.PostCustomer
 import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.AuthResult
@@ -17,25 +23,48 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
+import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
+import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
+import com.mohamednader.shoponthego.Model.Repo.Repository
+import com.mohamednader.shoponthego.Network.ApiClient
+import com.mohamednader.shoponthego.Network.ApiState
+import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityLoginBinding
+import kotlinx.coroutines.launch
 import java.util.*
 
 class LoginActivity : AppCompatActivity() {
+    private val TAG = "SignUP_INFO_TAG"
+
     private lateinit var firebaseAuth: FirebaseAuth
   private lateinit var loadingBar :ProgressDialog
     private lateinit var progressDialog :ProgressDialog
     private lateinit var binding: ActivityLoginBinding
-
+    private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var factory: GenericViewModelFactory
+    lateinit var customer: Customer
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(getLayoutInflater())
         setContentView(binding.getRoot())
         firebaseAuth = Firebase.auth
+        initViews()
+        val currentUser = firebaseAuth.currentUser
+
+        val customerId = intent.getLongExtra("CustomerID",0)
+        println("sssssssssssssssssssssssss"+customerId)
+
+
         progressDialog = ProgressDialog(this)
         val preferences = getSharedPreferences("user", MODE_PRIVATE)
         binding.login.setOnClickListener {
+
             userLogin(
+
                 binding.emailEditText.getText().toString().trim { it <= ' ' },
                 binding.passwordEditText.getText().toString().trim { it <= ' ' })
         }
@@ -48,6 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        apicall()
 
     }
 
@@ -142,4 +172,44 @@ class LoginActivity : AppCompatActivity() {
             }
         }.addOnFailureListener { e -> loadingBar.dismiss() }
     }
+    private fun apicall() {
+        lifecycleScope.launch {
+
+            signUpViewModel.product
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<Customerre> -> {
+                            Log.i(TAG, "onCreate: Success...{${result.data.id}")
+
+
+                        }
+                        is ApiState.Loading -> {
+//                                Log.i(TAG, "onCreate: Loading..."
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@LoginActivity, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+    }
+    private fun initViews() {
+
+        factory = GenericViewModelFactory(
+            Repository.getInstance(
+                ApiClient.getInstance(),
+                ConcreteLocalSource(this),
+                ConcreteSharedPrefsSource(this)
+            )
+        )
+
+        signUpViewModel =
+            ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
+    }
+
 }

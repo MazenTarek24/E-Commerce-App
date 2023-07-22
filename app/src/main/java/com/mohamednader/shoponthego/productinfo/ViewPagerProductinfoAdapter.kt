@@ -1,4 +1,4 @@
-package com.mohamednader.shoponthego
+package com.mohamednader.shoponthego.productinfo
 
 import android.R
 import android.view.LayoutInflater
@@ -6,33 +6,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
+import com.bumptech.glide.Glide
+import com.example.example.Images
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding.inflate
 
 
-//class ViewPagerProductinfoAdapter(photos: List<Photo>) : PagerAdapter() {
-    class ViewPagerProductinfoAdapter() : PagerAdapter() {
-//    private val mPhotos: List<Photo>
+class ViewPagerProductinfoAdapter(photos: ArrayList<Images>) : PagerAdapter() {
+    private val mPhotos: ArrayList<Images>
 
-//    init {
-//        mPhotos = photos
-//    }
-private var images: Array<Int> =
-    arrayOf<Int>(R.drawable.ic_dialog_dialer, R.drawable.ic_dialog_email, R.drawable.ic_dialog_dialer, R.drawable.ic_dialog_email, R.drawable.ic_btn_speak_now)
+    init {
+        mPhotos = photos
+    }
+private var images: ArrayList<Images> = mPhotos
 
 
     override fun getCount(): Int {
-//        return mPhotos.size
-        return images!!.size
+        return mPhotos.size
+//        return images!!.size
 
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-//        val photo: Photo = mPhotos[position]
+        val photo: Images = mPhotos[position]
         val inflater = LayoutInflater.from(container.context)
         val view: View = inflater.inflate(com.mohamednader.shoponthego.R.layout.productinfoitem, container, false)
         val imageView: ImageView = view.findViewById(com.mohamednader.shoponthego.R.id.image_viewproductinfo)
-//        imageView.setImageResource(photo.getResourceId())
-        imageView.setImageResource(images[position])
+//        imageView.setImageResource(photo.src)
+        Glide.with(imageView)
+            .load(photo.src)
+            .override(500, 500) // resize the image to 500x500 pixels
+            .into(imageView)
 
         container.addView(view)
         return view

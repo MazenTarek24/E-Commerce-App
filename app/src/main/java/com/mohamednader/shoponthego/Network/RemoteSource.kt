@@ -1,9 +1,14 @@
 package com.mohamednader.shoponthego.Network
 
+import com.example.example.Customerre
+import com.example.example.PostCustomer
+import com.example.example.ResponseCustomer
+import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteSource {
@@ -17,5 +22,9 @@ interface RemoteSource {
     suspend fun getAllBrands() : Flow<List<SmartCollection>>
 
     suspend fun getAllProductBrands(id : String) : Flow<List<Product>>
+    suspend fun getProductWithId(id : String) : Flow<SingleProduct>
+    suspend fun createCustomer(customer: PostCustomer) : Flow<Customerre>
+
+
 
 }

@@ -1,11 +1,15 @@
 package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
+import com.example.example.Customerre
+import com.example.example.PostCustomer
+import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Network.RemoteSource
 import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
 import kotlinx.coroutines.flow.Flow
@@ -66,6 +70,14 @@ class Repository constructor(
         Log.i(TAG, "getAllBrandsProducts: REPO")
         return remoteSource.getAllProductBrands(id)
     }
+
+    override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
+        Log.i(TAG, "getProductWithId: REPO")
+        return remoteSource.getProductWithId(id)
+    }
+
+    override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
+return remoteSource.createCustomer(customer)   }
 
 
 }
