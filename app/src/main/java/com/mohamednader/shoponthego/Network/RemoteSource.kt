@@ -18,4 +18,8 @@ interface RemoteSource {
 
     suspend fun getAllProductBrands(id : String) : Flow<List<Product>>
 
+    suspend fun getAllProductCategory(collectionId : String , productType : String , vendor : String)
+    : Flow<List<Product>>
+
+
 }
