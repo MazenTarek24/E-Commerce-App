@@ -71,6 +71,15 @@ class Repository constructor(
         return remoteSource.getAllProductBrands(id)
     }
 
+    override suspend fun getAllProductCategory(
+        collectionId: String,
+        productType: String,
+        vendor: String,
+    ): Flow<List<Product>> {
+        Log.i(TAG, "getAllCategoryProducts: REPO")
+        return remoteSource.getAllProductCategory(collectionId , productType , vendor)
+    }
+
     override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
         Log.i(TAG, "getProductWithId: REPO")
         return remoteSource.getProductWithId(id)

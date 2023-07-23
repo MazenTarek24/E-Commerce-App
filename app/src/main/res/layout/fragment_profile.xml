@@ -25,7 +25,7 @@
         android:layout_marginTop="@dimen/double_big_margin"
         android:text="Orders"
         android:textColor="@color/black"
-        android:textSize="@dimen/big_text"
+        android:textSize="@dimen/_20sdp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/back_arrow_img"
         app:layout_constraintTop_toBottomOf="@id/back_arrow_img" />
@@ -38,7 +38,7 @@
         android:layout_marginEnd="@dimen/_15sdp"
         android:text="more"
         android:textColor="@color/black"
-        android:textSize="@dimen/big_text"
+        android:textSize="@dimen/_16sdp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_arrow_img" />
@@ -90,7 +90,7 @@
                     android:layout_toEndOf="@id/item_img_card"
                     android:text="Item Title"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/big_text"
+                    android:textSize="@dimen/_18sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -102,8 +102,7 @@
                     android:layout_toEndOf="@id/item_img_card"
                     android:text="$250.00"
                     android:textColor="#AAAAAA"
-                    android:textSize="@dimen/big_text" />
-
+                    android:textSize="@dimen/_18sdp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>

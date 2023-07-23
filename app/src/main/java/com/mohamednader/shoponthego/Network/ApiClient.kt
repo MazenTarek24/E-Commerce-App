@@ -67,7 +67,7 @@ class ApiClient : RemoteSource {
     override suspend fun getAllProductBrands(id: String): Flow<List<Product>> {
         val response = apiService.getAllBrandsProduct(id)
         val productList: Flow<List<Product>>
-        Log.i(TAG, "getAllProducts API-Client")
+        Log.i(TAG, "getAllBrandsProducts API-Client")
         if (response.isSuccessful) {
             productList = flowOf(response.body()!!.products)
             Log.i(TAG, "getAllBrandsProducts: Done")
@@ -77,6 +77,25 @@ class ApiClient : RemoteSource {
             Log.i(TAG, "getAllBrandsProducts: ${response.errorBody().toString()}")
         }
         return productList
+    }
+
+    override suspend fun getAllProductCategory(
+        collectionId: String,
+        productType: String,
+        vendor: String,
+    ): Flow<List<Product>> {
+         val response = apiService.getAllCategoryProduct(collectionId,productType,vendor)
+         val productCategoryList : Flow<List<Product>>
+         Log.i(TAG, "getAllCategoryProducts API-Client")
+        if (response.isSuccessful)
+        {
+            productCategoryList = flowOf(response.body()!!.products)
+            Log.i(TAG, "getAllCategoryProducts: Done")
+        }else{
+            productCategoryList = emptyFlow()
+            Log.i(TAG, "getAllCategoryProducts: ${response.errorBody().toString()}")
+        }
+        return productCategoryList
     }
 
     override suspend fun getProductWithId(id: String): Flow<SingleProduct> {

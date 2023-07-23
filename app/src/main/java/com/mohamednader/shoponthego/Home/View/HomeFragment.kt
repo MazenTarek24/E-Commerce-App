@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -75,7 +76,7 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
     private fun initRvBrands() {
         brandAdapter = BrandAdapter()
-        brandLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        brandLayoutManager = GridLayoutManager(context, 2)
         binding.rvBrand.apply {
             adapter = brandAdapter
             layoutManager = brandLayoutManager

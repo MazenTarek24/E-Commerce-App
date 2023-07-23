@@ -17,7 +17,7 @@ data class Product(
     @SerializedName("published_scope") val publishedScope: String,
     val tags: String,
     @SerializedName("admin_graphql_api_id") val adminGraphqlApiId: String,
-    val variants: List<Variant> ,
+    val variants: List<Variant>? ,
     val options: List<Option>,
     val images: List<Image>,
     val image: Image

@@ -19,6 +19,7 @@ class BrandProductViewModel(val repository: Repository) : ViewModel() {
 
     private var  _productList : MutableStateFlow<ApiState<List<Product>>> =
         MutableStateFlow(ApiState.Loading)
+
     val productList : StateFlow<ApiState<List<Product>>>
         get() = _productList
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.BranProduct.viewmodel.BrandProductViewModel
@@ -97,7 +98,7 @@ class BrandProductFragment : Fragment() {
 
     private fun initRvProductBrands() {
         brandProductAdapter = BrandProductAdapter()
-        brandLayoutManager = LinearLayoutManager(context , RecyclerView.VERTICAL , false)
+        brandLayoutManager = GridLayoutManager(context,2)
 
         binding.rvProduct.apply {
             adapter = brandProductAdapter
