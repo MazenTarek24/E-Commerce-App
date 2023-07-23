@@ -3,19 +3,30 @@ package com.mohamednader.shoponthego.Network
 import android.util.Log
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
+import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
+import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import okhttp3.Credentials
+import retrofit2.Response
 
 class ApiClient : RemoteSource {
 
 
     private val TAG = "ApiClient_INFO_TAG"
 
+
     val apiService: ApiService by lazy {
-        RetrofitHelper.getInstance().create(ApiService::class.java)
+        RetrofitHelper.getInstance(Constants.shopifyBaseUrl).create(ApiService::class.java)
+    }
+
+    val apiServiceForCurrency: ApiService by lazy {
+        RetrofitHelper.getInstance(Constants.currencyBaseUrl).create(ApiService::class.java)
     }
 
     companion object {
@@ -91,6 +102,42 @@ class ApiClient : RemoteSource {
             Log.i(TAG, "getAllCategoryProducts: ${response.errorBody().toString()}")
         }
         return productCategoryList
+    }
+
+    override suspend fun getCurrencyConvertor(from: String, to: String): Flow<List<ToCurrency>> {
+        val response = apiServiceForCurrency.getCurrencyConvertor(
+            Credentials.basic(
+                Constants.currencyApiUsername, Constants.currencyApiPassword), from, to)
+        val currencyRes: Flow<List<ToCurrency>>
+        Log.i(TAG, "getCurrencyConvertor API-Client")
+        if (response.isSuccessful) {
+            currencyRes = flowOf(response.body()!!.to)
+            Log.i(TAG, "getCurrencyConvertor: Done")
+
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e(TAG, "getCurrencyConvertor: Error: $errorBody")
+            currencyRes = emptyFlow()
+        }
+        return currencyRes
+    }
+
+    override suspend fun getAllCurrencies(): Flow<List<CurrencyInfo>> {
+        val response = apiServiceForCurrency.getAllCurrencies(
+            Credentials.basic(
+                Constants.currencyApiUsername, Constants.currencyApiPassword))
+        val currencyRes: Flow<List<CurrencyInfo>>
+        Log.i(TAG, "getAllCurrencies API-Client")
+        if (response.isSuccessful) {
+            currencyRes = flowOf(response.body()!!.currencies)
+            Log.i(TAG, "getAllCurrencies: Done")
+
+        } else {
+            val errorBody = response.errorBody()?.string()
+            Log.e(TAG, "getAllCurrencies: Error: $errorBody")
+            currencyRes = emptyFlow()
+        }
+        return currencyRes
     }
 
     override suspend fun getDiscountCodesByPriceRuleID(priceRuleId: Long): Flow<List<DiscountCodes>> {
