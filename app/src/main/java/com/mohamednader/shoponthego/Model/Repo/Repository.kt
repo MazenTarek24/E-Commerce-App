@@ -7,6 +7,8 @@ import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
+import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
+import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
@@ -71,13 +73,12 @@ class Repository constructor(
         return remoteSource.getAllProductBrands(id)
     }
 
-    override suspend fun getAllProductCategory(
-        collectionId: String,
-        productType: String,
-        vendor: String,
-    ): Flow<List<Product>> {
-        Log.i(TAG, "getAllCategoryProducts: REPO")
-        return remoteSource.getAllProductCategory(collectionId , productType , vendor)
+    override suspend fun getCurrencyConvertor(from: String , to: String): Flow<List<ToCurrency>> {
+        return remoteSource.getCurrencyConvertor(from, to)
+    }
+
+    override suspend fun getAllCurrencies(): Flow<List<CurrencyInfo>> {
+        return remoteSource.getAllCurrencies()
     }
 
     override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
@@ -87,6 +88,15 @@ class Repository constructor(
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
 return remoteSource.createCustomer(customer)   }
+
+    override suspend fun getAllProductCategory(
+        collectionId: String,
+        productType: String,
+        vendor: String,
+    ): Flow<List<Product>> {
+        Log.i(TAG, "getAllCategoryProducts: REPO")
+        return remoteSource.getAllProductCategory(collectionId , productType , vendor)
+    }
 
 
 }

@@ -10,7 +10,7 @@ import com.mohamednader.shoponthego.databinding.ItemProductBinding
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
-class BrandProductAdapter : ListAdapter<Product , BrandProductAdapter.ViewHolder>(BrandDiffUtil()) {
+class BrandProductAdapter: ListAdapter<Product , BrandProductAdapter.ViewHolder>(BrandDiffUtil()) {
 
    public class ViewHolder(val binding : ItemProductBinding) : RecyclerView.ViewHolder(binding.root){
 

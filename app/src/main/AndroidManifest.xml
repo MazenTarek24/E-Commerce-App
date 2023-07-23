@@ -20,7 +20,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".productinfo.ProductInfo"
+            android:name=".Auth.SignUp.View.SignUpActivity"
 
             android:exported="false">
             <meta-data
@@ -78,7 +78,8 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Auth.SignUp.View.SignUpActivity"
+            android:name=".productinfo.ProductInfo"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
