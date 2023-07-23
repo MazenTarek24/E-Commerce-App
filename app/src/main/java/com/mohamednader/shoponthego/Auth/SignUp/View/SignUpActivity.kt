@@ -4,32 +4,59 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager.widget.ViewPager
+import com.example.example.Addresses
+import com.example.example.Customerre
+import com.example.example.PostCustomer
+import com.example.example.SingleProduct
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.mohamednader.shoponthego.Auth.Login.View.LoginActivity
-import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
+import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
+import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
+import com.mohamednader.shoponthego.Model.Repo.Repository
+import com.mohamednader.shoponthego.Network.ApiClient
+import com.mohamednader.shoponthego.Network.ApiState
+import com.mohamednader.shoponthego.R
+import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySignUpBinding
+import com.mohamednader.shoponthego.productinfo.ViewPagerProductinfoAdapter
+import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SignUpActivity : AppCompatActivity() {
+    private val TAG = "SignUP_INFO_TAG"
+    private var CustomerID :Long? =0
+
     private lateinit var binding: ActivitySignUpBinding
     lateinit var progressDialog: ProgressDialog
-
+    private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var factory: GenericViewModelFactory
+    var Addresses:kotlin.collections.ArrayList<Addresses>?= null
+lateinit var customer: Customer
     lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySignUpBinding.inflate(getLayoutInflater())
         setContentView(binding.root)
+        initViews()
         firebaseAuth = FirebaseAuth.getInstance()
 
         val currentUser = firebaseAuth.currentUser
-
+         customer=Customer()
         if (currentUser != null) {
-            println(firebaseAuth.currentUser!!.uid)
+
 //            startActivity(Intent(this, MainHomeActivity::class.java))
         }
         progressDialog = ProgressDialog(this)
@@ -40,7 +67,7 @@ class SignUpActivity : AppCompatActivity() {
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
 
         }
-
+        apicall()
     }
 
     private fun registerUser() {
@@ -69,13 +96,23 @@ class SignUpActivity : AppCompatActivity() {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this,
             OnCompleteListener { task: Task<AuthResult?> ->
                 if (task.isSuccessful) {
+                    val currentUser = firebaseAuth.currentUser
+
+                    customer= Customer(currentUser?.uid,"",currentUser?.email,"",currentUser?.isEmailVerified,arrayListOf( Addresses("","",
+                        "","","","","","")) )
+                    println(firebaseAuth.currentUser!!.uid)
+                    signUpViewModel.createCustomer(PostCustomer( customer))
                     Toast.makeText(
                         this@SignUpActivity,
                         "Account successfully created",
                         Toast.LENGTH_LONG
                     )
                         .show()
-                    startActivity(Intent(this, LoginActivity::class.java))
+
+                    val intent = Intent(this, LoginActivity::class.java).apply {
+                        putExtra("CustomerID",CustomerID )
+                    }
+                    startActivity(intent)
                 } else if (password.length < 6) {
                     Toast.makeText(this, "Password must be greater than 6", Toast.LENGTH_SHORT)
                         .show()
@@ -92,5 +129,44 @@ class SignUpActivity : AppCompatActivity() {
                 }
             })
     }
+    private fun initViews() {
 
+        factory = GenericViewModelFactory(
+            Repository.getInstance(
+                ApiClient.getInstance(),
+                ConcreteLocalSource(this),
+                ConcreteSharedPrefsSource(this)
+            )
+        )
+
+        signUpViewModel =
+            ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
+    }
+
+    private fun apicall() {
+        lifecycleScope.launch {
+
+            signUpViewModel.product
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<Customerre> -> {
+                            Log.i(TAG, "onCreate: Success...{${result.data.id}")
+                            CustomerID=result.data.id
+
+                        }
+                        is ApiState.Loading -> {
+//                                Log.i(TAG, "onCreate: Loading..."
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@SignUpActivity, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+    }
 }

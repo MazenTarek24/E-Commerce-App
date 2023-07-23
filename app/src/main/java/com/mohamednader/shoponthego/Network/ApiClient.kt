@@ -1,10 +1,15 @@
 package com.mohamednader.shoponthego.Network
 
 import android.util.Log
+import com.example.example.Customerre
+import com.example.example.PostCustomer
+import com.example.example.ResponseCustomer
+import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -73,6 +78,32 @@ class ApiClient : RemoteSource {
         }
         return productList
     }
+
+    override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
+        val response = apiService.getProductWithId(id)
+        val product: Flow<SingleProduct>
+        Log.i(TAG, "getAllProducts: API-Client")
+        if (response.isSuccessful) {
+            product = flowOf(response.body()!!.product)
+            Log.i(TAG, "getAllProducts: Done")
+        } else {
+        return emptyFlow()
+            Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
+        }
+        return product    }
+
+    override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
+        val response = apiService.createCustomer(customer)
+        val product: Flow<Customerre>
+        Log.i(TAG, "getAllProducts: API-Client")
+        if (response.isSuccessful) {
+            product = flowOf(response.body()!!.customer)
+            Log.i(TAG, "getAllProducts: Done")
+        } else {
+            return emptyFlow()
+            Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
+        }
+        return product     }
 
     override suspend fun getAllProductCategory(
         collectionId: String,

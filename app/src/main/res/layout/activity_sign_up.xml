@@ -47,7 +47,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:text="@string/username"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
@@ -55,9 +55,8 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userEditText"
         android:layout_width="@dimen/_250sdp"
-        android:layout_height="47dp"
+        android:layout_height="55dp"
         android:ems="10"
-        android:hint="@string/enterusername"
         android:inputType="textPersonName"
         app:boxBackgroundColor="#F5F5F5"
         app:boxCornerRadiusBottomStart="16dp"
@@ -69,12 +68,13 @@
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/usernameedtxt"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/white" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -89,25 +89,24 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailEditText"
         android:layout_width="@dimen/_250sdp"
-        android:layout_height="47dp"
+        android:layout_height="55dp"
         android:ems="10"
-        android:hint="@string/enteryouremail"
         android:inputType="textPersonName"
         app:boxBackgroundColor="#F5F5F5"
         app:boxStrokeColor="@color/white"
         app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#EA0505"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/emaileditText2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <TextView
@@ -121,25 +120,22 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordEditText"
         android:layout_width="@dimen/_250sdp"
-        android:layout_height="47dp"
-        android:ems="10"
-        android:hint="@string/enterpassword"
+        android:layout_height="55dp"
         android:inputType="textPassword"
         app:boxBackgroundColor="#F5F5F5"
         app:boxStrokeColor="@color/white"
-        app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#FB0000"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/passwordeditText3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -154,40 +150,51 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confrimpasswordEditText"
         android:layout_width="@dimen/_250sdp"
-        android:layout_height="47dp"
+        android:layout_height="55dp"
         android:ems="10"
-        android:hint="@string/enterpassword"
         android:inputType="textPassword"
         app:boxBackgroundColor="#F5F5F5"
         app:boxStrokeColor="@color/white"
         app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#D80101"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/editText5"
             android:layout_width="match_parent"
-            android:layout_height="47dp"
+            android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/white" />
+            android:textColor="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/signup"
-        android:layout_width="348dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/buttonstyle"
 
-        android:backgroundTintMode="src_in"
-        android:text="@string/signup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confrimpasswordEditText" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/signup"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/black"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="@+id/confrimpasswordEditText"
+        app:layout_constraintStart_toStartOf="@+id/confrimpasswordEditText"
+        app:layout_constraintTop_toBottomOf="@+id/confrimpasswordEditText">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/tiny_margin"
+            android:gravity="center"
+            android:text="@string/signup"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
     <LinearLayout
         android:id="@+id/you_user_sign_up_li"
         android:layout_width="wrap_content"
