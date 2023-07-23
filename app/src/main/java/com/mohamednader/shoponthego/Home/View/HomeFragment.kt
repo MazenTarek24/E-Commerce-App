@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Home.View
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,6 +31,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
+import com.mohamednader.shoponthego.Settings.View.SettingsActivity
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
@@ -104,7 +106,10 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
 
 
-
+        binding.cart.setOnClickListener{
+            val intent : Intent = Intent(requireContext(), SettingsActivity::class.java)
+            startActivity(intent)
+        }
 
         apiRequests()
         requestBrands()
