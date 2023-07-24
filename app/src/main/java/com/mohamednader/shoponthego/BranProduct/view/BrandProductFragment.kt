@@ -51,9 +51,9 @@ class BrandProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRvProductBrands()
 
         initViews()
-        initRvProductBrands()
 
 
     }
@@ -102,7 +102,6 @@ class BrandProductFragment : Fragment() {
         brandProductAdapter = BrandProductAdapter(){
             val intent = Intent(context, ProductInfo::class.java)
             intent.putExtra("id",it )
-            println("$it sssssssssssssss")
             startActivity(intent)
 
 
