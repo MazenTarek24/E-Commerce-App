@@ -137,8 +137,20 @@ class LoginActivity : AppCompatActivity() {
                     getSharedPreferences("user", MODE_PRIVATE)
                 preferences.edit()
                     .putBoolean("flag", true).apply()
-                startActivity(Intent(this, MainHomeActivity::class.java))
-                Toast.makeText(this@LoginActivity, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                val user = firebaseAuth.currentUser
+
+                if (user?.isEmailVerified == true) {
+                    // User's email address is verified
+                    startActivity(Intent(this, MainHomeActivity::class.java)
+                    )
+                    Toast.makeText(this@LoginActivity, "Logged in successfully", Toast.LENGTH_SHORT).show()
+
+                }
+              else{
+                    Toast.makeText(this@LoginActivity, "please verfiy your email", Toast.LENGTH_SHORT).show()
+                    progressDialog.dismiss()
+
+                }
             } else {
 //                Toast.makeText(LoginActivity.this, "Wrong email or password, or an error with the Internet connection", Toast.LENGTH_SHORT).show();
                 Toast.makeText(

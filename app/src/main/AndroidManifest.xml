@@ -62,7 +62,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Auth.SignUp.View.SignUpActivity"
+            android:name=".MainHome.View.MainHomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -83,8 +83,8 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainHome.View.MainHomeActivity"
 
+            android:name=".Auth.SignUp.View.SignUpActivity"
 
             android:exported="true">
             <intent-filter>
