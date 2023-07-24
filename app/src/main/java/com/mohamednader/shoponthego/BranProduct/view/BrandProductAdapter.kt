@@ -26,10 +26,10 @@ class BrandProductAdapter : ListAdapter<Product , BrandProductAdapter.ViewHolder
         val product = getItem(position)
         if (product != null) {
             Picasso.get().load(product.image.src).into(holder.binding.itemImg)
-            holder.binding.titleProduct.text = product.productType
+            holder.binding.titleProduct.text = product.title
 
             var price = product.variants?.getOrNull(0)?.price ?: 1.0
-            holder.binding.priceProduct.text = price.toString()
+            holder.binding.priceProduct.text = price.toString() + " EGP "
 
 //            holder.binding.priceProduct.text = product.vendor
         }

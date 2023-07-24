@@ -28,13 +28,16 @@ interface RemoteSource {
 
     suspend fun getAllProductBrands(id : String) : Flow<List<Product>>
     suspend fun getProductWithId(id : String) : Flow<SingleProduct>
+
     suspend fun createCustomer(customer: PostCustomer) : Flow<Customerre>
 
 
 
-    suspend fun getAllProductCategory(collectionId : String , productType : String , vendor : String)
+    suspend fun getAllProductCategory(collectionId : Long , productType : String )
     : Flow<List<Product>>
 
+    suspend fun getAllProductCategoryByType( productType : String )
+            : Flow<List<Product>>
 
 
     //Currency

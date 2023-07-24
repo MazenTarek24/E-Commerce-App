@@ -3,7 +3,6 @@ package com.mohamednader.shoponthego.Home.View
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -32,7 +30,6 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.Settings.View.SettingsActivity
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
@@ -78,7 +75,7 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
     private fun initRvBrands() {
         brandAdapter = BrandAdapter()
-        brandLayoutManager = GridLayoutManager(context, 2)
+        brandLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         binding.rvBrand.apply {
             adapter = brandAdapter
             layoutManager = brandLayoutManager
@@ -87,13 +84,9 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
     private fun initViews() {
 
-        factory = GenericViewModelFactory(
-            Repository.getInstance(
-                ApiClient.getInstance(),
-                ConcreteLocalSource(requireContext()),
-                ConcreteSharedPrefsSource(requireContext())
-            )
-        )
+        factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
+            ConcreteLocalSource(requireContext()),
+            ConcreteSharedPrefsSource(requireContext())))
 
         homeViewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
 
@@ -107,10 +100,7 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
 
 
-        binding.cart.setOnClickListener{
-            val intent : Intent = Intent(requireContext(), SettingsActivity::class.java)
-            startActivity(intent)
-        }
+
 
         apiRequests()
         requestBrands()
@@ -133,9 +123,9 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                         }
                         is ApiState.Failure -> {
                             //hideViews()
-                            Toast.makeText(
-                                requireContext(), "There Was An Error", Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(),
+                                "There Was An Error",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -154,9 +144,9 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                         }
                         is ApiState.Failure -> {
                             //hideViews()
-                            Toast.makeText(
-                                requireContext(), "There Was An Error", Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(),
+                                "There Was An Error",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -168,13 +158,11 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                     when (result) {
                         is ApiState.Success<List<PriceRules>> -> {
                             for (i in 0 until result.data.size) {
-                                val priceRule: PriceRules = PriceRules(
-                                    result.data.get(i).id,
+                                val priceRule: PriceRules = PriceRules(result.data.get(i).id,
                                     result.data.get(i).valueType,
                                     result.data.get(i).value,
                                     result.data.get(i).targetType,
-                                    result.data.get(i).title
-                                )
+                                    result.data.get(i).title)
                                 coupon = Coupon("", "", "")
                                 coupon.value =
                                     "${priceRule.value.toDouble().toInt().absoluteValue}% Off"
@@ -193,9 +181,9 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                         }
                         is ApiState.Failure -> {
                             //hideViews()
-                            Toast.makeText(
-                                requireContext(), "There Was An Error", Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(requireContext(),
+                                "There Was An Error",
+                                Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -220,20 +208,17 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
             homeViewModel.brandList.collect { result ->
                 when (result) {
                     is ApiState.Success<List<SmartCollection>> -> {
-                        Log.i(
-                            TAG, "onCreateBrands: SuccessFetchBrands...{${result.data.get(0).id}}"
-                        )
+                        Log.i(TAG,
+                            "onCreateBrands: SuccessFetchBrands...{${result.data.get(0).id}}")
                         brandAdapter.submitList(result.data)
                     }
                     is ApiState.Loading -> {
                         Log.i(TAG, "onCreate: LoadingWhenFetchingBrands...")
                     }
                     is ApiState.Failure -> {
-                        Toast.makeText(
-                            requireContext(),
+                        Toast.makeText(requireContext(),
                             "There Was An Error when fetching brands",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            Toast.LENGTH_SHORT).show()
                     }
                 }
             }

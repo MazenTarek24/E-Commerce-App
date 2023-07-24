@@ -90,12 +90,15 @@ class Repository constructor(
 return remoteSource.createCustomer(customer)   }
 
     override suspend fun getAllProductCategory(
-        collectionId: String,
+        collectionId: Long,
         productType: String,
-        vendor: String,
     ): Flow<List<Product>> {
         Log.i(TAG, "getAllCategoryProducts: REPO")
-        return remoteSource.getAllProductCategory(collectionId , productType , vendor)
+        return remoteSource.getAllProductCategory(collectionId , productType)
+    }
+
+    override suspend fun getAllProductCategoryByType(productType: String): Flow<List<Product>> {
+        return remoteSource.getAllProductCategoryByType(productType)
     }
 
 

@@ -25,11 +25,11 @@ class CategoriesViewModel(val repository: Repository)  : ViewModel(){
         get() = _productsList
 
 
-    fun getAllProductCategory(collectionId : String , productType : String , vendor : String )
+    fun getAllProductCategory(collectionId : Long , productType : String )
     {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllCategoryProducts: ")
-            repository.getAllProductCategory(collectionId,productType,vendor)
+            repository.getAllProductCategory(collectionId,productType)
             .catch {error->
                 _productCategory.value = ApiState.Failure(error)
              }.collect{result->
@@ -39,11 +39,11 @@ class CategoriesViewModel(val repository: Repository)  : ViewModel(){
             }
     }
 
-    fun getAllProductInCategory()
+    fun getAllProductInCategory(productType: String)
     {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllProductsssss: ")
-            repository.getAllProducts()
+            repository.getAllProductCategoryByType(productType)
                 .catch { error->
                     _productsList.value = ApiState.Failure(error)
                 }

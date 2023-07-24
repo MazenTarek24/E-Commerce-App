@@ -25,6 +25,7 @@ import com.google.firebase.ktx.Firebase
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
@@ -135,7 +136,7 @@ class LoginActivity : AppCompatActivity() {
                     getSharedPreferences("user", MODE_PRIVATE)
                 preferences.edit()
                     .putBoolean("flag", true).apply()
-//                startActivity(Intent(this, MainActivity::class.java))
+              // startActivity(Intent(this, MainHomeActivity::class.java))
                 Toast.makeText(this@LoginActivity, "Logged in successfully", Toast.LENGTH_SHORT).show()
             } else {
 //                Toast.makeText(LoginActivity.this, "Wrong email or password, or an error with the Internet connection", Toast.LENGTH_SHORT).show();

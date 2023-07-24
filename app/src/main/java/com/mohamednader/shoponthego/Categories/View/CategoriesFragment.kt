@@ -8,57 +8,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import com.google.android.gms.common.api.Api
 import com.google.android.material.tabs.TabLayout
 import com.mohamednader.shoponthego.BranProduct.view.BrandProductAdapter
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoriesViewModel
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoryViewModelFactory
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.Database.LocalSource
-import com.mohamednader.shoponthego.Home.View.BrandAdapter
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.Network.RemoteSource
-import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
-import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
+class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
 
-    lateinit var binding : FragmentCategoriesBinding
+    lateinit var binding: FragmentCategoriesBinding
 
-    lateinit var categoryViewModel : CategoriesViewModel
-    lateinit var factory : CategoryViewModelFactory
+    lateinit var categoryViewModel: CategoriesViewModel
+    lateinit var factory: CategoryViewModelFactory
 
     lateinit var brandAdapter: BrandProductAdapter
     lateinit var brandLayoutManager: LayoutManager
 
+
     val TAG = "CategoryResponseSuccessfully"
 
-    lateinit var categoryId : String
+     var categoryId: Long = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentCategoriesBinding.inflate(layoutInflater , container , false)
+        binding = FragmentCategoriesBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         initViews()
         initRvCategory()
@@ -68,26 +63,47 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Women"))
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Men"))
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Kids"))
+        binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Sale"))
 
         binding.catTabLayout.addOnTabSelectedListener(this)
 
+        binding.accessoriesTxt.setOnClickListener {
+            displayProductType("ACCESSORIES")
+        }
+
+        binding.shoesTxt.setOnClickListener {
+            displayProductType("SHOES")
+        }
+
+        binding.tshirtTxt.setOnClickListener {
+            displayProductType("T-SHIRTS")
+        }
+
+        displayProductType("ACCESSORIES")
+
     }
 
-    private fun initViews()
-    {
+    private fun displayProductType(productType: String) {
+        brandAdapter.deleteProductBrand()
+        getAllCategory(categoryId,productType)
+        getAllProduct(productType)
+    }
+
+
+    private fun initViews() {
 
         factory = CategoryViewModelFactory(Repository.getInstance(
             ApiClient.getInstance(),
             ConcreteLocalSource(requireContext()),
             ConcreteSharedPrefsSource(requireContext())
         ))
-        categoryViewModel = ViewModelProvider(this,factory)
+        categoryViewModel = ViewModelProvider(this, factory)
             .get(CategoriesViewModel::class.java)
 
-      getAllProduct()
     }
 
-    private fun getAllProduct()
+
+    private fun getAllProduct(productType: String? = null)
     {
         lifecycleScope.launch(Dispatchers.Main) {
             categoryViewModel.productList.collect{result->
@@ -97,7 +113,16 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
                         if (result.data.isNotEmpty()) {
                             Log.i(TAG,
                                 "onCreateProduct: SuccessFetchProduct...{${result.data[0].title}}")
-                            brandAdapter.submitList(result.data)
+
+                            // If a productType is specified, filter the data accordingly
+                            val filteredProduct = if (!productType.isNullOrBlank()) {
+                                result.data.filter { it.productType == productType }
+                            } else {
+                                result.data
+                            }
+
+                            brandAdapter.submitList(filteredProduct)
+
                         }else{
                             Log.i(TAG,
                                 "onCreateProduct: ListProductIsEmpty")
@@ -113,11 +138,11 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
                 }
             }
         }
-        categoryViewModel.getAllProductInCategory()
+        categoryViewModel.getAllProductInCategory(productType!!)
 
     }
 
-    private fun getAllCategory(collectionId : String , product_type : String , vendor : String)
+    private fun getAllCategory(collectionId : Long , product_type : String)
     {
         lifecycleScope.launch(Dispatchers.Main) {
             categoryViewModel.productCategory.collect{result->
@@ -126,8 +151,15 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
                     is ApiState.Success -> {
                         if (result.data.isNotEmpty()) {
                             Log.i(TAG,
-                                "onCreateCategory: SuccessFetchBrands...{${result.data[0].title}}")
-                            brandAdapter.submitList(result.data)
+                                "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}")
+                            val filterdProduct = if (!product_type.isNullOrBlank())
+                            {
+                                result.data.filter { it.productType == product_type }
+                            }else{
+                                result.data
+                            }
+                            brandAdapter.submitList(filterdProduct)
+
                         }else{
                             Log.i(TAG,
                                 "onCreateCategory: ListCategoryIsEmpty")
@@ -143,32 +175,48 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
                 }
             }
         }
-//        categoryViewModel.getAllProductCategory(collectionId,product_type,vendor)
+       categoryViewModel.getAllProductCategory(collectionId,product_type)
     }
 
+
+    private fun setSaleCategory()
+    {
+        categoryId = 456248230205
+        brandAdapter.deleteProductBrand()
+
+        getAllCategory(categoryId,"")
+    }
     private fun setCategoryWomen()
     {
-        categoryId = "274500059275"
-        brandAdapter.deleteProductBrand()
-         getAllCategory(categoryId,"","")
+         categoryId = 456248164669
+         brandAdapter.deleteProductBrand()
+
+         getAllCategory(categoryId,"",)
 
     }
     private fun setCategoryMen()
     {
-        categoryId = "274500026507"
-        brandAdapter.deleteProductBrand()
-        getAllCategory(categoryId,"","")
+       categoryId = 456248131901
+       brandAdapter.deleteProductBrand()
+
+       getAllCategory(categoryId,"")
 
     }
 
     private fun setCategoryKids()
     {
-        categoryId = "274500092043"
+        categoryId = 456248197437
         brandAdapter.deleteProductBrand()
-        getAllCategory(categoryId,"","")
+
+        getAllCategory(categoryId,"")
 
     }
 
+   private fun setAllProduct()
+    {
+        brandAdapter.deleteProductBrand()
+        getAllProduct("")
+    }
 
 
     private fun initRvCategory()
@@ -179,13 +227,15 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
             adapter = brandAdapter
             layoutManager = brandLayoutManager
         }
+
+
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when(tab?.position)
         {
             0 -> {
-                categoryViewModel.getAllProductInCategory()
+                setAllProduct()
             }
             1 -> {
                 setCategoryWomen()
@@ -194,10 +244,13 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
                setCategoryMen()
 
             }
-            3 ->{
+            3->{
                 setCategoryKids()
             }
 
+            4->{
+                setSaleCategory()
+            }
         }
     }
 
