@@ -31,7 +31,6 @@ class BrandProductAdapter : ListAdapter<Product , BrandProductAdapter.ViewHolder
             var price = product.variants?.getOrNull(0)?.price ?: 1.0
             holder.binding.priceProduct.text = price.toString() + " EGP "
 
-//            holder.binding.priceProduct.text = product.vendor
         }
     }
 
