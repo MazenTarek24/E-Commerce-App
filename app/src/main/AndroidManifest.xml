@@ -13,6 +13,13 @@
         android:theme="@style/Theme.ShopOnTheGo"
         tools:targetApi="31">
         <activity
+            android:name=".fav.favActivty"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Order.OrderActivity"
             android:exported="false">
             <meta-data
@@ -21,7 +28,6 @@
         </activity>
         <activity
             android:name=".productinfo.ProductInfo"
-
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -57,7 +63,6 @@
         </activity>
         <activity
             android:name=".MainHome.View.MainHomeActivity"
-
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -78,7 +83,9 @@
                 android:value="" />
         </activity>
         <activity
+
             android:name=".Auth.SignUp.View.SignUpActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,6 +97,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

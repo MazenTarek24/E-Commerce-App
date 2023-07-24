@@ -174,7 +174,9 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener {
     private fun initRvCategory()
     {
         brandLayoutManager = GridLayoutManager(context,2)
-        brandAdapter = BrandProductAdapter()
+        brandAdapter = BrandProductAdapter(){
+
+        }
         binding.rvCategory.apply {
             adapter = brandAdapter
             layoutManager = brandLayoutManager

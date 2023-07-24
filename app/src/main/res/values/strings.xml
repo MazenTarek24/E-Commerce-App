@@ -10,6 +10,10 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="g_color">Color</string>
+    <string name="g_size">Size</string>
+    <string name="g_please_select_color">Please select color</string>
+    <string name="g_please_select_size">Please select size</string>
     <string name="forgetpasswod">Did you forget the password?</string>
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
@@ -32,4 +36,5 @@
     <string name="description">Description</string>
     <string name="addtocart">Add To Cart</string>
     <string name="reviews">Reviews</string>
+    <string name="favorite">Favorite</string>
 </resources>
