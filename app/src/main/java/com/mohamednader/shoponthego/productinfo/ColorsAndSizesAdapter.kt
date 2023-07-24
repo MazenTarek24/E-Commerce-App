@@ -108,7 +108,7 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
                 selectedPosition = holder.adapterPosition
                 notifyItemChanged(selectedPosition)
 
-                onItemClick!!.invoke(size)
+//                onItemClick!!.invoke(size)
             }
 
 
