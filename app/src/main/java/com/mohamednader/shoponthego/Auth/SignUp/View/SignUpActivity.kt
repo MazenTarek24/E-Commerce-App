@@ -97,7 +97,7 @@ lateinit var customer: Customer
             OnCompleteListener { task: Task<AuthResult?> ->
                 if (task.isSuccessful) {
                     val currentUser = firebaseAuth.currentUser
-
+                    sendVerificationEmail()
                     customer= Customer(currentUser?.uid,"",currentUser?.email,"",currentUser?.isEmailVerified,arrayListOf( Addresses("","",
                         "","","","","","")) )
                     println(firebaseAuth.currentUser!!.uid)
@@ -128,7 +128,8 @@ lateinit var customer: Customer
                     progressDialog.dismiss()
                 }
             })
-    }
+
+   }
     private fun initViews() {
 
         factory = GenericViewModelFactory(
@@ -168,5 +169,17 @@ lateinit var customer: Customer
                     }
                 }
         }
+    }
+    fun sendVerificationEmail() {
+        val user = firebaseAuth.currentUser
+
+        user?.sendEmailVerification()
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Verification email sent successfully
+                } else {
+                    // Handle errors
+                }
+            }
     }
 }

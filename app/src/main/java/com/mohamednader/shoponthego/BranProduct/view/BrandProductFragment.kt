@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.BranProduct.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,6 +21,7 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.databinding.FragmentBrandProductBinding
+import com.mohamednader.shoponthego.productinfo.ProductInfo
 import kotlinx.coroutines.launch
 
 class BrandProductFragment : Fragment() {
@@ -49,9 +51,9 @@ class BrandProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRvProductBrands()
 
         initViews()
-        initRvProductBrands()
 
 
     }
@@ -97,7 +99,14 @@ class BrandProductFragment : Fragment() {
     }
 
     private fun initRvProductBrands() {
-        brandProductAdapter = BrandProductAdapter()
+        brandProductAdapter = BrandProductAdapter(){
+            val intent = Intent(context, ProductInfo::class.java)
+            intent.putExtra("id",it )
+            startActivity(intent)
+
+
+
+        }
         brandLayoutManager = GridLayoutManager(context,2)
 
         binding.rvProduct.apply {

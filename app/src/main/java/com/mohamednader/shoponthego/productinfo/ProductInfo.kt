@@ -1,36 +1,37 @@
 package com.mohamednader.shoponthego.productinfo
 
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.example.example.Image
 import com.example.example.Images
 import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.Home.ViewModel.HomeViewModel
-import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.Utils.Constants.COLORS
+import com.mohamednader.shoponthego.Utils.Constants.COLORS_TYPE
+import com.mohamednader.shoponthego.Utils.Constants.SIZES_TYPE
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityProductInfoBinding
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
 import kotlinx.coroutines.launch
+
 
 class ProductInfo : AppCompatActivity() {
     private val TAG = "ProductInfo_INFO_TAG"
 
     //View Model Members
     private lateinit var viewModelProductInfo: ViewModelProductInfo
+    private lateinit var colorsAdapter: ColorsAndSizesAdapter
+    private lateinit var sizesAdapter: ColorsAndSizesAdapter
     private lateinit var factory: GenericViewModelFactory
     var images: ArrayList<Images> ?=null
 
@@ -39,6 +40,11 @@ class ProductInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val intent = intent
+        val productId = intent.getLongExtra("id", 0)
+
+        colorsAdapter = ColorsAndSizesAdapter(COLORS_TYPE)
+        sizesAdapter = ColorsAndSizesAdapter(SIZES_TYPE)
         val randomNumber = (7..10).random()
         binding.ratingBar.rating=randomNumber.toFloat()
         binding.recyclerView.layoutManager =LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -49,6 +55,8 @@ class ProductInfo : AppCompatActivity() {
         )
         val adapter = ReviewAdapter(reviewList)
        binding.recyclerView.adapter = adapter
+        setupColorsRecyclerview()
+        setupSizesRecyclerview()
 
         initViews()
 
@@ -56,8 +64,7 @@ class ProductInfo : AppCompatActivity() {
         apicall()
 
 
-        viewModelProductInfo.getProductWithIdFromNetwork("8443620360509")
-
+        viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
 
     }
 
@@ -88,6 +95,15 @@ class ProductInfo : AppCompatActivity() {
                                binding.pricetv.text= result.data.variants.get(0).price
                                 binding.productnametv.text=result.data.title
                                 println(result.data.options.get(0).values)
+
+                                if (result.data.options.get(0).name=="Size"  ) {
+                                  sizesAdapter.differ.submitList(result.data.options.get(0).values)
+                              }
+                                if (result.data.options.get(0).name=="Color"  ) {
+                                    colorsAdapter.differ.submitList(result.data.options.get(0).values)
+                                }
+
+
                                 val springDotsIndicator = findViewById<SpringDotsIndicator>(R.id.dot2)
                                 val viewPager = findViewById<ViewPager>(R.id.view_pager)
                                 val adapter = ViewPagerProductinfoAdapter(result.data.images)
@@ -116,4 +132,19 @@ class ProductInfo : AppCompatActivity() {
         return random.nextInt(51) + 50
     }
 
+    private fun setupSizesRecyclerview() {
+        binding.rvSizes.apply {
+            adapter = sizesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(HorizantalSpacingItemDecorator(45))
+        }
+    }
+
+    private fun setupColorsRecyclerview() {
+        binding.rvColors.apply {
+            adapter = colorsAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            addItemDecoration(HorizantalSpacingItemDecorator(45))
+        }
+    }
     }
