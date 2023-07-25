@@ -27,6 +27,7 @@ import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.HomeFragment
 import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
+import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
@@ -56,9 +57,24 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth = Firebase.auth
         initViews()
         val currentUser = firebaseAuth.currentUser
-
-        val customerId = intent.getLongExtra("CustomerID",0)
-        println("sssssssssssssssssssssssss"+customerId)
+//        loginViewModel.createDraftOrder(
+//            PostDraftOrder(
+//                DraftOrderPost(
+//                    arrayListOf(LineItemsPost("favourite", "20.00", 2)),
+//                    AppliedDiscountPost(
+//                        firebaseAuth.currentUser?.email,
+//                        "fixed_amount",
+//                        "10.0",
+//                        "10.00",
+//                        ""
+//                    ),
+//                    CustomerPost(7224510218557),
+//                    true
+//                )
+//            )
+//        )
+        val customerId = intent.getLongExtra("CustomerID", 0)
+        println("sssssssssssssssssssssssss" + customerId)
 
 
         progressDialog = ProgressDialog(this)

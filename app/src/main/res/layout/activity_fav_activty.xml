@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fav.favActivty">
+    tools:context=".fav.FavActivty">
 
     <TextView
         android:id="@+id/textView7"
@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcycyfav"
         android:layout_width="409dp"
         android:layout_height="649dp"
         app:layout_constraintBottom_toBottomOf="parent"
