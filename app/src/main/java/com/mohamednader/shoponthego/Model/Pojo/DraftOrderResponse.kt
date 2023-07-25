@@ -3,7 +3,7 @@ package com.mohamednader.shoponthego.Model.Pojo
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 
 data class DraftOrderResponse(
-    var draft_order: DraftOrder? = null
+    var draft_order: DraftOrder = DraftOrder()
 )
 
 data class DraftOrder(

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class DraftOrders (
 
-  @SerializedName("id"                   ) var id                : Long?                 = null,
+  @SerializedName("id"                   ) var id                : Long               = 10,
   @SerializedName("note"                 ) var note              : String?              = null,
   @SerializedName("email"                ) var email             : String?              = null,
   @SerializedName("taxes_included"       ) var taxesIncluded     : Boolean?             = null,

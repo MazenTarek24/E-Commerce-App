@@ -7,6 +7,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
@@ -94,6 +95,9 @@ return remoteSource.createDraftforfav(draftorder)   }
         Log.i(TAG, "getProductWithId: REPO")
         return remoteSource.getProductWithId(id)
     }
+
+    override suspend fun getDraftWithId(id: Long): Flow<DraftOrder> {
+return remoteSource.getDraftWithId(id)   }
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
 return remoteSource.createCustomer(customer)   }

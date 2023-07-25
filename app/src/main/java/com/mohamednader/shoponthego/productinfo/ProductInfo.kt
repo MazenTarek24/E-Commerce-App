@@ -37,6 +37,9 @@ class ProductInfo : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private var product: SingleProduct = SingleProduct()
     private var draftOrdersID: String = ""
+    private var lineItems: List<com.mohamednader.shoponthego.Model.Pojo.LineItems>? =
+        listOf<com.mohamednader.shoponthego.Model.Pojo.LineItems>()
+    var mutable =lineItems?.toMutableList()
 
     //View Model Members
     private lateinit var viewModelProductInfo: ViewModelProductInfo
@@ -51,7 +54,6 @@ class ProductInfo : AppCompatActivity() {
         binding = ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         firebaseAuth = Firebase.auth
-
         val intent = intent
         val productId = intent.getLongExtra("id", 0)
 
@@ -76,41 +78,48 @@ class ProductInfo : AppCompatActivity() {
         viewModelProductInfo.getAllDraftsOrder()
 
         apicall()
+        apicallForgetdraftwithId()
         apicallForgetAllDrafts()
         apicallForModifyDrafts()
+
         binding.Addtofav.setOnClickListener {
+            println("LLLLLLLLLLLLine"+lineItems?.get(0))
+            val mutablelist =lineItems?.toMutableList()
+            println("LLLLLLLLLLLLinesssss"+mutablelist?.get(0))
+            println(product.title+"aaaaaaaaaaaaaaaa")
+            mutablelist?.add(LineItems(
+                productId,
+                product.variants.get(0).id,
+                productId,
+                product.title,
+                "",
+                "",
+                "",
+                1,
+                true,
+                true,
+                true,
+                "",
+                1,
+                listOf(TaxLine("", "")),
+                AppliedDiscount("", "", "", "", ""),
+                product.title,
+                null,
+                true,
+                "",
+                ""
+            ))
+            println("LLLLLLLLLLLLiafffffffffffffter"+mutablelist?.get(0))
 
             viewModelProductInfo.modifyDraftsOrder(
                 DraftOrderResponse(
                     DraftOrder(
-                        productId, "", "", true,
-                        "", "", "", "", true, "", "", "",
-                        listOf(
-                            LineItems(
-                                productId,
-                                product.variants.get(0).id,
-                                productId,
-                                product.title,
-                                "",
-                                "",
-                                "",
-                                1,
-                                true,
-                                true,
-                                true,
-                                "",
-                                1,
-                                listOf(TaxLine("", "")),
-                                AppliedDiscount("", "", "", "", ""),
-                                product.title,
-                                null,
-                                true,
-                                "",
-                                ""
-                            )
-                        )
+                        productId, "", "", true, "", "", "", "", true, "", "", "",mutablelist
+
+
                     )
-                ), draftOrdersID.toLong() )
+                ), draftOrdersID.toLong()
+            )
 
         }
 
@@ -122,9 +131,7 @@ class ProductInfo : AppCompatActivity() {
 
         factory = GenericViewModelFactory(
             Repository.getInstance(
-                ApiClient.getInstance(),
-                ConcreteLocalSource(this),
-                ConcreteSharedPrefsSource(this)
+                ApiClient.getInstance(), ConcreteLocalSource(this), ConcreteSharedPrefsSource(this)
             )
         )
 
@@ -135,8 +142,7 @@ class ProductInfo : AppCompatActivity() {
     private fun apicall() {
         lifecycleScope.launch {
 
-            viewModelProductInfo.product
-                .collect { result ->
+            viewModelProductInfo.product.collect { result ->
                     when (result) {
                         is ApiState.Success<SingleProduct> -> {
                             Log.i(TAG, "onCreate: Success...{${result.data.options.get(0)}")
@@ -182,8 +188,7 @@ class ProductInfo : AppCompatActivity() {
     private fun apicallForgetAllDrafts() {
         lifecycleScope.launch {
 
-            viewModelProductInfo.drafts
-                .collect { result ->
+            viewModelProductInfo.drafts.collect { result ->
                     when (result) {
                         is ApiState.Success<List<DraftOrders>> -> {
                             for (draftOrder in result.data) {
@@ -191,6 +196,8 @@ class ProductInfo : AppCompatActivity() {
                                 if (currentUser?.email == draftOrder.customer?.email) {
                                     draftOrdersID = draftOrder.id.toString()
                                     println(draftOrder.id)
+                                    viewModelProductInfo.getDraftOrderWithId(draftOrder.id)
+
                                 }
 
                             }
@@ -236,8 +243,7 @@ class ProductInfo : AppCompatActivity() {
     private fun apicallForModifyDrafts() {
         lifecycleScope.launch {
 
-            viewModelProductInfo.modifydraft
-                .collect { result ->
+            viewModelProductInfo.modifydraft.collect { result ->
                     when (result) {
                         is ApiState.Success<DraftOrdermo> -> {
                             println("AAAAAAAAAAAAAAa" + result.data.id)
@@ -245,6 +251,34 @@ class ProductInfo : AppCompatActivity() {
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: Loading... in DDDDDDDDraft Orders")
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@ProductInfo, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun apicallForgetdraftwithId() {
+        lifecycleScope.launch {
+
+            viewModelProductInfo.draftwithid.collect { result ->
+                    when (result) {
+                        is ApiState.Success<DraftOrder> -> {
+                            println("12:51" + result.data.id)
+                            result.data.line_items
+                            lineItems = result.data.line_items
+
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading... in 12:15")
 
                         }
                         is ApiState.Failure -> {

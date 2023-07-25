@@ -6,6 +6,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
@@ -97,6 +98,20 @@ class ApiClient : RemoteSource {
             Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
         }
         return product    }
+
+    override suspend fun getDraftWithId(id: Long): Flow<DraftOrder> {
+        val response = apiService.getDraftWithId(id)
+        val draftOrder: Flow<DraftOrder>
+        Log.i(TAG, "getDraftwith idAPI-Client")
+        if (response.isSuccessful) {
+            draftOrder = flowOf(response.body()!!.draft_order)
+            Log.i(TAG, "getDraftwith id: Done")
+
+        } else {
+            draftOrder = emptyFlow()
+            Log.i(TAG, "getDraftwith id: ${response.errorBody().toString()}")
+        }
+        return draftOrder       }
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
         val response = apiService.createCustomer(customer)

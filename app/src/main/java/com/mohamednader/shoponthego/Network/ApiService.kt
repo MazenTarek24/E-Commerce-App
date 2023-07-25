@@ -98,4 +98,8 @@ interface ApiService {
     suspend fun getAllDraftorders(): Response<ResponseDraftsOrders>
 
 
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("draft_orders/{draft_order_id}.json")
+    suspend fun getDraftWithId(@Path(value = "draft_order_id")draftOrderId:Long): Response<DraftOrderResponse>
 }
