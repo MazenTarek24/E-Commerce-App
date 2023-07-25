@@ -13,20 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.example.Addresses
-import com.example.example.Customerre
-import com.example.example.PostCustomer
+import com.example.example.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mohamednader.shoponthego.Auth.Login.ViewModel.LoginViewModel
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
-import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.Home.View.HomeFragment
-import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
@@ -42,10 +38,10 @@ class LoginActivity : AppCompatActivity() {
     private val TAG = "SignUP_INFO_TAG"
 
     private lateinit var firebaseAuth: FirebaseAuth
-  private lateinit var loadingBar :ProgressDialog
-    private lateinit var progressDialog :ProgressDialog
+    private lateinit var loadingBar: ProgressDialog
+    private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var loginViewModel: LoginViewModel
     private lateinit var factory: GenericViewModelFactory
     lateinit var customer: Customer
 
@@ -57,9 +53,24 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth = Firebase.auth
         initViews()
         val currentUser = firebaseAuth.currentUser
-
-        val customerId = intent.getLongExtra("CustomerID",0)
-        println("sssssssssssssssssssssssss"+customerId)
+//        loginViewModel.createDraftOrder(
+//            PostDraftOrder(
+//                DraftOrderPost(
+//                    arrayListOf(LineItemsPost("favourite", "20.00", 2)),
+//                    AppliedDiscountPost(
+//                        firebaseAuth.currentUser?.email,
+//                        "fixed_amount",
+//                        "10.0",
+//                        "10.00",
+//                        ""
+//                    ),
+//                    CustomerPost(7224510218557),
+//                    true
+//                )
+//            )
+//        )
+        val customerId = intent.getLongExtra("CustomerID", 0)
+        println("sssssssssssssssssssssssss" + customerId)
 
 
         progressDialog = ProgressDialog(this)
@@ -80,7 +91,7 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        apicall()
+//        apicallforcreateDraftOrder()
 
     }
 
@@ -98,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
             .setView(linearLayout)
             .setPositiveButton("Confrimation") { dialogInterface: DialogInterface?, i: Int ->
                 val email = emailEditText.text.toString().trim { it <= ' ' }
-                val emailPattern :Regex = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.[a-z]+")
+                val emailPattern: Regex = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.[a-z]+")
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
@@ -114,6 +125,7 @@ class LoginActivity : AppCompatActivity() {
             ) { dialogInterface: DialogInterface, i: Int -> dialogInterface.dismiss() }
             .show()
     }
+
     private fun userLogin(email: String, password: String) {
         val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         if (TextUtils.isEmpty(email)) {
@@ -142,13 +154,18 @@ class LoginActivity : AppCompatActivity() {
 
                 if (user?.isEmailVerified == true) {
                     // User's email address is verified
-                    startActivity(Intent(this, MainHomeActivity::class.java)
+                    startActivity(
+                        Intent(this, MainHomeActivity::class.java)
                     )
-                    Toast.makeText(this@LoginActivity, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Logged in successfully", Toast.LENGTH_SHORT)
+                        .show()
 
-                }
-              else{
-                    Toast.makeText(this@LoginActivity, "please verfiy your email", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "please verfiy your email",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     progressDialog.dismiss()
 
                 }
@@ -157,7 +174,7 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(
                     this@LoginActivity,
                     Objects.requireNonNull(task.exception)
-                        !!.localizedMessage,
+                    !!.localizedMessage,
                     Toast.LENGTH_LONG
                 ).show()
                 progressDialog.dismiss()
@@ -187,32 +204,39 @@ class LoginActivity : AppCompatActivity() {
             }
         }.addOnFailureListener { e -> loadingBar.dismiss() }
     }
-    private fun apicall() {
-        lifecycleScope.launch {
 
-            signUpViewModel.product
-                .collect { result ->
-                    when (result) {
-                        is ApiState.Success<Customerre> -> {
-                            Log.i(TAG, "onCreate: Success...{${result.data.id}")
+//    private fun apicallforcreateDraftOrder() {
+//        lifecycleScope.launch {
+//
+//            loginViewModel.customerList
+//                .collect { result ->
+//                    when (result) {
+//                        is ApiState.Success<ResponseDraftOrderOb> -> {
+//                            Log.i(
+//                                TAG,
+//                                "onCreate Login: Success..zzzzzzzzzzzzzzzzzzz.{${result.data.id}"
+//                            )
+//
+//
+//                        }
+//                        is ApiState.Loading -> {
+//                            Log.i(TAG, "onCreatezzzzzzzzzzzzzzzz: Loading...")
+//
+//                        }
+//                        is ApiState.Failure -> {
+//                            //hideViews()
+//
+//                            Toast.makeText(
+//                                this@LoginActivity,
+//                                "There Was An Errorzzzzzzzzzzzzzzz",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                        }
+//                    }
+//                }
+//        }
+//    }
 
-
-                        }
-                        is ApiState.Loading -> {
-//                                Log.i(TAG, "onCreate: Loading..."
-
-                        }
-                        is ApiState.Failure -> {
-                            //hideViews()
-
-                            Toast.makeText(
-                                this@LoginActivity, "There Was An Error", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-        }
-    }
     private fun initViews() {
 
         factory = GenericViewModelFactory(
@@ -223,8 +247,8 @@ class LoginActivity : AppCompatActivity() {
             )
         )
 
-        signUpViewModel =
-            ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
+        loginViewModel =
+            ViewModelProvider(this, factory).get(LoginViewModel::class.java)
     }
 
 }

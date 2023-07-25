@@ -1,14 +1,13 @@
 package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
-import com.example.example.Customerre
-import com.example.example.PostCustomer
-import com.example.example.SingleProduct
+import com.example.example.*
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
@@ -63,6 +62,16 @@ class Repository constructor(
         return remoteSource.getAllPriceRules()
     }
 
+    override suspend fun modifyDraftforfav(
+        draftorder: DraftOrderResponse,
+        id: Long
+    ): Flow<DraftOrdermo> {
+        return remoteSource.modifyDraftforfav(draftorder,id)
+    }
+
+    override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
+return remoteSource.createDraftforfav(draftorder)   }
+
     override suspend fun getAllBrands(): Flow<List<SmartCollection>> {
         Log.i(TAG, "getAllBrands: REPO")
         return remoteSource.getAllBrands()
@@ -88,6 +97,12 @@ class Repository constructor(
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
 return remoteSource.createCustomer(customer)   }
+
+    override suspend fun getAllCustomer(): Flow<List<Customers>> {
+return remoteSource.getAllCustomer()   }
+
+    override suspend fun getAllDraftsOrders(): Flow<List<DraftOrders>> {
+return remoteSource.getAllDraftsOrders()   }
 
     override suspend fun getAllProductCategory(
         collectionId: Long,

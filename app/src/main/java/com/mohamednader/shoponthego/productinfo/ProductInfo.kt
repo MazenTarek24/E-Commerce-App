@@ -8,9 +8,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.example.example.Images
-import com.example.example.SingleProduct
+import com.example.example.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.Model.Pojo.AppliedDiscount
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.LineItems
+import com.mohamednader.shoponthego.Model.Pojo.TaxLine
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
@@ -27,42 +34,85 @@ import kotlinx.coroutines.launch
 
 class ProductInfo : AppCompatActivity() {
     private val TAG = "ProductInfo_INFO_TAG"
+    private lateinit var firebaseAuth: FirebaseAuth
+    private var product: SingleProduct = SingleProduct()
+    private var draftOrdersID: String = ""
 
     //View Model Members
     private lateinit var viewModelProductInfo: ViewModelProductInfo
     private lateinit var colorsAdapter: ColorsAndSizesAdapter
     private lateinit var sizesAdapter: ColorsAndSizesAdapter
     private lateinit var factory: GenericViewModelFactory
-    var images: ArrayList<Images> ?=null
+    var images: ArrayList<Images>? = null
 
     private lateinit var binding: ActivityProductInfoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityProductInfoBinding.inflate(layoutInflater)
+        binding = ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        firebaseAuth = Firebase.auth
+
         val intent = intent
         val productId = intent.getLongExtra("id", 0)
 
         colorsAdapter = ColorsAndSizesAdapter(COLORS_TYPE)
         sizesAdapter = ColorsAndSizesAdapter(SIZES_TYPE)
         val randomNumber = (7..10).random()
-        binding.ratingBar.rating=randomNumber.toFloat()
-        binding.recyclerView.layoutManager =LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.ratingBar.rating = randomNumber.toFloat()
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         val reviewList = listOf(
             Review("John Doe", "This is a great product!", 5),
             Review("Jane Doe", "This product is okay.", 3),
             Review("Bob Smith", "I don't like this product.", 1)
         )
         val adapter = ReviewAdapter(reviewList)
-       binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter
         setupColorsRecyclerview()
         setupSizesRecyclerview()
 
         initViews()
 
+        viewModelProductInfo.getAllDraftsOrder()
 
         apicall()
+        apicallForgetAllDrafts()
+        apicallForModifyDrafts()
+        binding.Addtofav.setOnClickListener {
 
+            viewModelProductInfo.modifyDraftsOrder(
+                DraftOrderResponse(
+                    DraftOrder(
+                        productId, "", "", true,
+                        "", "", "", "", true, "", "", "",
+                        listOf(
+                            LineItems(
+                                productId,
+                                product.variants.get(0).id,
+                                productId,
+                                product.title,
+                                "",
+                                "",
+                                "",
+                                1,
+                                true,
+                                true,
+                                true,
+                                "",
+                                1,
+                                listOf(TaxLine("", "")),
+                                AppliedDiscount("", "", "", "", ""),
+                                product.title,
+                                null,
+                                true,
+                                "",
+                                ""
+                            )
+                        )
+                    )
+                ), draftOrdersID.toLong() )
+
+        }
 
         viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
 
@@ -85,48 +135,83 @@ class ProductInfo : AppCompatActivity() {
     private fun apicall() {
         lifecycleScope.launch {
 
-                viewModelProductInfo.product
-                    .collect { result ->
-                        when (result) {
-                            is ApiState.Success<SingleProduct> -> {
-                                Log.i(TAG, "onCreate: Success...{${result.data.options.get(0)}")
-                                binding.descriptiontxv.text=result.data.bodyHtml
-                                images=result.data.images
-                               binding.pricetv.text= result.data.variants.get(0).price
-                                binding.productnametv.text=result.data.title
-                                println(result.data.options.get(0).values)
+            viewModelProductInfo.product
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<SingleProduct> -> {
+                            Log.i(TAG, "onCreate: Success...{${result.data.options.get(0)}")
+                            binding.descriptiontxv.text = result.data.bodyHtml
+                            product = result.data
+                            images = result.data.images
+                            binding.pricetv.text = result.data.variants.get(0).price
+                            binding.productnametv.text = result.data.title
+                            println(result.data.options.get(0).values)
 
-                                if (result.data.options.get(0).name=="Size"  ) {
-                                  sizesAdapter.differ.submitList(result.data.options.get(0).values)
-                              }
-                                if (result.data.options.get(0).name=="Color"  ) {
-                                    colorsAdapter.differ.submitList(result.data.options.get(0).values)
-                                }
-
-
-                                val springDotsIndicator = findViewById<SpringDotsIndicator>(R.id.dot2)
-                                val viewPager = findViewById<ViewPager>(R.id.view_pager)
-                                val adapter = ViewPagerProductinfoAdapter(result.data.images)
-                                viewPager.adapter = adapter
-                                springDotsIndicator.setViewPager(viewPager)
-
-
+                            if (result.data.options.get(0).name == "Size") {
+                                sizesAdapter.differ.submitList(result.data.options.get(0).values)
                             }
-                            is ApiState.Loading -> {
+                            if (result.data.options.get(0).name == "Color") {
+                                colorsAdapter.differ.submitList(result.data.options.get(0).values)
+                            }
+
+
+                            val springDotsIndicator = findViewById<SpringDotsIndicator>(R.id.dot2)
+                            val viewPager = findViewById<ViewPager>(R.id.view_pager)
+                            val adapter = ViewPagerProductinfoAdapter(result.data.images)
+                            viewPager.adapter = adapter
+                            springDotsIndicator.setViewPager(viewPager)
+
+
+                        }
+                        is ApiState.Loading -> {
 //                                Log.i(TAG, "onCreate: Loading..."
 
-                            }
-                            is ApiState.Failure -> {
-                                //hideViews()
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
 
-                                Toast.makeText(
-                                    this@ProductInfo, "There Was An Error", Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            Toast.makeText(
+                                this@ProductInfo, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
-            }
+                }
         }
+    }
+
+    private fun apicallForgetAllDrafts() {
+        lifecycleScope.launch {
+
+            viewModelProductInfo.drafts
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<DraftOrders>> -> {
+                            for (draftOrder in result.data) {
+                                val currentUser = firebaseAuth.currentUser
+                                if (currentUser?.email == draftOrder.customer?.email) {
+                                    draftOrdersID = draftOrder.id.toString()
+                                    println(draftOrder.id)
+                                }
+
+                            }
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading... in DDDDDDDDraft Orders")
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@ProductInfo, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+    }
+
     fun getRandomNumber(): Int {
         val random = java.util.Random()
         return random.nextInt(51) + 50
@@ -147,4 +232,31 @@ class ProductInfo : AppCompatActivity() {
             addItemDecoration(HorizantalSpacingItemDecorator(45))
         }
     }
+
+    private fun apicallForModifyDrafts() {
+        lifecycleScope.launch {
+
+            viewModelProductInfo.modifydraft
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<DraftOrdermo> -> {
+                            println("AAAAAAAAAAAAAAa" + result.data.id)
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading... in DDDDDDDDraft Orders")
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@ProductInfo, "There Was An Error", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
     }
+
+}

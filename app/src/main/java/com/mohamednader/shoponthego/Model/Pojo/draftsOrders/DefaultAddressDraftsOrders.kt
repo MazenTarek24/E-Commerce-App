@@ -3,7 +3,7 @@ package com.example.example
 import com.google.gson.annotations.SerializedName
 
 
-data class DefaultAddress (
+data class DefaultAddressDraftsOrders (
 
   @SerializedName("id"            ) var id           : Int?     = null,
   @SerializedName("customer_id"   ) var customerId   : Int?     = null,

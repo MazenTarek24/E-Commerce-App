@@ -9,41 +9,34 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
-import com.example.example.Addresses
-import com.example.example.Customerre
-import com.example.example.PostCustomer
-import com.example.example.SingleProduct
+import com.example.example.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.mohamednader.shoponthego.Auth.Login.View.LoginActivity
+import com.mohamednader.shoponthego.Auth.Login.ViewModel.LoginViewModel
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySignUpBinding
-import com.mohamednader.shoponthego.productinfo.ViewPagerProductinfoAdapter
-import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SignUpActivity : AppCompatActivity() {
     private val TAG = "SignUP_INFO_TAG"
     private var CustomerID :Long? =0
-
+    private lateinit var loginViewModel: LoginViewModel
     private lateinit var binding: ActivitySignUpBinding
     lateinit var progressDialog: ProgressDialog
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var factory: GenericViewModelFactory
-    var Addresses:kotlin.collections.ArrayList<Addresses>?= null
+    var Addresses:kotlin.collections.ArrayList<AddressesCustomers>?= null
 lateinit var customer: Customer
     lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +61,8 @@ lateinit var customer: Customer
 
         }
         apicall()
+        apicallforcreateDraftOrder()
+
     }
 
     private fun registerUser() {
@@ -99,7 +94,8 @@ lateinit var customer: Customer
                     val currentUser = firebaseAuth.currentUser
                     sendVerificationEmail()
                     customer= Customer(currentUser?.uid,"",currentUser?.email,"",currentUser?.isEmailVerified,arrayListOf( Addresses("","",
-                        "","","","","","")) )
+                        "","","","","","")
+                    ) )
                     println(firebaseAuth.currentUser!!.uid)
                     signUpViewModel.createCustomer(PostCustomer( customer))
                     Toast.makeText(
@@ -139,7 +135,8 @@ lateinit var customer: Customer
                 ConcreteSharedPrefsSource(this)
             )
         )
-
+        loginViewModel =
+            ViewModelProvider(this, factory).get(LoginViewModel::class.java)
         signUpViewModel =
             ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
     }
@@ -153,6 +150,10 @@ lateinit var customer: Customer
                         is ApiState.Success<Customerre> -> {
                             Log.i(TAG, "onCreate: Success...{${result.data.id}")
                             CustomerID=result.data.id
+                            loginViewModel.createDraftOrder(PostDraftOrder(DraftOrderPost(arrayListOf(LineItemsPost("favourite","20.00",2))
+                                , AppliedDiscountPost(firebaseAuth.currentUser?.email,"fixed_amount","10.0","10.00",""),CustomerPost(result.data.id),true
+                            )
+                            ))
 
                         }
                         is ApiState.Loading -> {
@@ -182,4 +183,31 @@ lateinit var customer: Customer
                 }
             }
     }
+    private fun apicallforcreateDraftOrder() {
+        lifecycleScope.launch {
+
+            loginViewModel.customerList
+                .collect { result ->
+                    when (result) {
+                        is ApiState.Success<ResponseDraftOrderOb> -> {
+                            Log.i(TAG, "onCreate Login: Success..zzzzzzzzzzzzzzzzzzz.{${result.data.id}")
+
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreatezzzzzzzzzzzzzzzz: Loading...")
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(
+                                this@SignUpActivity, "There Was An Errorzzzzzzzzzzzzzzz", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+        }
+    }
+
 }

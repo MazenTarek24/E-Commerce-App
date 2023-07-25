@@ -3,7 +3,8 @@ package com.mohamednader.shoponthego.productinfo
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.example.SingleProduct
+import com.example.example.*
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
@@ -22,10 +23,43 @@ class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel(
     val product : StateFlow<ApiState<SingleProduct>>
         get() = _product
 
+    private var _draft: MutableStateFlow<ApiState<List<DraftOrders>>> =
+        MutableStateFlow<ApiState<List<DraftOrders>>>(ApiState.Loading)
+    val drafts : StateFlow<ApiState<List<DraftOrders>>>
+        get() = _draft
+
+
+    private var _mdraft: MutableStateFlow<ApiState<DraftOrdermo>> =
+        MutableStateFlow<ApiState<DraftOrdermo>>(ApiState.Loading)
+    val modifydraft : StateFlow<ApiState<DraftOrdermo>>
+        get() = _mdraft
 
 
 
+    fun getAllDraftsOrder(){
+        viewModelScope.launch(Dispatchers.IO){
+            Log.i(TAG, "get Drafts Orders: HomeViewModel")
+            repo.getAllDraftsOrders()
+                .catch { e -> _draft.value = ApiState.Failure(e)  }
+                .collect{
+                        data -> _draft.value = ApiState.Success(data)
 
+                }
+        }
+    }
+
+    fun modifyDraftsOrder(draftOrder: DraftOrderResponse, id: Long){
+        viewModelScope.launch(Dispatchers.IO){
+            println("is")
+            Log.i(TAG, "get Drafts Orders: HomeViewModel")
+            repo.modifyDraftforfav(draftOrder,id)
+                .catch { e -> _mdraft.value = ApiState.Failure(e)  }
+                .collect{
+                        data -> _mdraft.value = ApiState.Success(data)
+
+                }
+        }
+    }
 
     fun getProductWithIdFromNetwork(id:String){
         viewModelScope.launch(Dispatchers.IO){
