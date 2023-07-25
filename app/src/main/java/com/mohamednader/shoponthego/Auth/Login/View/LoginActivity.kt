@@ -27,6 +27,8 @@ import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 
+import com.mohamednader.shoponthego.Home.View.HomeFragment
+import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
