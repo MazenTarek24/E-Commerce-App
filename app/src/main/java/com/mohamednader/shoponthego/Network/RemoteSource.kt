@@ -36,8 +36,8 @@ interface RemoteSource {
     suspend fun getAllProductCategory(collectionId : Long , productType : String )
     : Flow<List<Product>>
 
-    suspend fun getAllProductCategoryByType( productType : String )
-            : Flow<List<Product>>
+//    suspend fun getAllProductCategoryByType( collectionId : Long,productType : String )
+//            : Flow<List<Product>>
 
 
     //Currency

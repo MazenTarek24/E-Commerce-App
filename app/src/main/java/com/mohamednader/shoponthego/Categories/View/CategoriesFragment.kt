@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Categories.View
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.mohamednader.shoponthego.BranProduct.view.BrandProductAdapter
+import com.mohamednader.shoponthego.BranProduct.view.CategoryAdapter
+import com.mohamednader.shoponthego.Cart.View.CartActivity
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoriesViewModel
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoryViewModelFactory
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
@@ -22,19 +25,24 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.databinding.ActivityCartBinding
+import com.mohamednader.shoponthego.databinding.ActivityFavActivtyBinding
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
+import com.mohamednader.shoponthego.databinding.SliderItemBinding
+import com.mohamednader.shoponthego.fav.favActivty
+import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
+class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceFilterDialogFragment.PriceFilterListener  {
 
     lateinit var binding: FragmentCategoriesBinding
 
     lateinit var categoryViewModel: CategoriesViewModel
     lateinit var factory: CategoryViewModelFactory
 
-    lateinit var brandAdapter: BrandProductAdapter
-    lateinit var brandLayoutManager: LayoutManager
+    lateinit var categoryAdapter: CategoryAdapter
+    lateinit var catLayoutManager: LayoutManager
 
 
     val TAG = "CategoryResponseSuccessfully"
@@ -59,7 +67,6 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
         initRvCategory()
 
 
-        binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("All"))
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Women"))
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Men"))
         binding.catTabLayout.addTab(binding.catTabLayout.newTab().setText("Kids"))
@@ -67,26 +74,31 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
 
         binding.catTabLayout.addOnTabSelectedListener(this)
 
+
         binding.accessoriesTxt.setOnClickListener {
             displayProductType("ACCESSORIES")
+            showPriceFilterDialog()
         }
 
         binding.shoesTxt.setOnClickListener {
             displayProductType("SHOES")
+            showPriceFilterDialog()
         }
 
         binding.tshirtTxt.setOnClickListener {
             displayProductType("T-SHIRTS")
+            showPriceFilterDialog()
         }
 
-        displayProductType("ACCESSORIES")
+        setCategoryWomen()
+
+        Navigation()
 
     }
 
     private fun displayProductType(productType: String) {
-        brandAdapter.deleteProductBrand()
+        categoryAdapter.deleteProductBrand()
         getAllCategory(categoryId,productType)
-        getAllProduct(productType)
     }
 
 
@@ -102,46 +114,6 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
 
     }
 
-
-    private fun getAllProduct(productType: String? = null)
-    {
-        lifecycleScope.launch(Dispatchers.Main) {
-            categoryViewModel.productList.collect{result->
-                when(result)
-                {
-                    is ApiState.Success -> {
-                        if (result.data.isNotEmpty()) {
-                            Log.i(TAG,
-                                "onCreateProduct: SuccessFetchProduct...{${result.data[0].title}}")
-
-                            // If a productType is specified, filter the data accordingly
-                            val filteredProduct = if (!productType.isNullOrBlank()) {
-                                result.data.filter { it.productType == productType }
-                            } else {
-                                result.data
-                            }
-
-                            brandAdapter.submitList(filteredProduct)
-
-                        }else{
-                            Log.i(TAG,
-                                "onCreateProduct: ListProductIsEmpty")
-                        }
-                    }
-                    is ApiState.Loading -> {
-                        Log.i(TAG, "onCreate: LoadingWhenFetchingProducts...")
-                    }
-                    is ApiState.Failure -> {
-                        Toast.makeText(requireContext(),
-                            "There Was An Error when fetching Products", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-        categoryViewModel.getAllProductInCategory(productType!!)
-
-    }
-
     private fun getAllCategory(collectionId : Long , product_type : String)
     {
         lifecycleScope.launch(Dispatchers.Main) {
@@ -152,18 +124,25 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
                         if (result.data.isNotEmpty()) {
                             Log.i(TAG,
                                 "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}")
+                            binding.rvCategory.visibility = View.VISIBLE
+                            binding.imgNoProduct.visibility = View.GONE
+
                             val filterdProduct = if (!product_type.isNullOrBlank())
                             {
                                 result.data.filter { it.productType == product_type }
                             }else{
                                 result.data
                             }
-                            brandAdapter.submitList(filterdProduct)
+                            categoryAdapter.submitList(filterdProduct)
 
                         }else{
+                            binding.rvCategory.visibility = View.GONE
+
+                            binding.imgNoProduct.visibility = View.VISIBLE
                             Log.i(TAG,
                                 "onCreateCategory: ListCategoryIsEmpty")
                         }
+
                     }
                     is ApiState.Loading -> {
                         Log.i(TAG, "onCreate: LoadingWhenFetchingCategoryProducts...")
@@ -182,14 +161,14 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
     private fun setSaleCategory()
     {
         categoryId = 456248230205
-        brandAdapter.deleteProductBrand()
+        categoryAdapter.deleteProductBrand()
 
         getAllCategory(categoryId,"")
     }
     private fun setCategoryWomen()
     {
          categoryId = 456248164669
-         brandAdapter.deleteProductBrand()
+        categoryAdapter.deleteProductBrand()
 
          getAllCategory(categoryId,"",)
 
@@ -197,7 +176,7 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
     private fun setCategoryMen()
     {
        categoryId = 456248131901
-       brandAdapter.deleteProductBrand()
+        categoryAdapter.deleteProductBrand()
 
        getAllCategory(categoryId,"")
 
@@ -206,28 +185,22 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
     private fun setCategoryKids()
     {
         categoryId = 456248197437
-        brandAdapter.deleteProductBrand()
+        categoryAdapter.deleteProductBrand()
 
         getAllCategory(categoryId,"")
 
     }
 
-   private fun setAllProduct()
-    {
-        brandAdapter.deleteProductBrand()
-        getAllProduct("")
-    }
 
 
     private fun initRvCategory()
     {
-        brandLayoutManager = GridLayoutManager(context,2)
-        brandAdapter = BrandProductAdapter(){
+        catLayoutManager = GridLayoutManager(context,2)
+        categoryAdapter = CategoryAdapter()
 
-        }
         binding.rvCategory.apply {
-            adapter = brandAdapter
-            layoutManager = brandLayoutManager
+            adapter = categoryAdapter
+            layoutManager = catLayoutManager
         }
 
 
@@ -237,20 +210,17 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
         when(tab?.position)
         {
             0 -> {
-                setAllProduct()
-            }
-            1 -> {
                 setCategoryWomen()
             }
-            2 -> {
+            1 -> {
                setCategoryMen()
 
             }
-            3->{
+            2 ->{
                 setCategoryKids()
             }
 
-            4->{
+            3 ->{
                 setSaleCategory()
             }
         }
@@ -263,6 +233,58 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener  {
     override fun onTabReselected(tab: TabLayout.Tab?) {
         Log.i(TAG,"selected")
 
+    }
+
+    override fun onPriceFiltered(priceFrom: Double, priceTo: Double) {
+        filterByPrice(priceFrom , priceTo)
+    }
+
+    private fun filterByPrice(priceFrom: Double, priceTo: Double) {
+        categoryAdapter.deleteProductBrand()
+        val filteredProducts = categoryAdapter.currentList.filter { product ->
+            product.variants?.get(0)?.price!!.toDouble() in priceFrom..priceTo
+        }
+        categoryAdapter.submitList(filteredProducts)
+    }
+
+    private fun showPriceFilterDialog() {
+        val filteredTshirts = categoryAdapter.currentList.filter { product ->
+            product.productType == "T-SHIRTS"
+        }
+        val filteredAccessories = categoryAdapter.currentList.filter { product ->
+            product.productType == "ACCESSORIES"
+        }
+        val filteredShoes = categoryAdapter.currentList.filter { product ->
+            product.productType == "SHOES"
+        }
+
+        if (filteredTshirts.isEmpty() && filteredAccessories.isEmpty() && filteredShoes.isEmpty()) {
+
+        } else {
+            val priceFilterDialog = PriceFilterDialogFragment.newInstance()
+            priceFilterDialog.setTargetFragment(this, 0)
+            priceFilterDialog.show(parentFragmentManager, "PriceFilterDialog")
+        }
+    }
+
+
+    private fun Navigation()
+    {
+        binding.fav.setOnClickListener {
+            val intent = Intent(requireContext() , favActivty::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.cart.setOnClickListener {
+            val intent = Intent(requireContext() , CartActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.search.setOnClickListener {
+            val intent = Intent(requireContext() , SearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 

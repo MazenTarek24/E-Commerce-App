@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,7 +56,16 @@ class BrandProductFragment : Fragment() {
 
         initViews()
 
+        binding.backArrowImg.setOnClickListener {
+            OnBackPressed()
+        }
 
+
+    }
+
+    private fun OnBackPressed() {
+        val navController = Navigation.findNavController(requireView())
+        navController.popBackStack()
     }
 
     private fun initViews() {

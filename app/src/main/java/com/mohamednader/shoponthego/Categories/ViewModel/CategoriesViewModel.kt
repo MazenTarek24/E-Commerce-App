@@ -38,19 +38,4 @@ class CategoriesViewModel(val repository: Repository)  : ViewModel(){
                 }
             }
     }
-
-    fun getAllProductInCategory(productType: String)
-    {
-        viewModelScope.launch(Dispatchers.IO) {
-            Log.i(TAG, "getAllProductsssss: ")
-            repository.getAllProductCategoryByType(productType)
-                .catch { error->
-                    _productsList.value = ApiState.Failure(error)
-                }
-                .collect{ products ->
-                    _productsList.value = ApiState.Success(products)
-                }
-        }
-    }
-
 }

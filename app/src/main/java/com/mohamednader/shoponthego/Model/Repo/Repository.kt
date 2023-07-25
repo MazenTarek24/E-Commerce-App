@@ -97,9 +97,9 @@ return remoteSource.createCustomer(customer)   }
         return remoteSource.getAllProductCategory(collectionId , productType)
     }
 
-    override suspend fun getAllProductCategoryByType(productType: String): Flow<List<Product>> {
-        return remoteSource.getAllProductCategoryByType(productType)
-    }
+//    override suspend fun getAllProductCategoryByType(collectionId : Long,productType: String): Flow<List<Product>> {
+//        return remoteSource.getAllProductCategoryByType(collectionId,productType)
+//    }
 
 
 }

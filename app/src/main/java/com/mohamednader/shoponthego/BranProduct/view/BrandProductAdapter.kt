@@ -26,13 +26,12 @@ class BrandProductAdapter(val myListener: (id:Long)->Unit): ListAdapter<Product 
         val product = getItem(position)
         if (product != null) {
             Picasso.get().load(product.image.src).into(holder.binding.itemImg)
-            holder.binding.titleProduct.text = product.productType
-            holder.binding.customconstraint.setOnClickListener {
+            holder.binding.titleProduct.text = product.title
+            holder.binding.cardProduct.setOnClickListener {
             myListener(product.id)
             }
 
-            var price = product.variants?.getOrNull(0)?.price ?: 1.0
-            holder.binding.priceProduct.text = price.toString() + " EGP "
+            holder.binding.priceProduct.text = product.vendor
 
 
 //            holder.binding.priceProduct.text = product.vendor

@@ -1,66 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/customconstraint"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:id="@+id/card_product"
+    style="@style/ThemeOverlay.Material3.MaterialCalendar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_200sdp"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    android:padding="@dimen/_8sdp"
+    app:cardCornerRadius="@dimen/_5sdp"
+    app:strokeColor="@color/black"
+    app:strokeWidth="0.2dp">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/_150sdp"
-        android:layout_height="@dimen/_180sdp"
-        android:layout_margin="@dimen/small_margin"
-        android:layout_marginTop="@dimen/double_big_margin"
-        app:cardCornerRadius="@dimen/small_margin"
-        android:padding="@dimen/_8sdp"
-        app:cardCornerRadius="@dimen/big_margin"
-        app:cardElevation="@dimen/small_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-        app:layout_constraintTop_toTopOf="parent">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <ImageView
+            android:id="@+id/item_img"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:backgroundTint="#AAAAAA"
+            android:padding="@dimen/_8sdp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profiletest" />
+
+        <TextView
+            android:id="@+id/title_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_5sdp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:text="cairo"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="@dimen/_12sdp" />
 
-            <ImageView
-                android:id="@+id/item_img"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
-                android:backgroundTint="#AAAAAA"
-                android:padding="@dimen/_8sdp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profiletest" />
+        <TextView
+            android:id="@+id/price_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/_7sdp"
+            android:gravity="center"
+            android:text="nike"
+            android:textAllCaps="false"
+            android:textColor="#AAAAAA"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/title_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:gravity="center"
-                android:text="cairo"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/price_product"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/_7sdp"
-                android:gravity="center"
-                android:text="nike"
-                android:textAllCaps="false"
-                android:textColor="#AAAAAA"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>

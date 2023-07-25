@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Home.View
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,10 +14,12 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.gms.common.api.Api
+import com.mohamednader.shoponthego.Cart.View.CartActivity
 
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CouponAdapter
@@ -33,6 +36,8 @@ import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
+import com.mohamednader.shoponthego.fav.favActivty
+import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
@@ -71,11 +76,12 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
         initRvBrands()
         initViews()
 
+        Navigation()
     }
 
     private fun initRvBrands() {
         brandAdapter = BrandAdapter()
-        brandLayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        brandLayoutManager = GridLayoutManager(context, 2)
         binding.rvBrand.apply {
             adapter = brandAdapter
             layoutManager = brandLayoutManager
@@ -224,6 +230,25 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
             }
         }
         homeViewModel.getAllBrands()
+    }
+
+    private fun Navigation()
+    {
+        binding.fav.setOnClickListener {
+            val intent = Intent(requireContext() , favActivty::class.java)
+            startActivity(intent)
+        }
+
+
+        binding.cart.setOnClickListener {
+            val intent = Intent(requireContext() , CartActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.search.setOnClickListener {
+            val intent = Intent(requireContext() , SearchActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }
