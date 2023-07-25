@@ -13,7 +13,7 @@
         android:theme="@style/Theme.ShopOnTheGo"
         tools:targetApi="31">
         <activity
-            android:name=".fav.favActivty"
+            android:name=".fav.FavActivty"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

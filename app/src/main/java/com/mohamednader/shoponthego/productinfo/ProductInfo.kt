@@ -1,5 +1,7 @@
 package com.mohamednader.shoponthego.productinfo
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -23,11 +25,11 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
-import com.mohamednader.shoponthego.Utils.Constants.COLORS
 import com.mohamednader.shoponthego.Utils.Constants.COLORS_TYPE
 import com.mohamednader.shoponthego.Utils.Constants.SIZES_TYPE
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityProductInfoBinding
+import com.mohamednader.shoponthego.fav.FavActivty
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
 import kotlinx.coroutines.launch
 
@@ -53,6 +55,7 @@ class ProductInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.addtocart.setOnClickListener {  }
         firebaseAuth = Firebase.auth
         val intent = intent
         val productId = intent.getLongExtra("id", 0)
@@ -83,17 +86,15 @@ class ProductInfo : AppCompatActivity() {
         apicallForModifyDrafts()
 
         binding.Addtofav.setOnClickListener {
-            println("LLLLLLLLLLLLine"+lineItems?.get(0))
             val mutablelist =lineItems?.toMutableList()
-            println("LLLLLLLLLLLLinesssss"+mutablelist?.get(0))
-            println(product.title+"aaaaaaaaaaaaaaaa")
+
             mutablelist?.add(LineItems(
                 productId,
                 product.variants.get(0).id,
                 productId,
                 product.title,
                 "",
-                "",
+                product.bodyHtml,
                 "",
                 1,
                 true,
@@ -109,7 +110,6 @@ class ProductInfo : AppCompatActivity() {
                 "",
                 ""
             ))
-            println("LLLLLLLLLLLLiafffffffffffffter"+mutablelist?.get(0))
 
             viewModelProductInfo.modifyDraftsOrder(
                 DraftOrderResponse(
@@ -217,6 +217,10 @@ class ProductInfo : AppCompatActivity() {
                     }
                 }
         }
+
+
+
+
     }
 
     fun getRandomNumber(): Int {
