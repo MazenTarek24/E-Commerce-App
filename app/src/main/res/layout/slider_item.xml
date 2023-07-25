@@ -1,0 +1,72 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp"
+    >
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvPriceFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price From:" />
+
+    <SeekBar
+        android:id="@+id/sbPriceFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:progress="0"
+        android:thumbTint="@color/white"
+        android:progressTint="@color/white"
+        android:background="@drawable/custom_seekbar_thumb"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:id="@+id/etPriceFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:text="0.0"
+        android:layout_gravity="center_horizontal" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvPriceTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price To:" />
+
+    <SeekBar
+        android:id="@+id/sbPriceTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:progress="0"
+        android:background="@drawable/custom_seekbar_thumb"
+        android:thumbTint="@color/white"
+        android:progressTint="@color/white"
+        android:layout_gravity="center_horizontal" />
+
+    <EditText
+        android:id="@+id/etPriceTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:text="0.0"
+        android:layout_gravity="center_horizontal" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnApply"
+        android:layout_width="@dimen/_90sdp"
+        android:layout_height="wrap_content"
+        android:text="Apply"
+        android:textColor="#fff"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@drawable/buttonstyle"
+        app:backgroundTint="@color/black"
+        android:layout_gravity="center" />
+</LinearLayout>
+
+
