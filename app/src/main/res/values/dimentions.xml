@@ -20,4 +20,6 @@
     <dimen name="big_margin">@dimen/_18sdp</dimen>
     <dimen name="double_big_margin">@dimen/_30sdp</dimen>
 
+    <dimen name="card_elevation">@dimen/_3sdp</dimen>
+
 </resources>

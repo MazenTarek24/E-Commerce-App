@@ -105,6 +105,10 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
         }
 
 
+        binding.cart.setOnClickListener {
+            val intent = Intent(requireContext(), CartActivity::class.java)
+            startActivity(intent)
+        }
 
 
 

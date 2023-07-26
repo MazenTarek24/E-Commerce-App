@@ -88,8 +88,8 @@ class SignUpActivity : AppCompatActivity() {
         }
         progressDialog.setMessage("Account is being created...")
         progressDialog.show()
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this,
-            OnCompleteListener { task: Task<AuthResult?> ->
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, OnCompleteListener { task: Task<AuthResult?> ->
                 if (task.isSuccessful) {
                     val currentUser = firebaseAuth.currentUser
                     sendVerificationEmail()
@@ -116,7 +116,7 @@ class SignUpActivity : AppCompatActivity() {
                         .show()
 
                     val intent = Intent(this, LoginActivity::class.java).apply {
-                        putExtra("CustomerID", CustomerID)
+                        putExtra("CustomerID",CustomerID )
                     }
                     startActivity(intent)
                 } else if (password.length < 6) {
@@ -211,8 +211,7 @@ class SignUpActivity : AppCompatActivity() {
     private fun apicallforcreateDraftOrder() {
         lifecycleScope.launch {
 
-            loginViewModel.customerList
-                .collect { result ->
+            loginViewModel.customerList.collect { result ->
                     when (result) {
                         is ApiState.Success<ResponseDraftOrderOb> -> {
                             Log.i(

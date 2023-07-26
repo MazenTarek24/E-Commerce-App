@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.example.*
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
@@ -13,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel() {
@@ -23,6 +25,12 @@ class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel(
         MutableStateFlow<ApiState<SingleProduct>>(ApiState.Loading)
     val product : StateFlow<ApiState<SingleProduct>>
         get() = _product
+
+
+    private var _productObject: MutableStateFlow<ApiState<Product>> =
+        MutableStateFlow<ApiState<Product>>(ApiState.Loading)
+    val productObject : StateFlow<ApiState<Product>>
+        get() = _productObject
 
     private var _draft: MutableStateFlow<ApiState<List<DraftOrders>>> =
         MutableStateFlow<ApiState<List<DraftOrders>>>(ApiState.Loading)
@@ -41,7 +49,22 @@ class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel(
     val draftwithid : StateFlow<ApiState<DraftOrder>>
         get() = _draftWithId
 
+    private var _draftOrdersCartList: MutableStateFlow<ApiState<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>> =
+        MutableStateFlow<ApiState<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>>(ApiState.Loading)
+    val draftOrdersCartList: StateFlow<ApiState<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>>
+        get() = _draftOrdersCartList
 
+
+    private var _updatedDraftCartOrder: MutableStateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> =
+        MutableStateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>(ApiState.Loading)
+    val updatedDraftCartOrder: StateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>
+        get() = _updatedDraftCartOrder
+
+
+    private var _newDraftOrder: MutableStateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> =
+        MutableStateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>(ApiState.Loading)
+    val newDraftOrder: StateFlow<ApiState<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>
+        get() = _newDraftOrder
 
     fun getAllDraftsOrder(){
         viewModelScope.launch(Dispatchers.IO){
@@ -64,6 +87,17 @@ class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel(
                 .collect{
                         data -> _mdraft.value = ApiState.Success(data)
 
+                }
+        }
+    }
+
+    fun getProductByIdFromNetwork(productId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "getProductByIdFromNetwork:  ViewModel")
+            repo.getProductByID(productId)
+                .catch { e -> _productObject.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _productObject.value = ApiState.Success(data)
                 }
         }
     }
@@ -91,5 +125,48 @@ class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel(
                 }
         }
     }
+
+
+    //Draft Orders
+    fun getAllDraftOrdersCartFromNetwork(customerID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "getAllDraftOrdersFromNetwork: HomeViewModel")
+            repo.getAllDraftOrders()
+                .catch { e -> _draftOrdersCartList.value = ApiState.Failure(e) }
+                .map { data -> data.filter { it.customer!!.id == customerID && it.note == "cartDraft" } }
+                .collect { data ->
+                    _draftOrdersCartList.value = ApiState.Success(data)
+                }
+        }
+    }
+
+
+    fun updateDraftOrderCartOnNetwork(
+            draftOrderId: Long,
+            updatedDraftOrder: SingleDraftOrderResponse
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "updateDraftOrderOnNetwork: HomeViewModel")
+            repo.updateDraftOrder(draftOrderId, updatedDraftOrder)
+                .catch { e -> _updatedDraftCartOrder.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _updatedDraftCartOrder.value = ApiState.Success(data)
+                }
+        }
+    }
+
+    fun addDraftOrderCartOnNetwork(
+            newDraftOrder: SingleDraftOrderResponse
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "addDraftOrderOnNetwork: HomeViewModel")
+            repo.addDraftOrder(newDraftOrder)
+                .catch { e -> _newDraftOrder.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _newDraftOrder.value = ApiState.Success(data)
+                }
+        }
+    }
+
 
 }

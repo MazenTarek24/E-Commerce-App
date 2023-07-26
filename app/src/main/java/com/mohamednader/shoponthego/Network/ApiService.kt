@@ -5,7 +5,9 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRulesResponse
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ConvertCurrencyResponse
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyResponse
+import com.mohamednader.shoponthego.Model.Pojo.Customers.CustomerResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.ProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.SingleProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.BrandResponse
@@ -102,4 +104,31 @@ interface ApiService {
     @Headers("X-Shopify-Access-Token: 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")
     @GET("draft_orders/{draft_order_id}.json")
     suspend fun getDraftWithId(@Path(value = "draft_order_id")draftOrderId:Long): Response<DraftOrderResponse>
+
+
+
+    //Draft Orders
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("draft_orders.json")
+    suspend fun getAllDraftOrders(): Response<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrderResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @PUT("draft_orders/{id}.json")
+    suspend fun updateDraftOrder(@Path("id") draftOrderId: Long,@Body updatedDraftOrder: SingleDraftOrderResponse): Response<SingleDraftOrderResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @POST("draft_orders.json")
+    suspend fun addDraftOrder(@Body newDraftOrder: SingleDraftOrderResponse): Response<SingleDraftOrderResponse>
+
+
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("products/{id}.json")
+    suspend fun getProductByID(@Path("id") productId: Long): Response<SingleProductResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("customers.json")
+    suspend fun getAllCustomers(): Response<CustomerResponse>
+
+
 }

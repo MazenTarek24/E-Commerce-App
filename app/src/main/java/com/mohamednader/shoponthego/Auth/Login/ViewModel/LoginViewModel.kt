@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.example.PostDraftOrder
 import com.example.example.ResponseDraftOrderOb
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class LoginViewModel (private val repo: RepositoryInterface) : ViewModel() {
@@ -23,6 +25,12 @@ class LoginViewModel (private val repo: RepositoryInterface) : ViewModel() {
         get() = _draftorder
 
 
+    private var _customer: MutableStateFlow<ApiState<List<Customer>>> =
+        MutableStateFlow<ApiState<List<Customer>>>(ApiState.Loading)
+    val customer : StateFlow<ApiState<List<Customer>>>
+        get() = _customer
+
+
 
     fun createDraftOrder(draftOrder: PostDraftOrder){
         viewModelScope.launch(Dispatchers.IO){
@@ -33,6 +41,19 @@ class LoginViewModel (private val repo: RepositoryInterface) : ViewModel() {
                 }
         }
     }
+
+    fun getAllCustomers(email:String){
+        viewModelScope.launch(Dispatchers.IO){
+            Log.i(TAG, "getAllProductsFromNetwork: HomeViewModel")
+            repo.getAllCustomers()
+                .catch { e -> _customer.value = ApiState.Failure(e) }
+                .map { data -> data.filter { it.email == email } }
+                .collect{ data -> _customer.value = ApiState.Success(data)
+                }
+        }
+    }
+
+
 
 
 

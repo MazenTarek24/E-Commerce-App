@@ -22,177 +22,83 @@
         android:id="@+id/my_cart_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/double_big_margin"
+        android:layout_marginTop="@dimen/big_margin"
         android:text="My Cart"
-        android:textColor="@color/black"
+        android:textColor="@color/dark"
         android:textSize="@dimen/big_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/back_arrow_img"
         app:layout_constraintTop_toBottomOf="@id/back_arrow_img" />
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/item_cart_card"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cart_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_130sdp"
-        android:layout_margin="@dimen/mid_margin"
-        android:layout_marginTop="@dimen/mid_margin"
-        app:cardCornerRadius="@dimen/big_margin"
-        app:cardElevation="@dimen/small_margin"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/tiny_margin"
+        app:layout_constraintBottom_toTopOf="@id/total_price_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/my_cart_text">
+        app:layout_constraintTop_toBottomOf="@id/my_cart_text" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/small_margin">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/item_img_card"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_centerVertical="true"
-                app:cardCornerRadius="@dimen/big_margin"
-                app:cardElevation="@dimen/small_margin">
-
-                <ImageView
-                    android:id="@+id/item_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/profiletest" />
-            </androidx.cardview.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_toEndOf="@id/item_img_card"
-                android:text="Item Title"
-                android:textColor="@color/black"
-                android:textSize="@dimen/mid_text"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/item_brand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/item_title"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_toEndOf="@id/item_img_card"
-                android:text="Item Brand"
-                android:textColor="@color/gray"
-                android:textSize="@dimen/small_text" />
-
-
-            <TextView
-                android:id="@+id/item_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_toEndOf="@id/item_img_card"
-                android:text="$250.00"
-                android:textColor="@color/black"
-                android:textSize="@dimen/mid_text"
-                android:textStyle="bold" />
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
-                android:backgroundTint="@color/semi_full_transparent"
-                app:cardCornerRadius="@dimen/big_margin"
-                app:cardElevation="@dimen/small_margin">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/btn_minus"
-                        android:layout_width="@dimen/small_icons"
-                        android:layout_height="@dimen/small_icons"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/full_transparent"
-                        android:src="@drawable/ic_baseline_remove" />
-
-                    <TextView
-                        android:id="@+id/tv_quantity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|center_vertical"
-                        android:gravity="center"
-                        android:text="1"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/mid_text"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/btn_plus"
-                        android:layout_width="@dimen/small_icons"
-                        android:layout_height="@dimen/small_icons"
-                        android:layout_gravity="center_vertical"
-                        android:background="@color/full_transparent"
-                        android:src="@drawable/ic_baseline_add" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
+    <TextView
+        android:id="@+id/empty_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There is No Items"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/total_price_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_cart_text" />
 
 
     <RelativeLayout
+        android:id="@+id/total_price_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginTop="@dimen/tiny_margin"
         android:layout_marginEnd="@dimen/big_margin"
-        app:layout_constraintBottom_toTopOf="@id/check_out_btn"
-        android:layout_marginBottom="@dimen/big_margin"
-        >
+        android:layout_marginBottom="@dimen/tiny_margin"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/check_out_btn">
 
         <TextView
+            android:id="@+id/total_items_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:text="Total (3 item): "
             android:textSize="@dimen/small_text"
-            android:layout_centerVertical="true"
-            />
+            android:visibility="gone" />
 
         <TextView
+            android:id="@+id/total_items_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$500"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="@dimen/big_text"
             android:layout_alignParentEnd="true"
-            />
+            android:text="$500"
+            android:textColor="@color/dark"
+            android:textSize="@dimen/big_text"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/check_out_btn"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_50sdp"
+        android:layout_height="@dimen/_45sdp"
         android:layout_marginStart="@dimen/mid_margin"
         android:layout_marginEnd="@dimen/mid_margin"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:backgroundTint="@color/black"
+        android:layout_marginBottom="@dimen/tiny_margin"
+        android:backgroundTint="@color/dark"
         app:cardCornerRadius="@dimen/small_margin"
-        app:cardElevation="@dimen/small_margin"
+        app:cardElevation="@dimen/card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -205,7 +111,7 @@
             android:drawableEnd="@drawable/arrow_right_white"
             android:gravity="center_vertical"
             android:text="Proceed to Chekout"
-            android:textColor="@color/white"
+            android:textColor="@color/whitey"
             android:textSize="@dimen/mid_text"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

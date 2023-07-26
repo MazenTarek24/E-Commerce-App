@@ -9,6 +9,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurren
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
@@ -120,5 +121,27 @@ return remoteSource.getAllDraftsOrders()   }
 //        return remoteSource.getAllProductCategoryByType(collectionId,productType)
 //    }
 
+
+    override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
+        return remoteSource.getAllDraftOrders()
+    }
+
+    override suspend fun updateDraftOrder(
+            draftOrderId: Long, updatedDraftOrder: SingleDraftOrderResponse
+    ): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+        return remoteSource.updateDraftOrder(draftOrderId, updatedDraftOrder)
+    }
+
+    override suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+        return remoteSource.addDraftOrder(newDraftOrder)
+    }
+
+    override suspend fun getProductByID(productId: Long): Flow<Product> {
+        return remoteSource.getProductByID(productId)
+    }
+
+    override suspend fun getAllCustomers(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer>> {
+        return remoteSource.getAllCustomers()
+    }
 
 }
