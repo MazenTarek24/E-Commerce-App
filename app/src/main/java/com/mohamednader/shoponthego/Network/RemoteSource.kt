@@ -6,12 +6,14 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.Body
 
 interface RemoteSource {
 
@@ -52,8 +54,11 @@ interface RemoteSource {
     suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>
 
     suspend fun getProductByID(productId: Long): Flow<Product>
+
+    //Customers
     suspend fun getAllCustomers(): Flow<List<Customer>>
     suspend fun getCustomerByID(customerId: Long): Flow<Customer>
-
+    suspend fun updateCustomer(
+            customerId: Long,@Body updatedCustomer: SingleCustomerResponse): Flow<Customer>
 
 }

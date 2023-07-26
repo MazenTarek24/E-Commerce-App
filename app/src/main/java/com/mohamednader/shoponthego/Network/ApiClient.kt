@@ -7,6 +7,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
@@ -20,9 +21,7 @@ import okhttp3.Credentials
 
 class ApiClient : RemoteSource {
 
-
     private val TAG = "ApiClient_INFO_TAG"
-
 
     val apiService: ApiService by lazy {
         RetrofitHelper.getInstance(Constants.shopifyBaseUrl).create(ApiService::class.java)
@@ -96,10 +95,11 @@ class ApiClient : RemoteSource {
             product = flowOf(response.body()!!.product)
             Log.i(TAG, "getAllProducts: Done")
         } else {
-        return emptyFlow()
+            return emptyFlow()
             Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
         }
-        return product    }
+        return product
+    }
 
     override suspend fun getDraftWithId(id: Long): Flow<DraftOrder> {
         val response = apiService.getDraftWithId(id)
@@ -113,7 +113,8 @@ class ApiClient : RemoteSource {
             draftOrder = emptyFlow()
             Log.i(TAG, "getDraftwith id: ${response.errorBody().toString()}")
         }
-        return draftOrder       }
+        return draftOrder
+    }
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
         val response = apiService.createCustomer(customer)
@@ -126,7 +127,9 @@ class ApiClient : RemoteSource {
             return emptyFlow()
             Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
         }
-        return product     }
+        return product
+    }
+
     override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
         val response = apiService.createDraftOrder(draftorder)
         val draftOrder: Flow<ResponseDraftOrderOb>
@@ -138,22 +141,20 @@ class ApiClient : RemoteSource {
             return emptyFlow()
             Log.i(TAG, "getAllProducts: ${response.errorBody().toString()}")
         }
-        return draftOrder     }
-
-
+        return draftOrder
+    }
 
     override suspend fun getAllProductCategory(
-        collectionId: Long,
-        productType: String,
+            collectionId: Long,
+            productType: String,
     ): Flow<List<Product>> {
-         val response = apiService.getAllCategoryProduct(collectionId,productType)
-         val productCategoryList : Flow<List<Product>>
-         Log.i(TAG, "getAllCategoryProducts API-Client")
-        if (response.isSuccessful)
-        {
+        val response = apiService.getAllCategoryProduct(collectionId, productType)
+        val productCategoryList: Flow<List<Product>>
+        Log.i(TAG, "getAllCategoryProducts API-Client")
+        if (response.isSuccessful) {
             productCategoryList = flowOf(response.body()!!.products)
             Log.i(TAG, "getAllCategoryProducts: Done")
-        }else{
+        } else {
             productCategoryList = emptyFlow()
             Log.i(TAG, "getAllCategoryProducts: ${response.errorBody().toString()}")
         }
@@ -177,8 +178,8 @@ class ApiClient : RemoteSource {
 
     override suspend fun getCurrencyConvertor(from: String, to: String): Flow<List<ToCurrency>> {
         val response = apiServiceForCurrency.getCurrencyConvertor(
-            Credentials.basic(
-                Constants.currencyApiUsername, Constants.currencyApiPassword), from, to)
+                Credentials.basic(
+                        Constants.currencyApiUsername, Constants.currencyApiPassword), from, to)
         val currencyRes: Flow<List<ToCurrency>>
         Log.i(TAG, "getCurrencyConvertor API-Client")
         if (response.isSuccessful) {
@@ -195,8 +196,8 @@ class ApiClient : RemoteSource {
 
     override suspend fun getAllCurrencies(): Flow<List<CurrencyInfo>> {
         val response = apiServiceForCurrency.getAllCurrencies(
-            Credentials.basic(
-                Constants.currencyApiUsername, Constants.currencyApiPassword))
+                Credentials.basic(
+                        Constants.currencyApiUsername, Constants.currencyApiPassword))
         val currencyRes: Flow<List<CurrencyInfo>>
         Log.i(TAG, "getAllCurrencies API-Client")
         if (response.isSuccessful) {
@@ -240,10 +241,10 @@ class ApiClient : RemoteSource {
     }
 
     override suspend fun modifyDraftforfav(
-        draftorder: DraftOrderResponse,
-        id: Long
+            draftorder: DraftOrderResponse,
+            id: Long
     ): Flow<DraftOrdermo> {
-        val response = apiService.modifyDraftOrder(id,draftorder)
+        val response = apiService.modifyDraftOrder(id, draftorder)
         val draftOrder: Flow<DraftOrdermo>
         Log.i(TAG, "getAllBrandsProducts API-Client")
         if (response.isSuccessful) {
@@ -254,7 +255,8 @@ class ApiClient : RemoteSource {
             draftOrder = emptyFlow()
             Log.i(TAG, "getAllBrandsProducts: ${response.errorBody().toString()}")
         }
-        return draftOrder    }
+        return draftOrder
+    }
 
     override suspend fun getAllCustomer(): Flow<List<Customers>> {
         val response = apiService.getAllCustomer()
@@ -285,9 +287,6 @@ class ApiClient : RemoteSource {
         }
         return draftsOrders
     }
-
-
-
 
     //Draft Orders
     override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
@@ -354,7 +353,6 @@ class ApiClient : RemoteSource {
         return customersList
     }
 
-
     override suspend fun getCustomerByID(customerId: Long): Flow<Customer> {
         val response = apiService.getCustomerByID(customerId)
         val customer: Flow<Customer>
@@ -369,6 +367,21 @@ class ApiClient : RemoteSource {
         return customer
     }
 
+    override suspend fun updateCustomer(customerId: Long,
+                                        updatedCustomer: SingleCustomerResponse): Flow<Customer> {
+        val response = apiService.updateCustomer(customerId, updatedCustomer)
+        val customer: Flow<Customer>
+        Log.i(TAG, "updateCustomer: API-Client")
+        if (response.isSuccessful) {
+            customer = flowOf(response.body()!!.customer)
+            Log.i(TAG, "updateCustomer: Done")
+        } else {
+            customer = emptyFlow()
+            Log.i(TAG, "updateCustomer: ${response.errorBody().toString()}")
+        }
+        return customer
+
+    }
 
     override suspend fun getProductByID(productId: Long): Flow<Product> {
         val response = apiService.getProductByID(productId)

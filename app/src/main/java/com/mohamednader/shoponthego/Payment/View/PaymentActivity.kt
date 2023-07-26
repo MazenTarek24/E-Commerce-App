@@ -6,21 +6,29 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Payment.ViewModel.PaymentViewModel
+import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
+import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityPaymentBinding
+import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class PaymentActivity : AppCompatActivity() {
+class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
     val TAG = "PaymentActivity_INFO_TAG"
 
@@ -30,9 +38,17 @@ class PaymentActivity : AppCompatActivity() {
     private lateinit var paymentViewModel: PaymentViewModel
     private lateinit var factory: GenericViewModelFactory
 
+    //Addresses Bottom Sheet
+    lateinit var addressBottomSheetBinding: BottomSheetDialogAddressesBinding
+    lateinit var addressBottomSheetDialog: BottomSheetDialog
+    private lateinit var addressAdapter: AddressAdapter
+    private lateinit var addressLinearLayoutManager: LinearLayoutManager
+
+
     //Needed Variables
     lateinit var draftOrder: DraftOrder
     lateinit var customer: Customer
+    lateinit var addressesList: List<Address>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +68,19 @@ class PaymentActivity : AppCompatActivity() {
                 ConcreteSharedPrefsSource(this@PaymentActivity)))
         paymentViewModel = ViewModelProvider(this, factory).get(PaymentViewModel::class.java)
 
+
+        //Address Bottom Sheet
+        addressAdapter = AddressAdapter(this@PaymentActivity, this)
+        addressLinearLayoutManager =
+            LinearLayoutManager(this@PaymentActivity, RecyclerView.VERTICAL, false)
+        addressBottomSheetBinding = BottomSheetDialogAddressesBinding.inflate(layoutInflater)
+        addressBottomSheetDialog = BottomSheetDialog(this@PaymentActivity)
+        addressBottomSheetDialog.setContentView(addressBottomSheetBinding.root)
+        addressBottomSheetBinding.addressesRecyclerView.apply {
+            adapter = addressAdapter
+            layoutManager = addressLinearLayoutManager
+        }
+
         binding.backArrowImg.setOnClickListener {
             onBackPressed()
         }
@@ -62,7 +91,7 @@ class PaymentActivity : AppCompatActivity() {
 
 
         binding.changeAddressBtn.setOnClickListener {
-
+            addressBottomSheetDialog.show()
         }
 
 
@@ -154,6 +183,7 @@ class PaymentActivity : AppCompatActivity() {
                             binding.cityText.text = customer.defaultAddress?.city
                             binding.countryText.text = customer.defaultAddress?.country
                             binding.phoneText.text = customer.defaultAddress?.phone
+                            binding.nameText.text = "${customer.defaultAddress?.firstName} + ${customer.defaultAddress?.lastName}"
 
 
                         }
@@ -174,5 +204,17 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    override fun onAddressClickListener(addressId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMakeDefaultClickListener(addressId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDeleteClickListener(addressId: Long) {
+        TODO("Not yet implemented")
     }
 }

@@ -127,14 +127,19 @@ interface ApiService {
     @GET("products/{id}.json")
     suspend fun getProductByID(@Path("id") productId: Long): Response<SingleProductResponse>
 
+
+    //Customers
     @Headers("X-Shopify-Access-Token: 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")
     @GET("customers.json")
     suspend fun getAllCustomers(): Response<CustomerResponse>
 
-
     @Headers("X-Shopify-Access-Token: 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")
     @GET("customers/{id}.json")
     suspend fun getCustomerByID(@Path("id") customerId: Long): Response<SingleCustomerResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @PUT("customers/{id}.json")
+    suspend fun updateCustomer(@Path("id") customerId: Long,@Body updatedCustomer: SingleCustomerResponse ): Response<SingleCustomerResponse>
 
 
 }

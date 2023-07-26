@@ -6,9 +6,10 @@
     android:layout_margin="@dimen/small_margin">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/address_card_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_background"
+        android:backgroundTint="@color/lite_gray"
         app:cardCornerRadius="@dimen/big_margin"
         app:cardElevation="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,6 +102,34 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/name_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name: "
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mid_text"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/name_tv"
+                    android:text="555-625-1199"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mid_text" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:orientation="horizontal">
+
+
+                <TextView
                     android:id="@+id/ph_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,19 +146,39 @@
                     android:text="555-625-1199"
                     android:textColor="@color/black"
                     android:textSize="@dimen/mid_text" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/change_address_btn"
+                    android:id="@+id/make_default_address_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/tiny_margin"
                     android:layout_marginEnd="@dimen/tiny_margin"
-                    android:layout_marginBottom="-15dp"
                     android:backgroundTint="@color/black"
-                    android:text="Change" />
+                    android:text="Make Default" />
 
+
+                <Button
+                    android:id="@+id/delete_address_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/tiny_margin"
+                    android:layout_marginEnd="@dimen/tiny_margin"
+                    android:backgroundTint="@color/main_color"
+                    android:text="delete" />
             </RelativeLayout>
+
 
         </LinearLayout>
 

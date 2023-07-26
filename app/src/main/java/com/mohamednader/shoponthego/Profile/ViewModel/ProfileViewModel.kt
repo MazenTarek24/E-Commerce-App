@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
@@ -23,33 +24,38 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
     private var _customer: MutableStateFlow<ApiState<Customer>> =
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
-    val customer : StateFlow<ApiState<Customer>>
+    val customer: StateFlow<ApiState<Customer>>
         get() = _customer
-
-
 
     fun getAllCurrenciesFromNetwork() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getCurrencyConvertor:  ViewModel")
-            repo.getAllCurrencies()
-                .catch { e -> _currencyRes.value = ApiState.Failure(e) }
+            repo.getAllCurrencies().catch { e -> _currencyRes.value = ApiState.Failure(e) }
                 .collect { data ->
                     _currencyRes.value = ApiState.Success(data)
                 }
         }
     }
 
-
-    fun getCustomerByID(customerID: Long){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getCustomerByIdFromNetwork(customerID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllProductsFromNetwork: HomeViewModel")
-            repo.getCustomerByID(customerID)
-                .catch { e -> _customer.value = ApiState.Failure(e) }
-                .collect{ data -> _customer.value = ApiState.Success(data)
+            repo.getCustomerByID(customerID).catch { e -> _customer.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _customer.value = ApiState.Success(data)
                 }
         }
     }
 
+    fun updateCustomerOnNetwork(customerId: Long, updatedCustomer: SingleCustomerResponse) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "updateCustomerOnNetwork: HomeViewModel")
+            repo.updateCustomer(customerId, updatedCustomer)
+                .catch { e -> _customer.value = ApiState.Failure(e) }.collect { data ->
+                    _customer.value = ApiState.Success(data)
+                }
+        }
+    }
 
     //To retrieve the all Currencies exchange Rate
     /*

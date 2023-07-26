@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.Profile.View.Addresses
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -26,10 +27,34 @@ class AddressAdapter(private val context: Context, private val listener: OnAddre
         binding.cityText.text = address.city
         binding.countryText.text = address.country
         binding.phoneText.text = address.phone
+        binding.nameText.text = "${address.firstName} + ${address.lastName}"
 
-//        holder.binding.root.setOnClickListener {
-//            listener.onAddressClickListener(currency.iso)
-//        }
+        if(address.province == "Profile"){
+            binding.makeDefaultAddressBtn.visibility = View.VISIBLE
+            binding.deleteAddressBtn.visibility = View.VISIBLE
+
+            if (address.default == true){
+                binding.makeDefaultAddressBtn.visibility = View.GONE
+            }
+
+
+        }else if(address.province == "Payment"){
+            binding.makeDefaultAddressBtn.visibility = View.GONE
+            binding.makeDefaultAddressBtn.visibility = View.GONE
+
+            binding.addressCardView.setOnClickListener {
+                listener.onAddressClickListener(address.id!!)
+            }
+
+        }
+        binding.makeDefaultAddressBtn.setOnClickListener{
+            listener.onMakeDefaultClickListener(address.id!!)
+        }
+
+        binding.deleteAddressBtn.setOnClickListener {
+            listener.onDeleteClickListener(address.id!!)
+        }
+
     }
 }
 
