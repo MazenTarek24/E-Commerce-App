@@ -38,4 +38,5 @@
     <string name="reviews">Reviews</string>
     <string name="favorite">Favorite</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="delete">Delete</string>
 </resources>

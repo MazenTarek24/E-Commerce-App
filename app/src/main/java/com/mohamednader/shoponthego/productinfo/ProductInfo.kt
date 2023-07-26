@@ -55,7 +55,8 @@ class ProductInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.addtocart.setOnClickListener {  }
+        binding.addtocart.setOnClickListener { val intent = Intent(this, FavActivty::class.java)
+            startActivity(intent) }
         firebaseAuth = Firebase.auth
         val intent = intent
         val productId = intent.getLongExtra("id", 0)
@@ -87,7 +88,6 @@ class ProductInfo : AppCompatActivity() {
 
         binding.Addtofav.setOnClickListener {
             val mutablelist =lineItems?.toMutableList()
-
             mutablelist?.add(LineItems(
                 productId,
                 product.variants.get(0).id,
@@ -100,7 +100,7 @@ class ProductInfo : AppCompatActivity() {
                 true,
                 true,
                 true,
-                "",
+                product.images.get(1).src,
                 1,
                 listOf(TaxLine("", "")),
                 AppliedDiscount("", "", "", "", ""),
@@ -250,7 +250,6 @@ class ProductInfo : AppCompatActivity() {
             viewModelProductInfo.modifydraft.collect { result ->
                     when (result) {
                         is ApiState.Success<DraftOrdermo> -> {
-                            println("AAAAAAAAAAAAAAa" + result.data.id)
 
                         }
                         is ApiState.Loading -> {
