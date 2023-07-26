@@ -20,7 +20,6 @@ import com.mohamednader.shoponthego.Order.view.viewmodel.OrderViewModelFactory
 
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.databinding.ActivityOrderBinding
-import com.mohamednader.shoponthego.orderdetails.view.OrderDetailsActivity
 import kotlinx.coroutines.launch
 
 class OrderActivity : AppCompatActivity()  {
