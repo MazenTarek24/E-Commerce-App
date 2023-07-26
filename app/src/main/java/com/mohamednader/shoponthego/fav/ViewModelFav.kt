@@ -1,12 +1,13 @@
-package com.mohamednader.shoponthego.productinfo
+package com.mohamednader.shoponthego.fav
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.example.*
+import com.example.example.DraftOrdermo
+import com.example.example.DraftOrders
+import com.example.example.SingleProduct
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
-import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class ViewModelProductInfo  (private val repo: RepositoryInterface) : ViewModel() {
+class ViewModelFav (private val repo: RepositoryInterface) : ViewModel() {
 
     private val TAG = "HomeViewModel_INFO_TAG"
 
