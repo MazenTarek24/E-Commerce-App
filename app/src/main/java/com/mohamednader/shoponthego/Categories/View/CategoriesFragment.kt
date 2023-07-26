@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.material.tabs.TabLayout
-import com.mohamednader.shoponthego.BranProduct.view.BrandProductAdapter
 import com.mohamednader.shoponthego.Cart.View.CartActivity
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoriesViewModel
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoryViewModelFactory
@@ -23,7 +22,6 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
-import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers

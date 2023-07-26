@@ -10,15 +10,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import com.google.android.gms.common.api.Api
 import com.mohamednader.shoponthego.Cart.View.CartActivity
 
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
@@ -36,9 +32,7 @@ import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
-import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.search.SearchActivity
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
