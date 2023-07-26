@@ -11,12 +11,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.mohamednader.shoponthego.BranProduct.view.BrandProductAdapter
-import com.mohamednader.shoponthego.BranProduct.view.CategoryAdapter
 import com.mohamednader.shoponthego.Cart.View.CartActivity
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoriesViewModel
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoryViewModelFactory
@@ -25,11 +22,9 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
-import com.mohamednader.shoponthego.databinding.ActivityCartBinding
-import com.mohamednader.shoponthego.databinding.ActivityFavActivtyBinding
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
-import com.mohamednader.shoponthego.databinding.SliderItemBinding
 import com.mohamednader.shoponthego.fav.favActivty
+import com.mohamednader.shoponthego.productinfo.ProductInfo
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -77,20 +72,24 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
 
         binding.accessoriesTxt.setOnClickListener {
             displayProductType("ACCESSORIES")
-            showPriceFilterDialog()
+//            showPriceFilterDialog()
         }
 
         binding.shoesTxt.setOnClickListener {
             displayProductType("SHOES")
-            showPriceFilterDialog()
+//            showPriceFilterDialog()
         }
 
         binding.tshirtTxt.setOnClickListener {
             displayProductType("T-SHIRTS")
-            showPriceFilterDialog()
+//            showPriceFilterDialog()
         }
 
         setCategoryWomen()
+
+        binding.filterPrice.setOnClickListener {
+            showPriceFilterDialog()
+        }
 
         Navigation()
 
@@ -195,9 +194,14 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
 
     private fun initRvCategory()
     {
-        catLayoutManager = GridLayoutManager(context,2)
-        categoryAdapter = CategoryAdapter()
+        categoryAdapter = CategoryAdapter(){
+            val intent = Intent(context, ProductInfo::class.java)
+            intent.putExtra("id",it )
+            startActivity(intent)
 
+        }
+
+        catLayoutManager = GridLayoutManager(context,2)
         binding.rvCategory.apply {
             adapter = categoryAdapter
             layoutManager = catLayoutManager
