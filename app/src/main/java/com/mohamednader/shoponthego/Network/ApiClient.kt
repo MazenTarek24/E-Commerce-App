@@ -12,9 +12,13 @@ import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Model.order.LineItem
+import com.mohamednader.shoponthego.Model.order.Order
+import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.Credentials
 
@@ -160,6 +164,8 @@ class ApiClient : RemoteSource {
         return productCategoryList
     }
 
+
+
 //    override suspend fun getAllProductCategoryByType(productType: String): Flow<List<Product>> {
 //        val response = apiService.getAllCategoryProductByType(productType)
 //        val productCategoryList : Flow<List<Product>>
@@ -285,6 +291,23 @@ class ApiClient : RemoteSource {
         }
         return draftsOrders
     }
+
+
+    override suspend fun getAllOrders(): Flow<List<OrderX>> {
+        val response = apiService.getAllOrders()
+        val orders : Flow<List<OrderX>>
+        Log.i(TAG, "getAllOrders API-Client")
+        if (response.isSuccessful)
+        {
+            orders = flowOf(response.body()!!.orders)
+        }else{
+            orders = emptyFlow()
+            Log.i(TAG, "getAllOrders: ${response.errorBody().toString()}")
+        }
+        return orders
+
+    }
+
 
 
 

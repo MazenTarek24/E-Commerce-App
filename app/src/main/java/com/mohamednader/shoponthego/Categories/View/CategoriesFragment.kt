@@ -27,8 +27,7 @@ import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
-    PriceFilterDialogFragment.PriceFilterListener {
+class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceFilterDialogFragment.PriceFilterListener  {
 
     lateinit var binding: FragmentCategoriesBinding
 
@@ -41,11 +40,12 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
 
     val TAG = "CategoryResponseSuccessfully"
 
-    var categoryId: Long = 0
+     var categoryId: Long = 0
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentCategoriesBinding.inflate(layoutInflater, container, false)
@@ -95,50 +95,49 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
 
     private fun displayProductType(productType: String) {
         categoryAdapter.deleteProductBrand()
-        getAllCategory(categoryId, productType)
+        getAllCategory(categoryId,productType)
     }
 
 
     private fun initViews() {
 
-        factory = CategoryViewModelFactory(
-            Repository.getInstance(
-                ApiClient.getInstance(),
-                ConcreteLocalSource(requireContext()),
-                ConcreteSharedPrefsSource(requireContext())
-            )
-        )
-        categoryViewModel = ViewModelProvider(this, factory).get(CategoriesViewModel::class.java)
+        factory = CategoryViewModelFactory(Repository.getInstance(
+            ApiClient.getInstance(),
+            ConcreteLocalSource(requireContext()),
+            ConcreteSharedPrefsSource(requireContext())
+        ))
+        categoryViewModel = ViewModelProvider(this, factory)
+            .get(CategoriesViewModel::class.java)
 
     }
 
-    private fun getAllCategory(collectionId: Long, product_type: String) {
+    private fun getAllCategory(collectionId : Long , product_type : String)
+    {
         lifecycleScope.launch(Dispatchers.Main) {
-            categoryViewModel.productCategory.collect { result ->
-                when (result) {
+            categoryViewModel.productCategory.collect{result->
+                when(result)
+                {
                     is ApiState.Success -> {
                         if (result.data.isNotEmpty()) {
-                            Log.i(
-                                TAG,
-                                "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}"
-                            )
+                            Log.i(TAG,
+                                "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}")
                             binding.rvCategory.visibility = View.VISIBLE
                             binding.imgNoProduct.visibility = View.GONE
 
-                            val filterdProduct = if (!product_type.isNullOrBlank()) {
+                            val filterdProduct = if (!product_type.isNullOrBlank())
+                            {
                                 result.data.filter { it.productType == product_type }
-                            } else {
+                            }else{
                                 result.data
                             }
                             categoryAdapter.submitList(filterdProduct)
 
-                        } else {
+                        }else{
                             binding.rvCategory.visibility = View.GONE
 
                             binding.imgNoProduct.visibility = View.VISIBLE
-                            Log.i(
-                                TAG, "onCreateCategory: ListCategoryIsEmpty"
-                            )
+                            Log.i(TAG,
+                                "onCreateCategory: ListCategoryIsEmpty")
                         }
 
                     }
@@ -146,60 +145,61 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
                         Log.i(TAG, "onCreate: LoadingWhenFetchingCategoryProducts...")
                     }
                     is ApiState.Failure -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "There Was An Error when fetching Category Products",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(requireContext(),
+                            "There Was An Error when fetching Category Products", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
-        categoryViewModel.getAllProductCategory(collectionId, product_type)
+       categoryViewModel.getAllProductCategory(collectionId,product_type)
     }
 
 
-    private fun setSaleCategory() {
+    private fun setSaleCategory()
+    {
         categoryId = 456248230205
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId, "")
+        getAllCategory(categoryId,"")
     }
-
-    private fun setCategoryWomen() {
-        categoryId = 456248164669
+    private fun setCategoryWomen()
+    {
+         categoryId = 456248164669
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId, "")
+         getAllCategory(categoryId,"",)
 
     }
-
-    private fun setCategoryMen() {
-        categoryId = 456248131901
+    private fun setCategoryMen()
+    {
+       categoryId = 456248131901
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId, "")
+       getAllCategory(categoryId,"")
 
     }
 
-    private fun setCategoryKids() {
+    private fun setCategoryKids()
+    {
         categoryId = 456248197437
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId, "")
+        getAllCategory(categoryId,"")
 
     }
 
 
-    private fun initRvCategory() {
-        categoryAdapter = CategoryAdapter() {
+
+    private fun initRvCategory()
+    {
+        categoryAdapter = CategoryAdapter(){
             val intent = Intent(context, ProductInfo::class.java)
-            intent.putExtra("id", it)
+            intent.putExtra("id",it )
             startActivity(intent)
 
         }
 
-        catLayoutManager = GridLayoutManager(context, 2)
+        catLayoutManager = GridLayoutManager(context,2)
         binding.rvCategory.apply {
             adapter = categoryAdapter
             layoutManager = catLayoutManager
@@ -209,35 +209,36 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-        when (tab?.position) {
+        when(tab?.position)
+        {
             0 -> {
                 setCategoryWomen()
             }
             1 -> {
-                setCategoryMen()
+               setCategoryMen()
 
             }
-            2 -> {
+            2 ->{
                 setCategoryKids()
             }
 
-            3 -> {
+            3 ->{
                 setSaleCategory()
             }
         }
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
-        Log.i(TAG, "selected")
+       Log.i(TAG,"selected")
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {
-        Log.i(TAG, "selected")
+        Log.i(TAG,"selected")
 
     }
 
     override fun onPriceFiltered(priceFrom: Double, priceTo: Double) {
-        filterByPrice(priceFrom, priceTo)
+        filterByPrice(priceFrom , priceTo)
     }
 
     private fun filterByPrice(priceFrom: Double, priceTo: Double) {

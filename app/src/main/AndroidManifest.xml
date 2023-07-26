@@ -16,6 +16,20 @@
         android:theme="@style/Theme.ShopOnTheGo"
         tools:targetApi="31">
         <activity
+            android:name=".orderdetails.view.OrderDetailsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Order.view.OrderActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".search.SearchActivity"
             android:exported="false"
             android:label="@string/title_activity_search"
@@ -32,7 +46,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Order.OrderActivity"
+            android:name=".Order.view.OrderActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -75,10 +89,16 @@
         </activity>
         <activity
             android:name=".MainHome.View.MainHomeActivity"
-            android:exported="false">
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Auth.Login.View.LoginActivity"
@@ -95,16 +115,8 @@
                 android:value="" />
         </activity>
         <activity
-
             android:name=".Auth.SignUp.View.SignUpActivity"
-
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

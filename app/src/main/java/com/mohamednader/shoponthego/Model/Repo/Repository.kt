@@ -13,6 +13,7 @@ import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderRespo
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
+import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Network.RemoteSource
 import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
 import kotlinx.coroutines.flow.Flow
@@ -92,13 +93,20 @@ return remoteSource.createDraftforfav(draftorder)   }
         return remoteSource.getAllCurrencies()
     }
 
+    override suspend fun getAllOrders(): Flow<List<OrderX>> {
+        return remoteSource.getAllOrders()
+    }
+
+
+
     override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
         Log.i(TAG, "getProductWithId: REPO")
         return remoteSource.getProductWithId(id)
     }
 
     override suspend fun getDraftWithId(id: Long): Flow<DraftOrder> {
-return remoteSource.getDraftWithId(id)   }
+     return remoteSource.getDraftWithId(id)
+    }
 
     override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
 return remoteSource.createCustomer(customer)   }
@@ -107,7 +115,7 @@ return remoteSource.createCustomer(customer)   }
 return remoteSource.getAllCustomer()   }
 
     override suspend fun getAllDraftsOrders(): Flow<List<DraftOrders>> {
-return remoteSource.getAllDraftsOrders()   }
+    return remoteSource.getAllDraftsOrders()   }
 
     override suspend fun getAllProductCategory(
         collectionId: Long,

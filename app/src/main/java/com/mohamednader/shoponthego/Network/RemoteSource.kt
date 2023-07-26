@@ -11,6 +11,8 @@ import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
+import com.mohamednader.shoponthego.Model.order.Order
+import com.mohamednader.shoponthego.Model.order.OrderX
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteSource {
@@ -41,10 +43,13 @@ interface RemoteSource {
 //            : Flow<List<Product>>
 
 
+
+
     //Currency
     suspend fun getCurrencyConvertor(from: String , to: String): Flow<List<ToCurrency>>
     suspend fun getAllCurrencies(): Flow<List<CurrencyInfo>>
 
+    suspend fun getAllOrders() : Flow<List<OrderX>>
     //Draft Orders
     suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>
     suspend fun updateDraftOrder(

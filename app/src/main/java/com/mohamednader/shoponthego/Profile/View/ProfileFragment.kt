@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Profile.View
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,6 +30,9 @@ import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogCurrenciesBinding
+import androidx.navigation.Navigation
+import com.mohamednader.shoponthego.Order.view.OrderActivity
+import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
@@ -113,6 +117,12 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             currencyBottomSheetDialog.show()
         }
 
+        binding.moreText.setOnClickListener {
+            val intent = Intent(requireContext() , OrderActivity::class.java)
+            startActivity(intent)
+        }
+
+    }
 
         binding.address.setOnClickListener {
             addressAdapter.submitList(addressesList)
