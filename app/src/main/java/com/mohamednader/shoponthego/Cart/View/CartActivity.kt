@@ -23,6 +23,7 @@ import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderRespo
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
+import com.mohamednader.shoponthego.Payment.View.PaymentActivity
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
@@ -72,6 +73,11 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
         binding.backArrowImg.setOnClickListener{
             onBackPressed()
+        }
+
+        binding.checkOutBtn.setOnClickListener {
+            val intent: Intent = Intent(this@CartActivity, PaymentActivity::class.java)
+            startActivity(intent)
         }
 
         apiRequests()

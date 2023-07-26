@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Model.Pojo.customer
 import com.example.example.Addresses
 import com.example.example.AddressesCustomers
 import com.google.gson.annotations.SerializedName
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 
 data class Customer (
 

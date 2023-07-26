@@ -53,6 +53,7 @@ interface RemoteSource {
 
     suspend fun getProductByID(productId: Long): Flow<Product>
     suspend fun getAllCustomers(): Flow<List<Customer>>
+    suspend fun getCustomerByID(customerId: Long): Flow<Customer>
 
 
 }

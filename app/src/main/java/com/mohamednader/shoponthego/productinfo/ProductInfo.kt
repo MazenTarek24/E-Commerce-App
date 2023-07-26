@@ -108,7 +108,7 @@ class ProductInfo : AppCompatActivity() {
                     listOf(TaxLine("", "")),
                     AppliedDiscount("", "", "", "", ""),
                     product.title,
-                    null,
+                    listOf(LineItemProperties("img_src", product.image?.src!!)),
                     true,
                     "",
                     ""))
