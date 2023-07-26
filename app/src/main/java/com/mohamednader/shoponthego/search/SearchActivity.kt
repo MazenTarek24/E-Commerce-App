@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,6 +28,7 @@ import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySearchBinding
+import com.mohamednader.shoponthego.productinfo.ProductInfo
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
@@ -53,7 +55,11 @@ class SearchActivity : AppCompatActivity() {
         textView.addTextChangedListener(textWatcher)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setHasFixedSize(true)
-         adapter = MyListAdapter(this){}
+         adapter = MyListAdapter(this){
+             val intent = Intent(this, ProductInfo::class.java)
+             intent.putExtra("id",it.id )
+             startActivity(intent)
+         }
         recyclerView.adapter = adapter
         homeViewModel.getAllProductsFromNetwork()
         lifecycleScope.launch {
