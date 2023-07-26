@@ -56,10 +56,8 @@ class FavActivty : AppCompatActivity() {
 
         firebaseAuth = Firebase.auth
         recyclerAdapter = FavRecycleAdapter(this) {
-            listItems?.removeAt(it)
-            if (it == 0) {
-                recyclerAdapter.submitList(listOf())
-            } else recyclerAdapter.submitList(listItems)
+            listItems?.remove(it)
+             recyclerAdapter.submitList(listItems)
 
             viewModelProductInfo.modifyDraftsOrder(
                 DraftOrderResponse(

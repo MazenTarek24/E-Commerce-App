@@ -15,7 +15,7 @@ import com.mohamednader.shoponthego.databinding.FavitemBinding
 
 
 class FavRecycleAdapter(
-    private val context: Context, val delete: (Int)->Unit
+    private val context: Context, val delete: (LineItems)->Unit
 ) : ListAdapter<LineItems, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
 
 
@@ -45,7 +45,7 @@ class FavRecycleAdapter(
             holder.binding.productDescription.text = currentItem.sku
             holder.binding.productTitle.text = currentItem.title
             holder.binding.delete.setOnClickListener {
-                delete(position)
+                delete(currentItem)
             }
         }
     }
