@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.R
+import com.mohamednader.shoponthego.databinding.FavitemBinding
 
 class MyListAdapter (
-    private val context: Context, val delete: (Int)->Unit
+    private val context: Context, val Open: (Product)->Unit
 ): ListAdapter<Product, MyListAdapter.MyViewHolder>(StringDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -24,14 +26,18 @@ class MyListAdapter (
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item.title)
+
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemText: TextView = itemView.findViewById(R.id.itemText)
+        private val layout: ConstraintLayout = itemView.findViewById(R.id.layout)
+
 
         fun bind(item: String) {
             itemText.text = item
         }
+
     }
 
     private class StringDiffCallback : DiffUtil.ItemCallback<Product>() {
