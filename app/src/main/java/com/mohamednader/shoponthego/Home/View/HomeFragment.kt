@@ -32,6 +32,7 @@ import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
+import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
