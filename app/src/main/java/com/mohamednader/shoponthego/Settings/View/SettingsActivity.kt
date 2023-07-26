@@ -80,6 +80,7 @@ class SettingsActivity : AppCompatActivity(),OnCurrencyClickListener{
 
 
 
+        binding
 
 
 

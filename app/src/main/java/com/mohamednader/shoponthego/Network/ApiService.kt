@@ -10,6 +10,8 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.ProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.SingleProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.BrandResponse
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
+import com.mohamednader.shoponthego.Model.order.Order
+import com.mohamednader.shoponthego.Model.order.OrderX
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -102,4 +104,11 @@ interface ApiService {
     @Headers("X-Shopify-Access-Token: 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")
     @GET("draft_orders/{draft_order_id}.json")
     suspend fun getDraftWithId(@Path(value = "draft_order_id")draftOrderId:Long): Response<DraftOrderResponse>
+
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("orders.json")
+    suspend fun getAllOrders(): Response<Order>
+
+
 }

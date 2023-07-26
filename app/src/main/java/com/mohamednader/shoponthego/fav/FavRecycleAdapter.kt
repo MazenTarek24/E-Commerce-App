@@ -36,9 +36,12 @@ class FavRecycleAdapter(
 
         holder.binding.productDescription.text = currentItem.sku
         holder.binding.productTitle.text = currentItem.title
-    holder.binding.delete.setOnClickListener {
+
+
+       holder.binding.delete.setOnClickListener {
+
         delete(position)
-    }
+       }
 
     }
 

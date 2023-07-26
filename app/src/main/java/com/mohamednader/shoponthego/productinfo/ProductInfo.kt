@@ -59,7 +59,9 @@ class ProductInfo : AppCompatActivity() {
             startActivity(intent) }
         firebaseAuth = Firebase.auth
         val intent = intent
+
         val productId = intent.getLongExtra("id", 0)
+
 
         colorsAdapter = ColorsAndSizesAdapter(COLORS_TYPE)
         sizesAdapter = ColorsAndSizesAdapter(SIZES_TYPE)
