@@ -1,4 +1,4 @@
-package com.mohamednader.shoponthego.BranProduct.view
+package com.mohamednader.shoponthego.Categories.View
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.databinding.ItemProductBinding
 import com.squareup.picasso.Picasso
-import java.text.DecimalFormat
 
-class CategoryAdapter : ListAdapter<Product , CategoryAdapter.ViewHolder>(BrandDiffUtil()) {
+class CategoryAdapter(val myListener: (id:Long)->Unit) : ListAdapter<Product , CategoryAdapter.ViewHolder>(BrandDiffUtil()) {
 
     public class ViewHolder(val binding : ItemProductBinding) : RecyclerView.ViewHolder(binding.root){
 
@@ -26,11 +25,14 @@ class CategoryAdapter : ListAdapter<Product , CategoryAdapter.ViewHolder>(BrandD
         val product = getItem(position)
         if (product != null) {
             Picasso.get().load(product.image.src).into(holder.binding.itemImg)
-            holder.binding.titleProduct.text = product.title
+            holder.binding.titleProduct.text = product.vendor
 
             var price = product.variants?.getOrNull(0)?.price ?: 1.0
             holder.binding.priceProduct.text = price.toString() + " EGP "
 
+            holder.binding.cardProduct.setOnClickListener {
+                myListener(product.id)
+            }
 
 //            holder.binding.priceProduct.text = product.vendor
         }

@@ -10,7 +10,7 @@ import com.mohamednader.shoponthego.databinding.ItemProductBinding
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 
-class BrandProductAdapter(val myListener: (id:Long)->Unit): ListAdapter<Product , BrandProductAdapter.ViewHolder>(BrandDiffUtil()) {
+class BrandProductAdapter(val myListener: (id:Long)->Unit) : ListAdapter<Product , BrandProductAdapter.ViewHolder>(BrandDiffUtil()) {
 
    public class ViewHolder(val binding : ItemProductBinding) : RecyclerView.ViewHolder(binding.root){
 
@@ -27,6 +27,7 @@ class BrandProductAdapter(val myListener: (id:Long)->Unit): ListAdapter<Product 
         if (product != null) {
             Picasso.get().load(product.image.src).into(holder.binding.itemImg)
             holder.binding.titleProduct.text = product.title
+
             holder.binding.cardProduct.setOnClickListener {
             myListener(product.id)
             }

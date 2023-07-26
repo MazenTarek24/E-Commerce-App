@@ -25,7 +25,6 @@ import com.google.firebase.ktx.Firebase
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 
 import com.mohamednader.shoponthego.Home.View.HomeFragment
 import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
