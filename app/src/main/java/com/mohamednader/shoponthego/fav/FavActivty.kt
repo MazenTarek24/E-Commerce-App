@@ -59,6 +59,8 @@ class FavActivty : AppCompatActivity() {
             listItems?.removeAt(it)
             if (it == 0) {
                 recyclerAdapter.submitList(listOf())
+                flag= false
+            } else recyclerAdapter.submitList(listItems)
             } else
                 recyclerAdapter.submitList(listItems)
 
@@ -79,11 +81,11 @@ class FavActivty : AppCompatActivity() {
         apicallForgetdraftwithId()
         apicall()
 
-        binding.rcycyfav
-            .apply {
+        binding.rcycyfav.apply {
                 adapter = recyclerAdapter
                 layoutManager = myLayoutManager
             }
+
         myLiveData.value = listItems?.toList()
         myLiveData.observe(this, Observer { lineItems ->
 
@@ -98,8 +100,7 @@ class FavActivty : AppCompatActivity() {
             )
         )
 
-        viewModelProductInfo =
-            ViewModelProvider(this, factory).get(ViewModelFav::class.java)
+        viewModelProductInfo = ViewModelProvider(this, factory).get(ViewModelFav::class.java)
     }
 
     private fun apicallForgetAllDrafts() {
@@ -145,6 +146,7 @@ class FavActivty : AppCompatActivity() {
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
                         println("12:51" + result.data.id)
+
                         listItems = result.data.line_items?.toMutableList()
                         println("lissssssssssstItttttem" + listItems)
                         recyclerAdapter.submitList(listItems)
@@ -206,6 +208,7 @@ class FavActivty : AppCompatActivity() {
             }
         }
     }
+
 
 
 }
