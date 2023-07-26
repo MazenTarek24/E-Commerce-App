@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mohamednader.shoponthego.Auth.Login.ViewModel.LoginViewModel
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
@@ -43,6 +44,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: ActivityLoginBinding
     private lateinit var signUpViewModel: SignUpViewModel
+    private lateinit var loginViewModel: LoginViewModel
     private lateinit var factory: GenericViewModelFactory
     lateinit var customer: Customer
 
@@ -91,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
 
         }
+
 
         apicall()
 
@@ -155,6 +158,9 @@ class LoginActivity : AppCompatActivity() {
                                 "Logged in successfully",
                                 Toast.LENGTH_SHORT).show()
 
+                        val email = user?.email
+                        loginViewModel.getAllCustomers(email!!)
+
                     } else {
                         Toast.makeText(this@LoginActivity,
                                 "please verfiy your email",
@@ -194,7 +200,8 @@ class LoginActivity : AppCompatActivity() {
     private fun apicall() {
         lifecycleScope.launch {
 
-            signUpViewModel.product.collect { result ->
+            launch {
+                signUpViewModel.product.collect { result ->
                     when (result) {
                         is ApiState.Success<Customerre> -> {
                             Log.i(TAG, "onCreate: Success...{${result.data.id}")
@@ -213,6 +220,35 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                 }
+            }
+
+            launch {
+                loginViewModel.customer.collect { result ->
+                    when (result) {
+                        is ApiState.Success<kotlin.collections.List<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer>> -> {
+                            Log.i(TAG, "onCreate: Success Customer ID IS ...{${result.data.get(0).id}")
+                            Constants.customerID = result.data.get(0).id!!
+                        }
+                        is ApiState.Loading -> {
+//                                Log.i(TAG, "onCreate: Loading..."
+
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+
+                            Toast.makeText(this@LoginActivity,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+
         }
     }
 
@@ -223,6 +259,10 @@ class LoginActivity : AppCompatActivity() {
                 ConcreteSharedPrefsSource(this)))
 
         signUpViewModel = ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
+
+        loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+
+
     }
 
 }

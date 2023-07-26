@@ -24,6 +24,7 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityCartBinding
 import com.mohamednader.shoponthego.productinfo.ProductInfo
@@ -69,7 +70,9 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         }
         firebaseAuth = Firebase.auth
 
-
+        binding.backArrowImg.setOnClickListener{
+            onBackPressed()
+        }
 
         apiRequests()
     }
@@ -139,9 +142,8 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                 }
             }
         }
-        val currentUser = firebaseAuth.currentUser
 
-        cartViewModel.getAllDraftOrdersFromNetwork(currentUser?.email!!)
+        cartViewModel.getAllDraftOrdersFromNetwork(Constants.customerID)
     }
 
     private fun showViews() {
@@ -216,4 +218,7 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 }

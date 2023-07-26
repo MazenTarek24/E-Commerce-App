@@ -29,11 +29,11 @@ class CartViewModel(private val repo: RepositoryInterface) : ViewModel() {
         get() = _updatedDraftCartOrder
 
     //Draft Orders
-    fun getAllDraftOrdersFromNetwork(customerID: String) {
+    fun getAllDraftOrdersFromNetwork(customerID: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllDraftOrdersFromNetwork: HomeViewModel")
             repo.getAllDraftOrders().catch { e -> _draftOrdersList.value = ApiState.Failure(e) }
-                .map { data -> data.filter { it.customer!!.email == customerID && it.note == "cartDraft" } }
+                .map { data -> data.filter { it.customer!!.id == customerID && it.note == "cartDraft" } }
                 .collect { data ->
                     _draftOrdersList.value = ApiState.Success(data)
                 }

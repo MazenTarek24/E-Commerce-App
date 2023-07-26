@@ -5,6 +5,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRulesResponse
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ConvertCurrencyResponse
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyResponse
+import com.mohamednader.shoponthego.Model.Pojo.Customers.CustomerResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.ProductResponse
@@ -124,6 +125,10 @@ interface ApiService {
     @Headers("X-Shopify-Access-Token: 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")
     @GET("products/{id}.json")
     suspend fun getProductByID(@Path("id") productId: Long): Response<SingleProductResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @GET("customers.json")
+    suspend fun getAllCustomers(): Response<CustomerResponse>
 
 
 }

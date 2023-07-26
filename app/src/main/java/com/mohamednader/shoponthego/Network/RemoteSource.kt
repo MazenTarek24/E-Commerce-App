@@ -5,6 +5,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
@@ -51,6 +52,7 @@ interface RemoteSource {
     suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>
 
     suspend fun getProductByID(productId: Long): Flow<Product>
+    suspend fun getAllCustomers(): Flow<List<Customer>>
 
 
 }

@@ -6,6 +6,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCode
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
@@ -337,6 +338,22 @@ class ApiClient : RemoteSource {
         return draftOrder
 
     }
+
+    //Customers
+    override suspend fun getAllCustomers(): Flow<List<Customer>> {
+        val response = apiService.getAllCustomers()
+        val customersList: Flow<List<Customer>>
+        Log.i(TAG, "getAllCustomers: API-Client")
+        if (response.isSuccessful) {
+            customersList = flowOf(response.body()!!.customers)
+            Log.i(TAG, "getAllCustomers: Done")
+        } else {
+            customersList = emptyFlow()
+            Log.i(TAG, "getAllCustomers: ${response.errorBody().toString()}")
+        }
+        return customersList
+    }
+
 
 
     override suspend fun getProductByID(productId: Long): Flow<Product> {
