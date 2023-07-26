@@ -3,6 +3,7 @@ package com.mohamednader.shoponthego.Home.View
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.google.android.gms.common.api.Api
+import com.mohamednader.shoponthego.Cart.View.CartActivity
 
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CouponAdapter
@@ -99,6 +101,10 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
         }
 
 
+        binding.cart.setOnClickListener {
+            val intent = Intent(requireContext(), CartActivity::class.java)
+            startActivity(intent)
+        }
 
 
 

@@ -21,5 +21,5 @@ object Constants {
     const val COLORS_TYPE = "colors"
     const val SIZES_TYPE = "sizes"
 
-
+    var customerID: Long = 0
 }

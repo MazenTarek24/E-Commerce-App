@@ -8,6 +8,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurren
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Utils.Constants
@@ -284,5 +285,72 @@ class ApiClient : RemoteSource {
         return draftsOrders
     }
 
+
+
+
+    //Draft Orders
+    override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
+        val response = apiService.getAllDraftOrders()
+        val draftOrdersList: Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>>
+        Log.i(TAG, "getAllDraftOrders: API-Client")
+        if (response.isSuccessful) {
+            draftOrdersList = flowOf(response.body()!!.draftOrders)
+            Log.i(TAG, "getAllDraftOrders: Done")
+        } else {
+            draftOrdersList = emptyFlow()
+            Log.i(TAG, "getAllDraftOrders: ${response.errorBody().toString()}")
+        }
+        return draftOrdersList
+    }
+
+    override suspend fun updateDraftOrder(
+            draftOrderId: Long,
+            updatedDraftOrder: SingleDraftOrderResponse
+    ): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+        val response = apiService.updateDraftOrder(draftOrderId, updatedDraftOrder)
+        val draftOrder: Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>
+        Log.i(TAG, "updateDraftOrder: API-Client")
+        if (response.isSuccessful) {
+            draftOrder = flowOf(response.body()!!.draftOrder)
+            Log.i(TAG, "updateDraftOrder: Done")
+        } else {
+            draftOrder = emptyFlow()
+            Log.i(TAG, "updateDraftOrder: ${response.errorBody().toString()}")
+            Log.i(TAG, "updateDraftOrder: ${response.errorBody()?.string()}")
+            Log.i(TAG, "updateDraftOrder: ${response.code()}")
+            Log.i(TAG, "updateDraftOrder: ${response.message()}")
+        }
+        return draftOrder
+    }
+
+    override suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+        val response = apiService.addDraftOrder(newDraftOrder)
+        val draftOrder: Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>
+        Log.i(TAG, "addDraftOrder: API-Client")
+        if (response.isSuccessful) {
+            draftOrder = flowOf(response.body()!!.draftOrder)
+            Log.i(TAG, "addDraftOrder: Done")
+        } else {
+            draftOrder = emptyFlow()
+            Log.i(TAG, "addDraftOrder: ${response.errorBody().toString()}")
+        }
+        return draftOrder
+
+    }
+
+
+    override suspend fun getProductByID(productId: Long): Flow<Product> {
+        val response = apiService.getProductByID(productId)
+        val product: Flow<Product>
+        Log.i(TAG, "getProductByID: API-Client")
+        if (response.isSuccessful) {
+            product = flowOf(response.body()!!.product)
+            Log.i(TAG, "getProductByID: Done")
+        } else {
+            product = emptyFlow()
+            Log.i(TAG, "getProductByID: ${response.errorBody().toString()}")
+        }
+        return product
+    }
 
 }

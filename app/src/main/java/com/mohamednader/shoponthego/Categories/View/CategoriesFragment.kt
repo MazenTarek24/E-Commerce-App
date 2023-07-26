@@ -29,7 +29,7 @@ import com.mohamednader.shoponthego.databinding.ActivityCartBinding
 import com.mohamednader.shoponthego.databinding.ActivityFavActivtyBinding
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import com.mohamednader.shoponthego.databinding.SliderItemBinding
-import com.mohamednader.shoponthego.fav.favActivty
+import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -260,7 +260,7 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
 
     private fun Navigation() {
         binding.fav.setOnClickListener {
-            val intent = Intent(requireContext(), favActivty::class.java)
+            val intent = Intent(requireContext(), FavActivty::class.java)
             startActivity(intent)
         }
 

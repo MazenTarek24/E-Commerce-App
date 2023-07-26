@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/item_cart_card"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_130sdp"
+        android:layout_margin="@dimen/mid_margin"
+         app:cardCornerRadius="@dimen/big_margin"
+        app:cardElevation="@dimen/card_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/small_margin">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/item_img_card"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_centerVertical="true"
+                app:cardCornerRadius="@dimen/big_margin"
+                app:cardElevation="@dimen/card_elevation">
+
+                <ImageView
+                    android:id="@+id/item_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/profiletest" />
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="Item Title"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/item_brand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_title"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="Item Brand"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text" />
+
+
+            <TextView
+                android:id="@+id/item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_toEndOf="@id/item_img_card"
+                android:text="$250.00"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:backgroundTint="@color/semi_transparent"
+                app:cardCornerRadius="@dimen/big_margin"
+                app:cardElevation="@dimen/card_elevation">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btn_minus"
+                        android:layout_width="@dimen/small_icons"
+                        android:layout_height="@dimen/small_icons"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/full_transparent"
+                        android:src="@drawable/ic_baseline_remove" />
+
+                    <TextView
+                        android:id="@+id/tv_quantity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="@color/dark"
+                        android:textSize="@dimen/mid_text"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/btn_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/small_icons"
+                        android:layout_gravity="center_vertical"
+                        android:background="@color/full_transparent"
+                        android:src="@drawable/ic_baseline_add" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_margin"
+        app:layout_constraintTop_toBottomOf="@id/item_cart_card"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
