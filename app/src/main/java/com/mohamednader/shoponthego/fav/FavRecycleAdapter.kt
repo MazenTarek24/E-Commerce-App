@@ -14,8 +14,7 @@ import com.mohamednader.shoponthego.databinding.FavitemBinding
 
 
 class FavRecycleAdapter(
-    private val context: Context,
-
+    private val context: Context, val delete: (Int)->Unit
 ) : ListAdapter<LineItems, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
 
 
@@ -30,14 +29,16 @@ class FavRecycleAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val currentItem: LineItems = getItem(position)
-//        Glide.with(binding.productPhoto)
-//            .load(currentItem.image)
-//            .override(500, 500) // resize the image to 500x500 pixels
-//            .into(binding.productPhoto)
+        println(currentItem.fulfillment_service.toString())
+        Glide.with(binding.productPhoto)
+            .load(currentItem.fulfillment_service.toString())
+            .into(binding.productPhoto)
 
         holder.binding.productDescription.text = currentItem.sku
         holder.binding.productTitle.text = currentItem.title
-
+    holder.binding.delete.setOnClickListener {
+        delete(position)
+    }
 
     }
 
