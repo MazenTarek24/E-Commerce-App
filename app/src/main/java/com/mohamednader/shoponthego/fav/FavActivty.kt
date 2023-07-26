@@ -35,11 +35,10 @@ import kotlinx.coroutines.launch
 
 class FavActivty : AppCompatActivity() {
     private val TAG = "fav_INFO_TAG"
-    private var flag: Boolean=true
     private var draftOrdersID: String? = null
     lateinit var recyclerAdapter: FavRecycleAdapter
     private val myLiveData = MutableLiveData<List<LineItems>>()
-    private var listItems: MutableList<LineItems>? = mutableListOf<LineItems>()
+private var listItems :MutableList<LineItems> ?= mutableListOf<LineItems>()
 
     private lateinit var viewModelProductInfo: ViewModelFav
     private lateinit var factory: GenericViewModelFactory
@@ -56,17 +55,18 @@ class FavActivty : AppCompatActivity() {
         myLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         firebaseAuth = Firebase.auth
-        recyclerAdapter = FavRecycleAdapter(this) {
+        recyclerAdapter = FavRecycleAdapter(this){
             listItems?.removeAt(it)
-            if (it == 0) {
+            if(it==0){
                 recyclerAdapter.submitList(listOf())
-                flag= false
-            } else recyclerAdapter.submitList(listItems)
+            }
+            else
+            recyclerAdapter.submitList(listItems)
 
             viewModelProductInfo.modifyDraftsOrder(
                 DraftOrderResponse(
                     DraftOrder(
-                        1, "", "", true, "", "", "", "", true, "", "", "", listItems
+                        1, "", "", true, "", "", "", "", true, "", "", "",listItems
 
 
                     )
@@ -80,10 +80,11 @@ class FavActivty : AppCompatActivity() {
         apicallForgetdraftwithId()
         apicall()
 
-        binding.rcycyfav.apply {
-                adapter = recyclerAdapter
-                layoutManager = myLayoutManager
-            }
+        binding.rcycyfav
+            .apply {
+            adapter = recyclerAdapter
+            layoutManager = myLayoutManager
+        }
         myLiveData.value = listItems?.toList()
         myLiveData.observe(this, Observer { lineItems ->
 
@@ -98,9 +99,9 @@ class FavActivty : AppCompatActivity() {
             )
         )
 
-        viewModelProductInfo = ViewModelProvider(this, factory).get(ViewModelFav::class.java)
+        viewModelProductInfo =
+            ViewModelProvider(this, factory).get(ViewModelFav::class.java)
     }
-
     private fun apicallForgetAllDrafts() {
         lifecycleScope.launch {
 
@@ -136,7 +137,6 @@ class FavActivty : AppCompatActivity() {
 
 
     }
-
     private fun apicallForgetdraftwithId() {
         lifecycleScope.launch {
 
@@ -144,13 +144,12 @@ class FavActivty : AppCompatActivity() {
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
                         println("12:51" + result.data.id)
-                        listItems = result.data.line_items?.toMutableList()
-                        println("lissssssssssstItttttem" + listItems)
-                        if (flag){
-                        recyclerAdapter.submitList(listItems)}
+                            listItems=result.data.line_items?.toMutableList()
+                        println("lissssssssssstItttttem"+listItems)
+                        recyclerAdapter.submitList(listItems)
 
                         val list = result.data.line_items
-                        listItems = result.data.line_items?.toMutableList()
+                        listItems= result.data.line_items?.toMutableList()
                         val lineItems = result.data.line_items
                         val lineItemsIterator = result.data.line_items?.iterator()
                         while (lineItemsIterator!!.hasNext()) {
@@ -159,6 +158,7 @@ class FavActivty : AppCompatActivity() {
                             viewModelProductInfo.getProductWithIdFromNetwork(lineItem.product_id.toString())
 
                         }
+
 
 
                     }
@@ -177,7 +177,6 @@ class FavActivty : AppCompatActivity() {
             }
         }
     }
-
     private fun apicall() {
         lifecycleScope.launch {
 
@@ -185,7 +184,7 @@ class FavActivty : AppCompatActivity() {
                 when (result) {
                     is ApiState.Success<SingleProduct> -> {
                         Log.i(TAG, "onCreate: Success...product{${result.data.options.get(0)}")
-                        var list = mutableListOf<SingleProduct>()
+              var list  = mutableListOf<SingleProduct>()
                         list.add(result.data)
                         listofproduct.add(result.data)
 
@@ -206,6 +205,7 @@ class FavActivty : AppCompatActivity() {
             }
         }
     }
+
 
 
 }
