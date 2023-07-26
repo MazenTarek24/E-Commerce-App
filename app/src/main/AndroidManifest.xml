@@ -22,7 +22,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".fav.favActivty"
+            android:name=".fav.FavActivty"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -72,16 +72,10 @@
         </activity>
         <activity
             android:name=".MainHome.View.MainHomeActivity"
-            android:exported="true">
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Auth.Login.View.LoginActivity"
@@ -98,8 +92,16 @@
                 android:value="" />
         </activity>
         <activity
+
             android:name=".Auth.SignUp.View.SignUpActivity"
+
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

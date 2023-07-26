@@ -57,9 +57,24 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth = Firebase.auth
         initViews()
         val currentUser = firebaseAuth.currentUser
-
-        val customerId = intent.getLongExtra("CustomerID",0)
-        println("sssssssssssssssssssssssss"+customerId)
+//        loginViewModel.createDraftOrder(
+//            PostDraftOrder(
+//                DraftOrderPost(
+//                    arrayListOf(LineItemsPost("favourite", "20.00", 2)),
+//                    AppliedDiscountPost(
+//                        firebaseAuth.currentUser?.email,
+//                        "fixed_amount",
+//                        "10.0",
+//                        "10.00",
+//                        ""
+//                    ),
+//                    CustomerPost(7224510218557),
+//                    true
+//                )
+//            )
+//        )
+        val customerId = intent.getLongExtra("CustomerID", 0)
+        println("sssssssssssssssssssssssss" + customerId)
 
 
         progressDialog = ProgressDialog(this)

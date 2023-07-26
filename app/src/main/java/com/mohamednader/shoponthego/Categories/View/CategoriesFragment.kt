@@ -272,21 +272,20 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
     }
 
 
-    private fun Navigation()
-    {
+    private fun Navigation() {
         binding.fav.setOnClickListener {
-            val intent = Intent(requireContext() , favActivty::class.java)
+            val intent = Intent(requireContext(), FavActivty::class.java)
             startActivity(intent)
         }
 
 
         binding.cart.setOnClickListener {
-            val intent = Intent(requireContext() , CartActivity::class.java)
+            val intent = Intent(requireContext(), CartActivity::class.java)
             startActivity(intent)
         }
 
         binding.search.setOnClickListener {
-            val intent = Intent(requireContext() , SearchActivity::class.java)
+            val intent = Intent(requireContext(), SearchActivity::class.java)
             startActivity(intent)
         }
     }
