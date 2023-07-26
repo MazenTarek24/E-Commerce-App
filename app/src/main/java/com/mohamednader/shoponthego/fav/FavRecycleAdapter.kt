@@ -29,6 +29,7 @@ class FavRecycleAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val currentItem: LineItems = getItem(position)
+
         println(currentItem.fulfillment_service.toString())
         Glide.with(binding.productPhoto)
             .load(currentItem.fulfillment_service.toString())
