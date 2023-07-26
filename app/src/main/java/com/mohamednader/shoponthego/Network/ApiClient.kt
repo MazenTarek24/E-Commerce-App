@@ -355,6 +355,20 @@ class ApiClient : RemoteSource {
     }
 
 
+    override suspend fun getCustomerByID(customerId: Long): Flow<Customer> {
+        val response = apiService.getCustomerByID(customerId)
+        val customer: Flow<Customer>
+        Log.i(TAG, "getCustomerByID: API-Client")
+        if (response.isSuccessful) {
+            customer = flowOf(response.body()!!.customer)
+            Log.i(TAG, "getCustomerByID: Done")
+        } else {
+            customer = emptyFlow()
+            Log.i(TAG, "getCustomerByID: ${response.errorBody().toString()}")
+        }
+        return customer
+    }
+
 
     override suspend fun getProductByID(productId: Long): Flow<Product> {
         val response = apiService.getProductByID(productId)

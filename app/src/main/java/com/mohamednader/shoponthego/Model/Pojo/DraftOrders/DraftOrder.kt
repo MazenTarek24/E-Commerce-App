@@ -2,7 +2,7 @@ package com.mohamednader.shoponthego.Model.Pojo.DraftOrders
 
 import com.google.gson.annotations.SerializedName
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
-import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+ import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 
 data class DraftOrder(
         val id: Long?,

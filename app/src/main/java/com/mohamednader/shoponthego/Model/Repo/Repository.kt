@@ -144,4 +144,8 @@ return remoteSource.getAllDraftsOrders()   }
         return remoteSource.getAllCustomers()
     }
 
+    override suspend fun getCustomerByID(customerId: Long): Flow<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> {
+        return remoteSource.getCustomerByID(customerId)
+    }
+
 }

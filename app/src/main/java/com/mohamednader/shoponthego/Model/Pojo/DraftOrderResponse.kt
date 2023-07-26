@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Model.Pojo
 
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItemProperties
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 
 data class DraftOrderResponse(
@@ -38,26 +39,26 @@ data class DraftOrder(
 )
 
 data class LineItems(
-    var id: Long? = null,
-    var variant_id: Long? = null,
-    var product_id: Long? = null,
-    var title: String? = null,
-    var variant_title: String? = null,
-    var sku: String? = null,
-    var vendor: String? = null,
-    var quantity: Int? = null,
-    var requires_shipping: Boolean? = null,
-    var taxable: Boolean? = null,
-    var gift_card: Boolean? = null,
-    var fulfillment_service: String? = null,
-    var grams: Int? = null,
-    var tax_lines: List<TaxLine>? = null,
-    var applied_discount: AppliedDiscount? = null,
-    var name: String? = null,
-    var properties: List<Any>? = null,
-    var custom: Boolean? = null,
-    var price: String? = null,
-    var admin_graphql_api_id: String? = null
+        var id: Long? = null,
+        var variant_id: Long? = null,
+        var product_id: Long? = null,
+        var title: String? = null,
+        var variant_title: String? = null,
+        var sku: String? = null,
+        var vendor: String? = null,
+        var quantity: Int? = null,
+        var requires_shipping: Boolean? = null,
+        var taxable: Boolean? = null,
+        var gift_card: Boolean? = null,
+        var fulfillment_service: String? = null,
+        var grams: Int? = null,
+        var tax_lines: List<TaxLine>? = null,
+        var applied_discount: AppliedDiscount? = null,
+        var name: String? = null,
+        var properties: List<LineItemProperties>? = null,
+        var custom: Boolean? = null,
+        var price: String? = null,
+        var admin_graphql_api_id: String? = null
 )
 
 data class ShippingAddress(
