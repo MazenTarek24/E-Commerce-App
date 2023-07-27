@@ -22,10 +22,11 @@ class OrdersAdapter() : ListAdapter<OrderX , OrdersAdapter.ViewHolder> (BrandDif
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val order = getItem(position)
         holder.binding.apply {
-            itemDate.text = order.created_at
-            itemAddress.text = order.billing_address.toString()
-            itemId.text = order.id.toString()
-            itemTotalPriceUsd.text = order.total_price.toString()
+            itemDate.text = "created at = ${order.created_at}"
+            itemAddress.text = "order number = ${order.number.toString()}"
+            itemPhone.text = "name = ${order.billing_address?.first_name} "
+            itemId.text = "order id = ${order.id.toString()}"
+            itemTotalPriceUsd.text = "total price = ${order.current_total_price.toString()}"
         }
     }
 
