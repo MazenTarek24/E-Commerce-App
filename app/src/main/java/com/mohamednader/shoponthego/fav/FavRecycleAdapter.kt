@@ -9,12 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mohamednader.shoponthego.Model.Pojo.LineItems
 import com.example.example.SingleProduct
+import com.mohamednader.shoponthego.R
 
 import com.mohamednader.shoponthego.databinding.FavitemBinding
 
 
 class FavRecycleAdapter(
-    private val context: Context, val delete: (Int)->Unit
+    private val context: Context, val delete: (LineItems)->Unit
 ) : ListAdapter<LineItems, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
 
 
@@ -28,22 +29,25 @@ class FavRecycleAdapter(
 
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        val currentItem: LineItems = getItem(position)
+        if(position+1>0) {
 
-        println(currentItem.fulfillment_service.toString())
-        Glide.with(binding.productPhoto)
-            .load(currentItem.fulfillment_service.toString())
-            .into(binding.productPhoto)
+            val currentItem: LineItems = getItem(position)
+            try {
+                Glide.with(context).load(currentItem.properties?.get(0)?.value)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .into(holder.binding.productPhoto)
+            } catch (ex: Exception) {
+                Glide.with(context).load(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .into(holder.binding.productPhoto)
+            }
 
-        holder.binding.productDescription.text = currentItem.sku
-        holder.binding.productTitle.text = currentItem.title
-
-
-       holder.binding.delete.setOnClickListener {
-
-        delete(position)
-       }
-
+            holder.binding.productDescription.text = currentItem.sku
+            holder.binding.productTitle.text = currentItem.title
+            holder.binding.delete.setOnClickListener {
+                delete(currentItem)
+            }
+        }
     }
 
     inner class ProductViewHolder(var binding: FavitemBinding) :

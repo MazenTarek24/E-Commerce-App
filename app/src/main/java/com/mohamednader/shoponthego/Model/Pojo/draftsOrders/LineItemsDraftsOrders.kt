@@ -1,6 +1,7 @@
 package com.example.example
 
 import com.google.gson.annotations.SerializedName
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItemProperties
 
 
 data class LineItemsDraftsOrders (
@@ -21,7 +22,7 @@ data class LineItemsDraftsOrders (
   @SerializedName("tax_lines"            ) var taxLines           : ArrayList<TaxLines> = arrayListOf(),
   @SerializedName("applied_discount"     ) var appliedDiscount    : String?           = null,
   @SerializedName("name"                 ) var name               : String?           = null,
-  @SerializedName("properties"           ) var properties         : ArrayList<Any> = arrayListOf(),
+  @SerializedName("properties"           ) var properties         : ArrayList<LineItemProperties> = arrayListOf(),
   @SerializedName("custom"               ) var custom             : Boolean?          = null,
   @SerializedName("price"                ) var price              : String?           = null,
   @SerializedName("admin_graphql_api_id" ) var adminGraphqlApiId  : String?           = null

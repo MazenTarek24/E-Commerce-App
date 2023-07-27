@@ -41,6 +41,7 @@
     </FrameLayout>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="403dp"
         android:layout_height="432dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -95,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="15dp"
+                android:fontFamily="@font/gfs_neohellenic"
                 android:scrollbarSize="@dimen/mid_text"
                 android:textColor="#040404"
                 android:textSize="@dimen/mid_text"
@@ -106,12 +108,12 @@
                 style="@style/Widget.AppCompat.RatingBar.Indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="8dp"
                 android:isIndicator="true"
                 android:progressTint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/pricetv" />
 
             <View
                 android:id="@+id/divider"
@@ -139,8 +141,8 @@
                 android:id="@+id/cd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView13">
@@ -151,6 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="10dp"
+                    android:fontFamily="monospace"
                     android:textColor="#474747"
                     android:textSize="@dimen/small_text"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -307,4 +310,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="151dp"
+        android:layout_height="98dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

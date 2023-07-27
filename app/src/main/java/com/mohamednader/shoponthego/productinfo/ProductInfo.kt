@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.productinfo
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -130,6 +131,7 @@ class ProductInfo : AppCompatActivity() {
                     mutablelist
 
             )), draftOrdersID.toLong())
+            Toast.makeText(this@ProductInfo, "adding to Favourite", Toast.LENGTH_SHORT).show()
 
         }
 
@@ -175,10 +177,14 @@ class ProductInfo : AppCompatActivity() {
                             val adapter = ViewPagerProductinfoAdapter(result.data.images)
                             viewPager.adapter = adapter
                             springDotsIndicator.setViewPager(viewPager)
+                            binding.progressBar.visibility=View.GONE
+                            binding.scrollView2.visibility=View.VISIBLE
+
 
                         }
                         is ApiState.Loading -> {
-//                                Log.i(TAG, "onCreate: Loading..."
+binding.progressBar.visibility=View.VISIBLE
+                            binding.scrollView2.visibility=View.GONE
 
                         }
                         is ApiState.Failure -> {

@@ -22,6 +22,7 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
+import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
