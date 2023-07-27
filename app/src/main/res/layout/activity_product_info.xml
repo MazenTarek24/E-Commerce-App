@@ -41,6 +41,7 @@
     </FrameLayout>
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="403dp"
         android:layout_height="432dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -309,4 +310,15 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="151dp"
+        android:layout_height="98dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
