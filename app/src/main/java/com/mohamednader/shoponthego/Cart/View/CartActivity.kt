@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,7 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Payment.View.PaymentActivity
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityCartBinding
@@ -48,6 +49,8 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     //Needed Variables
     val EXTRA_PRODUCT_ID = "productID"
     lateinit var draftOrder: DraftOrder
+    lateinit var customerId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -59,7 +62,7 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     private fun initViews() {
         factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
                 ConcreteLocalSource(this@CartActivity),
-                ConcreteSharedPrefsSource(this@CartActivity)))
+                ConcreteDataStoreSource(this@CartActivity)))
         cartViewModel = ViewModelProvider(this, factory).get(CartViewModel::class.java)
         //Layouts
         cartAdapter = CartAdapter(this@CartActivity, this, this)
@@ -71,7 +74,7 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         }
         firebaseAuth = Firebase.auth
 
-        binding.backArrowImg.setOnClickListener{
+        binding.backArrowImg.setOnClickListener {
             onBackPressed()
         }
 
@@ -85,6 +88,18 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
     private fun apiRequests() {
         lifecycleScope.launchWhenStarted {
+
+            launch {
+                cartViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+                    .observe(this@CartActivity) { customerID ->
+                        // Update UI with the retrieved name
+                        Log.i(TAG, "apiRequests: VIP: $customerID")
+                        customerId = customerID!!
+                        cartViewModel.getAllDraftOrdersFromNetwork(customerId.toLong())
+                    }
+            }
+
+
             launch {
                 cartViewModel.draftOrdersList.collectLatest { result ->
                     when (result) {
@@ -105,7 +120,8 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                                 binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
                                 showViews()
                             } else {
-                                Log.i(TAG, "onCreate: Success...The list is empty}")
+
+                                Log.i(TAG, "onCreate: Success...The list is empty ${customerId}}")
                                 hideViews()
                             }
                         }
@@ -149,7 +165,7 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
             }
         }
 
-        cartViewModel.getAllDraftOrdersFromNetwork(Constants.customerID)
+
     }
 
     private fun showViews() {
@@ -173,13 +189,13 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     override fun onPlusClickListener(productVariantId: Long) {
         var lineItemToUpdate = draftOrder.lineItems!!.find { it.variantId == productVariantId }
         if (lineItemToUpdate != null) {
-            if (lineItemToUpdate.quantity!! < lineItemToUpdate.properties.get(1).value.toInt()) {
+            if (lineItemToUpdate.quantity!! < lineItemToUpdate.properties?.get(1)?.value?.toInt()!!) {
                 updateQuantity(productVariantId, true)
                 cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
                         SingleDraftOrderResponse(draftOrder))
             } else {
                 Toast.makeText(this@CartActivity,
-                        "Available in Stock (${lineItemToUpdate.properties.get(1).value.toInt()})",
+                        "Available in Stock (${lineItemToUpdate.properties!!.get(1).value.toInt()})",
                         Toast.LENGTH_SHORT).show()
 
             }
@@ -224,7 +240,4 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

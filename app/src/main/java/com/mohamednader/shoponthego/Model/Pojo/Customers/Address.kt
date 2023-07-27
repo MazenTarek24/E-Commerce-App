@@ -3,7 +3,7 @@ package com.mohamednader.shoponthego.Model.Pojo.Customers
 import com.google.gson.annotations.SerializedName
 
 data class Address(
-        val id: Long?  = null,
+        val id: Long? = null,
         @SerializedName("customer_id") val customerId: Long? = null,
         @SerializedName("first_name") val firstName: String? = null,
         @SerializedName("last_name") val lastName: String? = null,
@@ -20,4 +20,4 @@ data class Address(
         @SerializedName("country_code") val countryCode: String? = null,
         @SerializedName("country_name") val countryName: String? = null,
         var default: Boolean? = false
-): java.io.Serializable
+) : java.io.Serializable

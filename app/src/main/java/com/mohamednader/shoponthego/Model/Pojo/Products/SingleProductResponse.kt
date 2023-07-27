@@ -2,9 +2,8 @@ package com.mohamednader.shoponthego.Model.Pojo.Products
 
 import com.google.gson.annotations.SerializedName
 
+data class SingleProductResponse(
 
-data class SingleProductResponse (
-
-    @SerializedName("product" ) var product : Product
+        @SerializedName("product") var product: Product
 
 )

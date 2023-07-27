@@ -1,24 +1,17 @@
 package com.mohamednader.shoponthego.Categories.View
 
-import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-
 import com.mohamednader.shoponthego.databinding.SliderItemBinding
-
 
 class PriceFilterDialogFragment : BottomSheetDialogFragment() {
 
-    interface PriceFilterListener{
-        fun onPriceFiltered(priceFrom : Double , priceTo : Double)
+    interface PriceFilterListener {
+        fun onPriceFiltered(priceFrom: Double, priceTo: Double)
     }
 
     companion object {
@@ -31,11 +24,11 @@ class PriceFilterDialogFragment : BottomSheetDialogFragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        _binding = SliderItemBinding.inflate(inflater , container , false)
+        _binding = SliderItemBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -85,8 +78,8 @@ class PriceFilterDialogFragment : BottomSheetDialogFragment() {
         super.onStart()
 
         dialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
         )
     }
 

@@ -10,8 +10,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.databinding.ItemCurrencyBinding
 
 class CurrencyAdapter(private val context: Context, private val listener: OnCurrencyClickListener) :
-    ListAdapter<CurrencyInfo, CurrencyViewHolder>(CurrencyDiffUtil()) {
-
+        ListAdapter<CurrencyInfo, CurrencyViewHolder>(CurrencyDiffUtil()) {
 
     private lateinit var binding: ItemCurrencyBinding
 

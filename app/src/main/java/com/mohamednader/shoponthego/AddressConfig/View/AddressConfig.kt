@@ -1,8 +1,10 @@
 package com.mohamednader.shoponthego.AddressConfig.View
 
+import android.R
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.mohamednader.shoponthego.Maps.MapResult
@@ -27,10 +29,43 @@ class AddressConfig : AppCompatActivity(), MapResult {
 
     fun initViews() {
         binding.mapBtn.setOnClickListener {
-            MapResultListenerHolder.listener = this@AddressConfig as MapResult
+            MapResultListenerHolder.listener = this@AddressConfig
             val resMapView = Intent(this, MapsActivity::class.java)
             startActivityForResult(resMapView, LOCATION_PICK)
         }
+
+        val countries = listOf("Bangladesh",
+                "Brazil",
+                "China",
+                "DR Congo",
+                "Egypt",
+                "Ethiopia",
+                "France",
+                "Germany",
+                "India",
+                "Indonesia",
+                "Iran",
+                "Italy",
+                "Japan",
+                "Mexico",
+                "Nigeria",
+                "Pakistan",
+                "Philippines",
+                "Russia",
+                "Saudi Arabia",
+                "South Africa",
+                "Thailand",
+                "Turkey",
+                "United Kingdom",
+                "United States",
+                "Vietnam")
+
+        val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, countries)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.countrySpinner.adapter = adapter
+
+
+
 
         binding.saveAddressBtn.setOnClickListener {
             if (validation()) {
@@ -38,7 +73,7 @@ class AddressConfig : AppCompatActivity(), MapResult {
                 val sName = binding.secondNameEditText.text.toString()
                 val address1 = binding.streetEditText.text.toString()
                 val city = binding.cityEditText.text.toString()
-                val county = binding.countryEditText.text.toString()
+                val county = binding.countrySpinner.selectedItem.toString()
                 val phone = binding.phoneEditText.text.toString()
                 val address = Address(firstName = fName,
                         lastName = sName,
@@ -75,7 +110,7 @@ class AddressConfig : AppCompatActivity(), MapResult {
             Toast.makeText(this@AddressConfig, "Please Enter, City", Toast.LENGTH_SHORT).show()
             return false
         }
-        if (binding.countryEditText.text.isEmpty()) {
+        if (binding.countrySpinner.selectedItem == null) {
             Toast.makeText(this@AddressConfig, "Please Enter, Country", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -97,7 +132,7 @@ class AddressConfig : AppCompatActivity(), MapResult {
         Toast.makeText(this, "$address", Toast.LENGTH_SHORT).show()
         binding.streetEditText.setText(street)
         binding.cityEditText.setText(city)
-        binding.countryEditText.setText(country)
+        //binding.countryEditText.setText(country)
 
     }
 }

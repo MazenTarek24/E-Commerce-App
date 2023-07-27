@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitHelper {
     val gson = GsonBuilder().create()
-    fun getInstance(BASE_URL : String): Retrofit {
+    fun getInstance(BASE_URL: String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))

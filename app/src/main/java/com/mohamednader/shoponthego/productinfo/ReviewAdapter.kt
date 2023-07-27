@@ -3,14 +3,13 @@ package com.mohamednader.shoponthego.productinfo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.R
 
-
-class ReviewAdapter(private val reviewList: List<Review>) : RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
+class ReviewAdapter(private val reviewList: List<Review>) :
+        RecyclerView.Adapter<ReviewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.itemreview, parent, false)

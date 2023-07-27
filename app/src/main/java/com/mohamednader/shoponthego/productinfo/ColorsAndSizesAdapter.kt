@@ -13,11 +13,12 @@ import com.mohamednader.shoponthego.Utils.Constants.COLORS_TYPE
 import com.mohamednader.shoponthego.databinding.ColorAndSizesBinding
 
 class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
-    RecyclerView.Adapter<ColorsAndSizesAdapter.ColorsAndSizesAdapterViewHolder>() {
+        RecyclerView.Adapter<ColorsAndSizesAdapter.ColorsAndSizesAdapterViewHolder>() {
 
-    var onItemClick : ((String) -> Unit)?=null
+    var onItemClick: ((String) -> Unit)? = null
+
     inner class ColorsAndSizesAdapterViewHolder(val binding: ColorAndSizesBinding) :
-        RecyclerView.ViewHolder(binding.root)
+            RecyclerView.ViewHolder(binding.root)
 
     private val diffCallback = object : DiffUtil.ItemCallback<String>() {
         override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
@@ -32,13 +33,13 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
     val differ = AsyncListDiffer(this, diffCallback)
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): ColorsAndSizesAdapterViewHolder {
         return ColorsAndSizesAdapterViewHolder(
-            ColorAndSizesBinding.inflate(
-                LayoutInflater.from(parent.context)
-            )
+                ColorAndSizesBinding.inflate(
+                        LayoutInflater.from(parent.context)
+                )
         )
     }
 
@@ -47,7 +48,7 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
     override fun onBindViewHolder(holder: ColorsAndSizesAdapterViewHolder, position: Int) {
         if (type == COLORS_TYPE) {
             val color = differ.currentList[position]
-            if(position == selectedPosition) { //Select case
+            if (position == selectedPosition) { //Select case
                 holder.binding.apply {
                     val color = Color.parseColor(color)
                     val imageDrawable = ColorDrawable(color)
@@ -55,8 +56,7 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
                     imgShadow.visibility = View.INVISIBLE
                     imgDone.visibility = View.VISIBLE
                 }
-            }
-            else{
+            } else {
                 holder.binding.apply {
                     val color = Color.parseColor(color)
                     val imageDrawable = ColorDrawable(color)
@@ -76,11 +76,10 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
                 onItemClick!!.invoke(color)
 
             }
-        }
-        else{
+        } else {
             val size = differ.currentList[position] as String
 
-            if(selectedPosition == position){
+            if (selectedPosition == position) {
                 holder.binding.apply {
                     imgShadow.visibility = View.VISIBLE
                     imgContent.visibility = View.VISIBLE
@@ -90,7 +89,7 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
                     tvSize.text = size
                 }
 
-            }else{
+            } else {
                 holder.binding.apply {
                     imgShadow.visibility = View.INVISIBLE
                     imgContent.visibility = View.VISIBLE
@@ -103,14 +102,13 @@ class ColorsAndSizesAdapter(var type: String = COLORS_TYPE) :
             }
 
             holder.itemView.setOnClickListener {
-                if(selectedPosition >= 0)
+                if (selectedPosition >= 0)
                     notifyItemChanged(selectedPosition)
                 selectedPosition = holder.adapterPosition
                 notifyItemChanged(selectedPosition)
 
 //                onItemClick!!.invoke(size)
             }
-
 
         }
     }

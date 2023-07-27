@@ -117,10 +117,10 @@
         app:layout_constraintStart_toStartOf="@id/city_text"
         app:layout_constraintTop_toBottomOf="@id/city_edit_text" />
 
-    <EditText
-        android:id="@+id/country_edit_text"
+    <Spinner
+        android:id="@+id/country_spinner"
         android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_30sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/first_name_text"
         app:layout_constraintTop_toBottomOf="@id/country_text" />
@@ -136,7 +136,7 @@
         android:textSize="@dimen/tiny_text"
         app:layout_constraintEnd_toEndOf="@id/country_text"
         app:layout_constraintStart_toStartOf="@id/country_text"
-        app:layout_constraintTop_toBottomOf="@id/country_edit_text" />
+        app:layout_constraintTop_toBottomOf="@id/country_spinner" />
 
     <EditText
         android:id="@+id/phone_edit_text"

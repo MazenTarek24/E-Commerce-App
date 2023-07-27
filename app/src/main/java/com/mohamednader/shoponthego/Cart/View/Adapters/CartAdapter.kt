@@ -33,7 +33,7 @@ class CartAdapter(private val context: Context,
         binding.tvQuantity.text = item.quantity.toString()
 
         try {
-            Glide.with(context).load(item.properties.get(0).value)
+            Glide.with(context).load(item.properties?.get(0)?.value!!)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(holder.binding.itemImg)
         } catch (ex: Exception) {

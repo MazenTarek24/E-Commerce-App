@@ -1,27 +1,23 @@
 package com.mohamednader.shoponthego.Home.View
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.Glide
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.databinding.ItemBrandBinding
 import com.squareup.picasso.Picasso
 
-class BrandAdapter() : ListAdapter<SmartCollection , BrandAdapter.ViewHolder>(BrandDiffUtil()) {
+class BrandAdapter : ListAdapter<SmartCollection, BrandAdapter.ViewHolder>(BrandDiffUtil()) {
 
-
-    class ViewHolder(val binding : ItemBrandBinding) : RecyclerView.ViewHolder(binding.root)
-    {}
+    class ViewHolder(val binding: ItemBrandBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemBrandBinding.inflate(LayoutInflater.from(parent.context),
-            parent , false ) )
+                parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -31,7 +27,8 @@ class BrandAdapter() : ListAdapter<SmartCollection , BrandAdapter.ViewHolder>(Br
 
         val brandString = currentBrand.id.toString()
         holder.itemView.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragment2ToBrandProductFragment(brandString)
+            val action =
+                HomeFragmentDirections.actionHomeFragment2ToBrandProductFragment(brandString)
             it.findNavController().navigate(action)
         }
     }

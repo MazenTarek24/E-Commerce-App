@@ -1,48 +1,46 @@
 package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
-import com.example.example.*
+import androidx.datastore.preferences.core.Preferences
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
-import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
-import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
-import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
-import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Network.RemoteSource
-import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
+import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import kotlinx.coroutines.flow.Flow
 
 class Repository constructor(remoteSource: RemoteSource,
                              localSource: LocalSource,
-                             sharedPrefsSource: SharedPrefsSource) : RepositoryInterface {
+                             dataStorePrefsSource: DataStoreSource) : RepositoryInterface {
 
     private val TAG = "Repository_INFO_TAG"
 
-
     private val remoteSource: RemoteSource
     private val localSource: LocalSource
-    private val sharedPrefsSource: SharedPrefsSource
+    private val dataStorePrefsSource: DataStoreSource
 
     init {
         this.remoteSource = remoteSource
         this.localSource = localSource
-        this.sharedPrefsSource = sharedPrefsSource
+        this.dataStorePrefsSource = dataStorePrefsSource
     }
 
     companion object {
         private var repo: Repository? = null
         fun getInstance(remoteSource: RemoteSource,
                         localSource: LocalSource,
-                        sharedPrefsSource: SharedPrefsSource): Repository {
+                        dataStorePrefsSource: DataStoreSource): Repository {
             return repo ?: synchronized(this) {
-                val instance = Repository(remoteSource, localSource, sharedPrefsSource)
+                val instance = Repository(remoteSource, localSource, dataStorePrefsSource)
                 repo = instance
                 instance
             }
@@ -64,12 +62,12 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getAllPriceRules()
     }
 
-    override suspend fun modifyDraftforfav(draftorder: DraftOrderResponse,
-                                           id: Long): Flow<DraftOrdermo> {
+    override suspend fun modifyDraftforfav(draftorder: SingleDraftOrderResponse,
+                                           id: Long): Flow<DraftOrder> {
         return remoteSource.modifyDraftforfav(draftorder, id)
     }
 
-    override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
+    override suspend fun createDraftforfav(draftorder: SingleDraftOrderResponse): Flow<DraftOrder> {
         return remoteSource.createDraftforfav(draftorder)
     }
 
@@ -91,31 +89,21 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getAllCurrencies()
     }
 
-    override suspend fun getAllOrders(): Flow<List<OrderX>> {
+    override suspend fun getAllOrders(): Flow<List<Order>> {
         return remoteSource.getAllOrders()
     }
 
-
-
-    override suspend fun getProductWithId(id: String): Flow<SingleProduct> {
+    override suspend fun getProductWithId(id: String): Flow<Product> {
         Log.i(TAG, "getProductWithId: REPO")
         return remoteSource.getProductWithId(id)
     }
 
     override suspend fun getDraftWithId(id: Long): Flow<DraftOrder> {
-     return remoteSource.getDraftWithId(id)
+        return remoteSource.getDraftWithId(id)
     }
 
-    override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
+    override suspend fun createCustomer(customer: SingleCustomerResponse): Flow<Customer> {
         return remoteSource.createCustomer(customer)
-    }
-
-    override suspend fun getAllCustomer(): Flow<List<Customers>> {
-        return remoteSource.getAllCustomer()
-    }
-
-    override suspend fun getAllDraftsOrders(): Flow<List<DraftOrders>> {
-        return remoteSource.getAllDraftsOrders()
     }
 
     override suspend fun getAllProductCategory(
@@ -129,7 +117,6 @@ class Repository constructor(remoteSource: RemoteSource,
 //    override suspend fun getAllProductCategoryByType(collectionId : Long,productType: String): Flow<List<Product>> {
 //        return remoteSource.getAllProductCategoryByType(collectionId,productType)
 //    }
-
 
     override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
         return remoteSource.getAllDraftOrders()
@@ -163,6 +150,14 @@ class Repository constructor(remoteSource: RemoteSource,
 
     override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
         remoteSource.deleteUserAddress(customerId, addressId)
+    }
+
+    override suspend fun saveStringDS(key: Preferences.Key<String>, value: String) {
+        dataStorePrefsSource.saveStringDS(key, value)
+    }
+
+    override fun getStringDS(key: Preferences.Key<String>): Flow<String?> {
+        return dataStorePrefsSource.getStringDS(key)
     }
 
 }

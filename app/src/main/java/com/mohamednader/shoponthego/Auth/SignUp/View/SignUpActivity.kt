@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.example.*
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -18,12 +17,16 @@ import com.mohamednader.shoponthego.Auth.Login.View.LoginActivity
 import com.mohamednader.shoponthego.Auth.Login.ViewModel.LoginViewModel
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
-import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySignUpBinding
 import kotlinx.coroutines.launch
@@ -37,29 +40,25 @@ class SignUpActivity : AppCompatActivity() {
     lateinit var progressDialog: ProgressDialog
     private lateinit var signUpViewModel: SignUpViewModel
     private lateinit var factory: GenericViewModelFactory
-    var Addresses: kotlin.collections.ArrayList<AddressesCustomers>? = null
+    var Addresses: List<Address>? = null
     lateinit var customer: Customer
     lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySignUpBinding.inflate(getLayoutInflater())
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
         firebaseAuth = FirebaseAuth.getInstance()
 
-        val currentUser = firebaseAuth.currentUser
         customer = Customer()
-        if (currentUser != null) {
 
-            startActivity(Intent(this, MainHomeActivity::class.java))
-        }
         progressDialog = ProgressDialog(this)
         binding.signup.setOnClickListener {
             registerUser()
         }
         binding.signInTv.setOnClickListener {
             startActivity(Intent(this@SignUpActivity, LoginActivity::class.java))
-
+            finish()
         }
         apicall()
         apicallforcreateDraftOrder()
@@ -94,30 +93,20 @@ class SignUpActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val currentUser = firebaseAuth.currentUser
                     sendVerificationEmail()
-                    customer = Customer(
-                        currentUser?.uid,
-                        "",
-                        currentUser?.email,
-                        "",
-                        currentUser?.isEmailVerified,
-                        arrayListOf(
-                            Addresses(
-                                "", "",
-                                "", "", "", "", "", ""
-                            )
-                        )
-                    )
+                    customer = Customer(firstName = binding.usernameedtxt.text.toString(),
+                            note = currentUser?.uid,
+                            verifiedEmail = currentUser?.isEmailVerified,
+                            email = currentUser?.email)
+
+
                     println(firebaseAuth.currentUser!!.uid)
-                    signUpViewModel.createCustomer(PostCustomer(customer))
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        "Account successfully created",
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
+                    signUpViewModel.createCustomer(SingleCustomerResponse(customer))
+                    Toast.makeText(this@SignUpActivity,
+                            "Account successfully created",
+                            Toast.LENGTH_LONG).show()
 
                     val intent = Intent(this, LoginActivity::class.java).apply {
-                        putExtra("CustomerID",CustomerID )
+                        putExtra("CustomerID", CustomerID)
                     }
                     startActivity(intent)
                 } else if (password.length < 6) {
@@ -126,12 +115,9 @@ class SignUpActivity : AppCompatActivity() {
                     progressDialog.dismiss()
                 } else {
 //                Toast.makeText(SignUpActivity.this, "This account is already registered or there is an error with the internet connection",Toast.LENGTH_LONG).show();
-                    Toast.makeText(
-                        this@SignUpActivity,
-                        Objects.requireNonNull(task.exception)
-                        !!.localizedMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@SignUpActivity,
+                            Objects.requireNonNull(task.exception)?.localizedMessage,
+                            Toast.LENGTH_LONG).show()
                     progressDialog.dismiss()
                 }
             })
@@ -140,103 +126,85 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initViews() {
 
-        factory = GenericViewModelFactory(
-            Repository.getInstance(
-                ApiClient.getInstance(),
+        factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
                 ConcreteLocalSource(this),
-                ConcreteSharedPrefsSource(this)
-            )
-        )
-        loginViewModel =
-            ViewModelProvider(this, factory).get(LoginViewModel::class.java)
-        signUpViewModel =
-            ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
+                ConcreteDataStoreSource(this)))
+        loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        signUpViewModel = ViewModelProvider(this, factory).get(SignUpViewModel::class.java)
     }
 
     private fun apicall() {
         lifecycleScope.launch {
 
-            signUpViewModel.product
-                .collect { result ->
-                    when (result) {
-                        is ApiState.Success<Customerre> -> {
-                            Log.i(TAG, "onCreate: Success...{${result.data.id}")
-                            CustomerID = result.data.id
-                            loginViewModel.createDraftOrder(
-                                PostDraftOrder(
-                                    DraftOrderPost(
-                                        arrayListOf(LineItemsPost("favourite", "20.00", 2)),
-                                        AppliedDiscountPost(
-                                            firebaseAuth.currentUser?.email,
-                                            "fixed_amount",
-                                            "10.0",
-                                            "10.00",
-                                            ""
-                                        ),
-                                        CustomerPost(result.data.id),
-                                        true
-                                    )
-                                )
-                            )
+            signUpViewModel.customer.collect { result ->
+                when (result) {
+                    is ApiState.Success<Customer> -> {
+                        Log.i(TAG, "onCreate: Success...{${result.data.id}")
+                        CustomerID = result.data.id
 
-                        }
-                        is ApiState.Loading -> {
+
+                        val draftOrder = DraftOrder(
+                                    lineItems = mutableListOf(LineItem(title = "favourite",
+                                            price = "20.00",
+                                            quantity = 2)),
+                                    customer = Customer(result.data.id!!),
+                                    note = "favDraft")
+
+
+                        //loginViewModel.createDraftOrder(SingleDraftOrderResponse(draftOrder))
+
+                    }
+                    is ApiState.Loading -> {
 //                                Log.i(TAG, "onCreate: Loading..."
 
-                        }
-                        is ApiState.Failure -> {
-                            //hideViews()
+                    }
+                    is ApiState.Failure -> {
+                        //hideViews()
 
-                            Toast.makeText(
-                                this@SignUpActivity, "There Was An Error", Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        Toast.makeText(this@SignUpActivity,
+                                "There Was An Error",
+                                Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
         }
     }
 
     fun sendVerificationEmail() {
         val user = firebaseAuth.currentUser
 
-        user?.sendEmailVerification()
-            ?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Verification email sent successfully
-                } else {
-                    // Handle errors
-                }
+        user?.sendEmailVerification()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Verification email sent successfully
+            } else {
+                // Handle errors
             }
+        }
     }
 
     private fun apicallforcreateDraftOrder() {
         lifecycleScope.launch {
 
             loginViewModel.customerList.collect { result ->
-                    when (result) {
-                        is ApiState.Success<ResponseDraftOrderOb> -> {
-                            Log.i(
-                                TAG,
-                                "onCreate Login: Success..zzzzzzzzzzzzzzzzzzz.{${result.data.id}"
-                            )
+                when (result) {
+                    is ApiState.Success<DraftOrder> -> {
+                        Log.i(TAG,
+                                "onCreate Login: Success..zzzzzzzzzzzzzzzzzzz.{${result.data.id}")
 
+                    }
+                    is ApiState.Loading -> {
+                        Log.i(TAG, "onCreatezzzzzzzzzzzzzzzz: Loading...")
 
-                        }
-                        is ApiState.Loading -> {
-                            Log.i(TAG, "onCreatezzzzzzzzzzzzzzzz: Loading...")
+                    }
+                    is ApiState.Failure -> {
+                        //hideViews()
 
-                        }
-                        is ApiState.Failure -> {
-                            //hideViews()
-
-                            Toast.makeText(
-                                this@SignUpActivity,
+                        Toast.makeText(this@SignUpActivity,
                                 "There Was An Errorzzzzzzzzzzzzzzz",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                                Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
         }
     }
 

@@ -10,8 +10,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.Coupon
 import com.mohamednader.shoponthego.databinding.ItemCouponBinding
 
 class CouponAdapter(private val context: Context, private val listener: OnGetNowClickListener) :
-    ListAdapter<Coupon, CouponViewHolder>(CouponDiffUtil()) {
-
+        ListAdapter<Coupon, CouponViewHolder>(CouponDiffUtil()) {
 
     private lateinit var binding: ItemCouponBinding
 

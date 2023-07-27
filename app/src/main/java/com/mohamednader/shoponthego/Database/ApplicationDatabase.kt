@@ -1,4 +1,3 @@
 package com.mohamednader.shoponthego.Database
 
-class ApplicationDatabase {
-}
+class ApplicationDatabase

@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Cart.ViewModel
 
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
@@ -33,7 +34,15 @@ class CartViewModel(private val repo: RepositoryInterface) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllDraftOrdersFromNetwork: HomeViewModel")
             repo.getAllDraftOrders().catch { e -> _draftOrdersList.value = ApiState.Failure(e) }
-                .map { data -> data.filter { it.customer!!.id == customerID && it.note == "cartDraft" } }
+                .map { data ->
+                    data.filter {
+                        try {
+                            it.customer!!.id == customerID && it.note == "cartDraft"
+                        }catch (e: Exception){
+                            false
+                        }
+                    }
+                }
                 .collect { data ->
                     _draftOrdersList.value = ApiState.Success(data)
                 }
@@ -50,5 +59,16 @@ class CartViewModel(private val repo: RepositoryInterface) : ViewModel() {
                 }
         }
     }
+
+
+    fun saveStringDS(key: Preferences.Key<String>, value: String) {
+        viewModelScope.launch {
+            repo.saveStringDS(key, value)
+        }
+    }
+
+    fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
+
+
 
 }

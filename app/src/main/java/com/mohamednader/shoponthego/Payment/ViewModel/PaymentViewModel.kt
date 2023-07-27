@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Payment.ViewModel
 
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
@@ -29,20 +30,25 @@ class PaymentViewModel(private val repo: RepositoryInterface) : ViewModel() {
     val updatedDraftCartOrder: StateFlow<ApiState<DraftOrder>>
         get() = _updatedDraftCartOrder
 
-
     private var _customer: MutableStateFlow<ApiState<Customer>> =
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
-    val customer : StateFlow<ApiState<Customer>>
+    val customer: StateFlow<ApiState<Customer>>
         get() = _customer
-
-
 
     //Draft Orders
     fun getAllDraftOrdersFromNetwork(customerID: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllDraftOrdersFromNetwork: HomeViewModel")
             repo.getAllDraftOrders().catch { e -> _draftOrdersList.value = ApiState.Failure(e) }
-                .map { data -> data.filter { it.customer!!.id == customerID && it.note == "cartDraft" } }
+                .map { data ->
+                    data.filter {
+                        try {
+                            it.customer!!.id == customerID && it.note == "cartDraft"
+                        }catch (e: Exception){
+                            false
+                        }
+                    }
+                }
                 .collect { data ->
                     _draftOrdersList.value = ApiState.Success(data)
                 }
@@ -60,17 +66,23 @@ class PaymentViewModel(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
-
-
-
-    fun getCustomerByID(customerID: Long){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getCustomerByID(customerID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllProductsFromNetwork: HomeViewModel")
             repo.getCustomerByID(customerID)
                 .catch { e -> _customer.value = ApiState.Failure(e) }
-                .collect{ data -> _customer.value = ApiState.Success(data)
+                .collect { data ->
+                    _customer.value = ApiState.Success(data)
                 }
         }
     }
+
+    fun saveStringDS(key: Preferences.Key<String>, value: String) {
+        viewModelScope.launch {
+            repo.saveStringDS(key, value)
+        }
+    }
+
+    fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
 
 }

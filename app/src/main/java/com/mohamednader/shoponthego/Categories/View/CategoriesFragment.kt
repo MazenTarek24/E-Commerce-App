@@ -3,11 +3,11 @@ package com.mohamednader.shoponthego.Categories.View
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +20,7 @@ import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
@@ -28,7 +28,8 @@ import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceFilterDialogFragment.PriceFilterListener  {
+class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
+                           PriceFilterDialogFragment.PriceFilterListener {
 
     lateinit var binding: FragmentCategoriesBinding
 
@@ -38,15 +39,13 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
     lateinit var categoryAdapter: CategoryAdapter
     lateinit var catLayoutManager: LayoutManager
 
-
     val TAG = "CategoryResponseSuccessfully"
 
-     var categoryId: Long = 0
-
+    var categoryId: Long = 0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentCategoriesBinding.inflate(layoutInflater, container, false)
@@ -96,49 +95,45 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
 
     private fun displayProductType(productType: String) {
         categoryAdapter.deleteProductBrand()
-        getAllCategory(categoryId,productType)
+        getAllCategory(categoryId, productType)
     }
-
 
     private fun initViews() {
 
         factory = CategoryViewModelFactory(Repository.getInstance(
-            ApiClient.getInstance(),
-            ConcreteLocalSource(requireContext()),
-            ConcreteSharedPrefsSource(requireContext())
+                ApiClient.getInstance(),
+                ConcreteLocalSource(requireContext()),
+                ConcreteDataStoreSource(requireContext())
         ))
         categoryViewModel = ViewModelProvider(this, factory)
             .get(CategoriesViewModel::class.java)
 
     }
 
-    private fun getAllCategory(collectionId : Long , product_type : String)
-    {
+    private fun getAllCategory(collectionId: Long, product_type: String) {
         lifecycleScope.launch(Dispatchers.Main) {
-            categoryViewModel.productCategory.collect{result->
-                when(result)
-                {
+            categoryViewModel.productCategory.collect { result ->
+                when (result) {
                     is ApiState.Success -> {
                         if (result.data.isNotEmpty()) {
                             Log.i(TAG,
-                                "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}")
+                                    "onCreateCategory: SuccessFetchCategory...{${result.data[0].title}}")
                             binding.rvCategory.visibility = View.VISIBLE
                             binding.imgNoProduct.visibility = View.GONE
 
-                            val filterdProduct = if (!product_type.isNullOrBlank())
-                            {
+                            val filterdProduct = if (!product_type.isNullOrBlank()) {
                                 result.data.filter { it.productType == product_type }
-                            }else{
+                            } else {
                                 result.data
                             }
                             categoryAdapter.submitList(filterdProduct)
 
-                        }else{
+                        } else {
                             binding.rvCategory.visibility = View.GONE
 
                             binding.imgNoProduct.visibility = View.VISIBLE
                             Log.i(TAG,
-                                "onCreateCategory: ListCategoryIsEmpty")
+                                    "onCreateCategory: ListCategoryIsEmpty")
                         }
 
                     }
@@ -147,99 +142,92 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
                     }
                     is ApiState.Failure -> {
                         Toast.makeText(requireContext(),
-                            "There Was An Error when fetching Category Products", Toast.LENGTH_SHORT).show()
+                                "There Was An Error when fetching Category Products",
+                                Toast.LENGTH_SHORT).show()
                     }
                 }
             }
         }
-       categoryViewModel.getAllProductCategory(collectionId,product_type)
+        categoryViewModel.getAllProductCategory(collectionId, product_type)
     }
 
-
-    private fun setSaleCategory()
-    {
+    private fun setSaleCategory() {
         categoryId = 456248230205
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId,"")
+        getAllCategory(categoryId, "")
     }
-    private fun setCategoryWomen()
-    {
-         categoryId = 456248164669
+
+    private fun setCategoryWomen() {
+        categoryId = 456248164669
         categoryAdapter.deleteProductBrand()
 
-         getAllCategory(categoryId,"",)
+        getAllCategory(categoryId, "")
 
     }
-    private fun setCategoryMen()
-    {
-       categoryId = 456248131901
+
+    private fun setCategoryMen() {
+        categoryId = 456248131901
         categoryAdapter.deleteProductBrand()
 
-       getAllCategory(categoryId,"")
+        getAllCategory(categoryId, "")
 
     }
 
-    private fun setCategoryKids()
-    {
+    private fun setCategoryKids() {
         categoryId = 456248197437
         categoryAdapter.deleteProductBrand()
 
-        getAllCategory(categoryId,"")
+        getAllCategory(categoryId, "")
 
     }
 
-
-
-    private fun initRvCategory()
-    {
-        categoryAdapter = CategoryAdapter(){
+    private fun initRvCategory() {
+        categoryAdapter = CategoryAdapter {
             val intent = Intent(context, ProductInfo::class.java)
-            intent.putExtra("id",it )
+            intent.putExtra("id", it)
             startActivity(intent)
 
         }
 
-        catLayoutManager = GridLayoutManager(context,2)
+        catLayoutManager = GridLayoutManager(context, 2)
         binding.rvCategory.apply {
             adapter = categoryAdapter
             layoutManager = catLayoutManager
         }
 
-
     }
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-        when(tab?.position)
-        {
+        when (tab?.position) {
             0 -> {
                 setCategoryWomen()
             }
             1 -> {
-               setCategoryMen()
+                setCategoryMen()
 
             }
-            2 ->{
+            2 -> {
                 setCategoryKids()
             }
 
-            3 ->{
+            3 -> {
                 setSaleCategory()
             }
         }
     }
 
     override fun onTabUnselected(tab: TabLayout.Tab?) {
-       Log.i(TAG,"selected")
+        Log.i(TAG, "selected")
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {
-        Log.i(TAG,"selected")
+        Log.i(TAG, "selected")
 
     }
 
     override fun onPriceFiltered(priceFrom: Double, priceTo: Double) {
-        filterByPrice(priceFrom , priceTo)
+        filterByPrice(priceFrom, priceTo)
     }
 
     private fun filterByPrice(priceFrom: Double, priceTo: Double) {
@@ -270,7 +258,6 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
         }
     }
 
-
     private fun Navigation() {
         binding.fav.setOnClickListener {
             val intent = Intent(requireContext(), FavActivty::class.java)
@@ -288,6 +275,5 @@ class CategoriesFragment : Fragment() , TabLayout.OnTabSelectedListener , PriceF
             startActivity(intent)
         }
     }
-
 
 }

@@ -10,9 +10,9 @@ import com.paypal.checkout.createorder.UserAction
 
 class App : Application() {
 
-    var clientID = "AbxAPOWEu8sCmJUizsb1pRfaWSLdCvYwEYNbNDYeY_v8-ZvJky3UA_10N4chH2rczde6-vaFlSgNxaT9"
+    var clientID =
+        "AbxAPOWEu8sCmJUizsb1pRfaWSLdCvYwEYNbNDYeY_v8-ZvJky3UA_10N4chH2rczde6-vaFlSgNxaT9"
     var returnUrl = "com.mohamednader.shoponthego://paypalpay"
-
 
     //email : sb-fbrmj26182867@business.example.com
     //password: g^Y3ycZV

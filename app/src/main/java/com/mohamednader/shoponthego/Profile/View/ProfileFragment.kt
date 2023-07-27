@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,17 +26,15 @@ import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
+import com.mohamednader.shoponthego.Order.view.OrderActivity
 import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
 import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
 import com.mohamednader.shoponthego.Profile.ViewModel.ProfileViewModel
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogCurrenciesBinding
-import androidx.navigation.Navigation
-import com.mohamednader.shoponthego.Order.view.OrderActivity
-import com.mohamednader.shoponthego.R
 import com.mohamednader.shoponthego.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
 
@@ -65,6 +64,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     lateinit var currenciesList: List<CurrencyInfo>
     lateinit var addressesList: List<Address>
     lateinit var customer: Customer
+    lateinit var customerId: String
+
 
     val ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE: Int = 1234
 
@@ -88,7 +89,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         //View Model
         factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
                 ConcreteLocalSource(requireContext()),
-                ConcreteSharedPrefsSource(requireContext())))
+                ConcreteDataStoreSource(requireContext())))
         profileViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
         //Currency Bottom Sheet
@@ -123,7 +124,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
         binding.moreText.setOnClickListener {
-            val intent = Intent(requireContext() , OrderActivity::class.java)
+            val intent = Intent(requireContext(), OrderActivity::class.java)
             startActivity(intent)
         }
 
@@ -146,15 +147,20 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     }
 
     private fun apiRequests() {
-
         lifecycleScope.launchWhenStarted {
-            profileViewModel.getCustomerByIdFromNetwork(Constants.customerID)
-            profileViewModel.getAllCurrenciesFromNetwork()
-
-        }
 
 
-        lifecycleScope.launchWhenStarted {
+            launch {
+                profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+                    .observe(requireActivity()) { customerID ->
+                        // Update UI with the retrieved name
+                        Log.i(TAG, "apiRequests: VIP: $customerID")
+                        customerId = customerID!!
+                        profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
+                        profileViewModel.getAllCurrenciesFromNetwork()
+                    }
+            }
+
 
             launch {
 
@@ -186,8 +192,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Success<Customer> -> {
                             customer = result.data
 
-                            binding.nameText.setText("${customer.firstName} ${customer.lastName}")
-                            binding.emailText.setText(customer.email)
+                            binding.nameText.text = customer.firstName
+                            binding.emailText.text = customer.email
 
 
                             addressesList = result.data.addresses!!
@@ -248,7 +254,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val resultAddress: Address = data?.getSerializableExtra("Address") as Address
-            Log.i(TAG, "onActivityResult: ${resultAddress.toString()}")
+            Log.i(TAG, "onActivityResult: $resultAddress")
 
             val updatedAddresses = customer.addresses
             updatedAddresses?.add(resultAddress)

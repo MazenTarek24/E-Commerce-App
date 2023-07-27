@@ -12,30 +12,28 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(val repository: Repository)  : ViewModel(){
+class CategoriesViewModel(val repository: Repository) : ViewModel() {
     private val TAG = "CategoryProductViewModel_INFO_TAG"
 
-    private val _productCategory : MutableStateFlow<ApiState<List<Product>>> =
-       MutableStateFlow(ApiState.Loading)
-    val productCategory : StateFlow<ApiState<List<Product>>> get() = _productCategory
+    private val _productCategory: MutableStateFlow<ApiState<List<Product>>> =
+        MutableStateFlow(ApiState.Loading)
+    val productCategory: StateFlow<ApiState<List<Product>>> get() = _productCategory
 
     private var _productsList: MutableStateFlow<ApiState<List<Product>>> =
         MutableStateFlow<ApiState<List<Product>>>(ApiState.Loading)
-    val productList : StateFlow<ApiState<List<Product>>>
+    val productList: StateFlow<ApiState<List<Product>>>
         get() = _productsList
 
-
-    fun getAllProductCategory(collectionId : Long , productType : String )
-    {
+    fun getAllProductCategory(collectionId: Long, productType: String) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getAllCategoryProducts: ")
-            repository.getAllProductCategory(collectionId,productType)
-            .catch {error->
-                _productCategory.value = ApiState.Failure(error)
-             }.collect{result->
-                 _productCategory.value = ApiState.Success(result)
+            repository.getAllProductCategory(collectionId, productType)
+                .catch { error ->
+                    _productCategory.value = ApiState.Failure(error)
+                }.collect { result ->
+                    _productCategory.value = ApiState.Success(result)
 
                 }
-            }
+        }
     }
 }

@@ -28,15 +28,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.mohamednader.shoponthego.R
-import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.MapResultListenerHolder
 import com.mohamednader.shoponthego.databinding.ActivityMapsBinding
 import java.io.IOException
 import java.io.Serializable
 import java.util.*
 
-class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Serializable,
-                       ConfirmAddress.getDataDialogListener {
+class MapsActivity : FragmentActivity(), OnMapReadyCallback, Serializable,
+                     ConfirmAddress.getDataDialogListener {
 
     private lateinit var binding: ActivityMapsBinding
     val TAG = "MapsActivity_INFO_TAG"
@@ -114,7 +113,7 @@ class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Serializable,
     fun getDeviceLocation() {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         try {
-            val location: Task<*> = mFusedLocationProviderClient.getLastLocation()
+            val location: Task<*> = mFusedLocationProviderClient.lastLocation
             location.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.e("Success", "done getting location in map ")
@@ -169,7 +168,7 @@ class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Serializable,
             val address = addresses[0].countryName + "/" + addresses[0].adminArea
             val city = addresses[0].locality
             val country = addresses[0].countryName
-              val street = addresses[0].thoroughfare
+            val street = addresses[0].adminArea
 
             val ft = supportFragmentManager.beginTransaction()
             val prev = fragmentManager.findFragmentByTag("dialog")
@@ -193,14 +192,19 @@ class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Serializable,
         }
     }
 
-    override fun onFinishDialog(lat: Double, lon: Double, Address: String,country: String, city: String, street: String ) {
+    override fun onFinishDialog(lat: Double,
+                                lon: Double,
+                                Address: String,
+                                country: String,
+                                city: String,
+                                street: String) {
         bundle.putDouble("selectedLat", lat)
         bundle.putDouble("selectedLong", lon)
         bundle.putString("selectedAddress", Address)
         Log.i(TAG, "onFinishDialog: FROM MAPS ACTIVITY : $lat, $lon, $Address ")
 
 
-        MapResultListenerHolder.listener?.onMapResult(lat, lon, Address, country , city , street)
+        MapResultListenerHolder.listener?.onMapResult(lat, lon, Address, country, city, street)
         finish()
 //        mapResultDialog.setArguments(bundle)
 //        mapResultDialog.show((this as FragmentActivity).supportFragmentManager, "MapResultDialog")
@@ -225,7 +229,6 @@ class MapsActivity() : FragmentActivity(), OnMapReadyCallback, Serializable,
             }
         }
     }
-
 
     private fun checkPermissions(): Boolean {
         val result = ActivityCompat.checkSelfPermission(

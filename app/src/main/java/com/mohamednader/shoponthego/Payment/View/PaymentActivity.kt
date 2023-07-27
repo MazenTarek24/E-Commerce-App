@@ -2,15 +2,17 @@ package com.mohamednader.shoponthego.Payment.View
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
@@ -20,11 +22,11 @@ import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Payment.ViewModel.PaymentViewModel
 import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
 import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityPaymentBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
+import com.mohamednader.shoponthego.databinding.BottomSheetDialogPaymentMethodBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -40,15 +42,17 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
     //Addresses Bottom Sheet
     lateinit var addressBottomSheetBinding: BottomSheetDialogAddressesBinding
+    lateinit var paymentMethodBottomSheetBinding: BottomSheetDialogPaymentMethodBinding
     lateinit var addressBottomSheetDialog: BottomSheetDialog
+    lateinit var paymentMethodBottomSheetDialog: BottomSheetDialog
     private lateinit var addressAdapter: AddressAdapter
     private lateinit var addressLinearLayoutManager: LinearLayoutManager
-
 
     //Needed Variables
     lateinit var draftOrder: DraftOrder
     lateinit var customer: Customer
     lateinit var addressesList: List<Address>
+    lateinit var customerId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +69,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
         //View Model
         factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
                 ConcreteLocalSource(this@PaymentActivity),
-                ConcreteSharedPrefsSource(this@PaymentActivity)))
+                ConcreteDataStoreSource(this@PaymentActivity)))
         paymentViewModel = ViewModelProvider(this, factory).get(PaymentViewModel::class.java)
-
 
         //Address Bottom Sheet
         addressAdapter = AddressAdapter(this@PaymentActivity, this, "Payment")
@@ -80,13 +83,25 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             adapter = addressAdapter
             layoutManager = addressLinearLayoutManager
         }
+        addressBottomSheetBinding.fab.visibility = View.GONE
+
+
+
+        paymentMethodBottomSheetBinding = BottomSheetDialogPaymentMethodBinding.inflate(layoutInflater)
+        paymentMethodBottomSheetDialog = BottomSheetDialog(this@PaymentActivity)
+        paymentMethodBottomSheetDialog.setContentView(paymentMethodBottomSheetBinding.root)
+
+
+
+
+
 
         binding.backArrowImg.setOnClickListener {
             onBackPressed()
         }
 
         binding.changePaymentMethod.setOnClickListener {
-
+            paymentMethodBottomSheetDialog.show()
         }
 
 
@@ -99,6 +114,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
         }
 
+        paymentMethodBottomSheetBinding.cashSelectBtn.setOnClickListener {
+            binding.paymentMethodText.setText("Cash On Delivery")
+            paymentMethodBottomSheetDialog.dismiss()
+        }
+        paymentMethodBottomSheetBinding.paypalSelectBtn.setOnClickListener {
+            binding.paymentMethodText.setText("Using PayPal")
+            paymentMethodBottomSheetDialog.dismiss()
+        }
 
         apiRequests()
     }
@@ -106,12 +129,20 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
     private fun apiRequests() {
 
         lifecycleScope.launchWhenStarted {
-            paymentViewModel.getAllDraftOrdersFromNetwork(Constants.customerID)
-            paymentViewModel.getCustomerByID(Constants.customerID)
-        }
+
+            launch {
+                paymentViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+                    .observe(this@PaymentActivity) { customerID ->
+                        // Update UI with the retrieved name
+                        Log.i(TAG, "apiRequests: VIP: $customerID")
+                        customerId = customerID!!
+                        paymentViewModel.getAllDraftOrdersFromNetwork(customerId.toLong())
+                        paymentViewModel.getCustomerByID(customerId.toLong())
+                    }
+            }
 
 
-        lifecycleScope.launchWhenStarted {
+
             launch {
                 paymentViewModel.draftOrdersList.collectLatest { result ->
                     when (result) {
@@ -158,8 +189,6 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
                             draftOrder = result.data
 
-
-
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -183,9 +212,10 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                             binding.cityText.text = customer.defaultAddress?.city
                             binding.countryText.text = customer.defaultAddress?.country
                             binding.phoneText.text = customer.defaultAddress?.phone
-                            binding.nameText.text = "${customer.defaultAddress?.firstName} + ${customer.defaultAddress?.lastName}"
-
-
+                            binding.nameText.text =
+                                "${customer.defaultAddress?.firstName}  ${customer.defaultAddress?.lastName}"
+                            addressesList = customer.addresses!!
+                            addressAdapter.submitList(addressesList)
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -202,12 +232,18 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     override fun onAddressClickListener(addressId: Long) {
-        TODO("Not yet implemented")
+        addressesList.filter {
+            it.id == addressId
+        }.map {
+            binding.streetText.text = it.address1
+            binding.cityText.text = it.city
+            binding.countryText.text = it.country
+            binding.phoneText.text = it.phone
+            binding.nameText.text =
+                "${it.firstName} + ${it.lastName}"
+        }
+        addressBottomSheetDialog.dismiss()
     }
 
     override fun onMakeDefaultClickListener(addressId: Long) {

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -48,10 +50,17 @@
 
         <activity
             android:name=".Splash.View.SplashActivity"
-            android:exported="false">
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".Intro.View.IntroActivity"
@@ -91,13 +100,7 @@
         <activity
 
             android:name=".Auth.SignUp.View.SignUpActivity"
-
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
 
             <meta-data
                 android:name="android.app.lib_name"
@@ -119,6 +122,13 @@
             android:name=".Maps.MapsActivity"
             android:exported="false"
             android:label="Maps" />
+
+        <activity
+            android:name=".AddressConfig.View.AddressConfig"
+            android:exported="false"
+            android:label="Maps" />
+
+
     </application>
 
 </manifest>

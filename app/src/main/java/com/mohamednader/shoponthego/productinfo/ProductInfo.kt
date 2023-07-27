@@ -6,28 +6,23 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.example.example.DraftOrdermo
-import com.example.example.DraftOrders
-import com.example.example.Images
-import com.example.example.SingleProduct
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
-import com.mohamednader.shoponthego.Model.Pojo.*
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
-import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
-import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItemProperties
-import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.*
+import com.mohamednader.shoponthego.Model.Pojo.Products.Image
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.R
-import com.mohamednader.shoponthego.SharedPrefs.ConcreteSharedPrefsSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.Constants.COLORS_TYPE
 import com.mohamednader.shoponthego.Utils.Constants.SIZES_TYPE
@@ -39,11 +34,10 @@ import kotlinx.coroutines.launch
 class ProductInfo : AppCompatActivity() {
     private val TAG = "ProductInfo_INFO_TAG"
     private lateinit var firebaseAuth: FirebaseAuth
-    private var product: SingleProduct = SingleProduct()
+    private var product: Product = Product()
     lateinit var productObject: Product
     private var draftOrdersID: String = ""
-    private var lineItems: List<com.mohamednader.shoponthego.Model.Pojo.LineItems>? =
-        listOf<com.mohamednader.shoponthego.Model.Pojo.LineItems>()
+    private var lineItems: List<LineItem>? = listOf<LineItem>()
     var mutable = lineItems?.toMutableList()
 
     //View Model Members
@@ -51,8 +45,10 @@ class ProductInfo : AppCompatActivity() {
     private lateinit var colorsAdapter: ColorsAndSizesAdapter
     private lateinit var sizesAdapter: ColorsAndSizesAdapter
     private lateinit var factory: GenericViewModelFactory
-    var images: ArrayList<Images>? = null
-    lateinit var draftOrder: com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
+    var images: List<Image> = emptyList()
+    lateinit var draftOrder: DraftOrder
+    lateinit var customerId: String
+    var productId: Long = 0
 
     private lateinit var binding: ActivityProductInfoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +62,7 @@ class ProductInfo : AppCompatActivity() {
         firebaseAuth = Firebase.auth
         val intent = intent
 
-        val productId = intent.getLongExtra("id", 0)
+        productId = intent.getLongExtra("id", 0)
 
 
         colorsAdapter = ColorsAndSizesAdapter(COLORS_TYPE)
@@ -88,15 +84,11 @@ class ProductInfo : AppCompatActivity() {
         viewModelProductInfo.getAllDraftsOrder()
 
         apicall()
-        apicallForgetdraftwithId()
-        apicallForgetAllDrafts()
-        apicallForModifyDrafts()
 
         binding.Addtofav.setOnClickListener {
             val mutablelist = lineItems?.toMutableList()
-
-            mutablelist?.add(LineItems(productId,
-                    product.variants.get(0).id,
+            mutablelist?.add(LineItem(productId,
+                    product.variants?.get(0)?.id,
                     productId,
                     product.title,
                     "",
@@ -108,35 +100,24 @@ class ProductInfo : AppCompatActivity() {
                     true,
                     "",
                     1,
-                    listOf(TaxLine("", "")),
                     AppliedDiscount("", "", "", "", ""),
                     product.title,
                     listOf(LineItemProperties("img_src", product.image?.src!!)),
                     true,
-                    "",
                     ""))
 
-            viewModelProductInfo.modifyDraftsOrder(DraftOrderResponse(DraftOrder(productId,
-                    "",
-                    "",
-                    true,
-                    "",
-                    "",
-                    "",
-                    "",
-                    true,
-                    "",
-                    "",
-                    "",
-                    mutablelist
 
-            )), draftOrdersID.toLong())
-            Toast.makeText(this@ProductInfo, "adding to Favourite", Toast.LENGTH_SHORT).show()
+
+            if (draftOrdersID.isEmpty()) {
+                val draftOrder = DraftOrder(lineItems = mutablelist, customer = Customer(customerId.toLong()), note = "favDraft")
+                viewModelProductInfo.createDraftOrder(SingleDraftOrderResponse(draftOrder))
+            } else {
+                viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = mutablelist,
+                        note = "favDraft")), draftOrdersID.toLong())
+                Toast.makeText(this@ProductInfo, "adding to Favourite", Toast.LENGTH_SHORT).show()
+            }
 
         }
-
-        viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
-        viewModelProductInfo.getProductByIdFromNetwork(productId)
 
     }
 
@@ -144,7 +125,7 @@ class ProductInfo : AppCompatActivity() {
 
         factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
                 ConcreteLocalSource(this),
-                ConcreteSharedPrefsSource(this)))
+                ConcreteDataStoreSource(this)))
 
         viewModelProductInfo =
             ViewModelProvider(this, factory).get(ViewModelProductInfo::class.java)
@@ -154,22 +135,38 @@ class ProductInfo : AppCompatActivity() {
         lifecycleScope.launch {
 
             launch {
+                viewModelProductInfo.getStringDS(Constants.customerIdKey).asLiveData()
+                    .observe(this@ProductInfo) { customerID ->
+                        // Update UI with the retrieved name
+                        Log.i(TAG, "apiRequests: VIP: $customerID")
+                        customerId = customerID!!
+
+                        viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
+                        viewModelProductInfo.getProductByIdFromNetwork(productId)
+                        apicallForgetdraftwithId()
+                        apicallForgetAllDrafts()
+                        apicallForModifyDrafts()
+
+                    }
+            }
+
+            launch {
                 viewModelProductInfo.product.collect { result ->
                     when (result) {
-                        is ApiState.Success<SingleProduct> -> {
-                            Log.i(TAG, "onCreate: Success...{${result.data.options.get(0)}")
+                        is ApiState.Success<Product> -> {
+                            Log.i(TAG, "onCreate: Success...{${result.data.options?.get(0)}")
                             binding.descriptiontxv.text = result.data.bodyHtml
                             product = result.data
-                            images = result.data.images
-                            binding.pricetv.text = result.data.variants.get(0).price
+                            images = result.data.images!!
+                            binding.pricetv.text = result.data.variants?.get(0)?.price
                             binding.productnametv.text = result.data.title
-                            println(result.data.options.get(0).values)
+                            println(result.data.options?.get(0)?.values)
 
-                            if (result.data.options.get(0).name == "Size") {
-                                sizesAdapter.differ.submitList(result.data.options.get(0).values)
+                            if (result.data.options?.get(0)?.name == "Size") {
+                                sizesAdapter.differ.submitList(result.data.options.get(0)?.values)
                             }
-                            if (result.data.options.get(0).name == "Color") {
-                                colorsAdapter.differ.submitList(result.data.options.get(0).values)
+                            if (result.data.options?.get(0)?.name == "Color") {
+                                colorsAdapter.differ.submitList(result.data.options.get(0)?.values)
                             }
 
                             val springDotsIndicator = findViewById<SpringDotsIndicator>(R.id.dot2)
@@ -177,14 +174,13 @@ class ProductInfo : AppCompatActivity() {
                             val adapter = ViewPagerProductinfoAdapter(result.data.images)
                             viewPager.adapter = adapter
                             springDotsIndicator.setViewPager(viewPager)
-                            binding.progressBar.visibility=View.GONE
-                            binding.scrollView2.visibility=View.VISIBLE
-
+                            binding.progressBar.visibility = View.GONE
+                            binding.scrollView2.visibility = View.VISIBLE
 
                         }
                         is ApiState.Loading -> {
-binding.progressBar.visibility=View.VISIBLE
-                            binding.scrollView2.visibility=View.GONE
+                            binding.progressBar.visibility = View.VISIBLE
+                            binding.scrollView2.visibility = View.GONE
 
                         }
                         is ApiState.Failure -> {
@@ -223,16 +219,16 @@ binding.progressBar.visibility=View.VISIBLE
             launch {
                 viewModelProductInfo.draftOrdersCartList.collect { result ->
                     when (result) {
-                        is ApiState.Success<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> -> {
+                        is ApiState.Success<List<DraftOrder>> -> {
                             if (result.data.isNotEmpty()) {
                                 draftOrder = result.data.get(0)
                                 Log.i(TAG, "onCreate: Success: Draft Orders:  ${draftOrder.id}")
                                 Log.i(TAG, "onCreate: Success: Draft Orders:  ${draftOrder.email}")
 
-                                val prop =
-                                    listOf(LineItemProperties("img_src", productObject.image.src),
-                                            LineItemProperties("quantity",
-                                                    productObject.variants!!.get(0).inventoryQuantity.toString()))
+                                val prop = listOf(LineItemProperties("img_src",
+                                        productObject.image?.src!!),
+                                        LineItemProperties("quantity",
+                                                productObject.variants!!.get(0).inventoryQuantity.toString()))
 
                                 draftOrder.lineItems!!.add(LineItem(variantId = productObject.variants!!.get(
                                         0).id, quantity = 1, properties = prop))
@@ -246,23 +242,21 @@ binding.progressBar.visibility=View.VISIBLE
                                 Log.i(TAG,
                                         "onCreate: updatedDraftOrder Success...The list is empty")
 
-                                val prop =
-                                    listOf(LineItemProperties("img_src", productObject.image.src),
-                                            LineItemProperties("quantity",
-                                                    productObject.variants!!.get(0).inventoryQuantity.toString()))
+                                val prop = listOf(LineItemProperties("img_src",
+                                        productObject.image?.src!!),
+                                        LineItemProperties("quantity",
+                                                productObject.variants!!.get(0).inventoryQuantity.toString()))
 
                                 val lineItem =
                                     LineItem(variantId = productObject.variants!!.get(0).id,
                                             quantity = 1,
                                             properties = prop)
 
-                                val customer = Customer(id = Constants.customerID)
+                                val customer = Customer(id = customerId.toLong())
 
-                                draftOrder =
-                                    com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder(
-                                            lineItems = mutableListOf(lineItem),
-                                            customer = customer,
-                                            note = "cartDraft")
+                                draftOrder = DraftOrder(lineItems = mutableListOf(lineItem),
+                                        customer = customer,
+                                        note = "cartDraft")
 
                                 viewModelProductInfo.addDraftOrderCartOnNetwork(
                                         SingleDraftOrderResponse(draftOrder))
@@ -292,8 +286,8 @@ binding.progressBar.visibility=View.VISIBLE
                                     "onCreate:updatedDraftOrder Success: Draft Orders Updated:  ${draftOrder.email}")
                             Log.i(TAG,
                                     "onCreate: Success: updatedDraftOrder Draft Orders Updated:  ${draftOrder.lineItems}")
-                            Toast.makeText(this@ProductInfo, "Added to Cart", Toast.LENGTH_SHORT)
-                                .show()
+//                            Toast.makeText(this@ProductInfo, "Added to Cart", Toast.LENGTH_SHORT)
+//                                .show()
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -311,7 +305,7 @@ binding.progressBar.visibility=View.VISIBLE
             launch {
                 viewModelProductInfo.newDraftOrder.collect { result ->
                     when (result) {
-                        is ApiState.Success<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> -> {
+                        is ApiState.Success<DraftOrder> -> {
                             val draftOrder = result.data
                             Log.i(TAG,
                                     "onCreate: newDraftOrder Success: Draft Orders Updated:  ${draftOrder.id}")
@@ -343,13 +337,13 @@ binding.progressBar.visibility=View.VISIBLE
 
             viewModelProductInfo.drafts.collect { result ->
                 when (result) {
-                    is ApiState.Success<List<DraftOrders>> -> {
+                    is ApiState.Success<List<DraftOrder>> -> {
                         for (draftOrder in result.data) {
                             val currentUser = firebaseAuth.currentUser
-                            if (currentUser?.email == draftOrder.customer?.email) {
+                            if (currentUser?.email == draftOrder.customer?.email && draftOrder.note == "favDraft") {
                                 draftOrdersID = draftOrder.id.toString()
                                 println(draftOrder.id)
-                                viewModelProductInfo.getDraftOrderWithId(draftOrder.id)
+                                viewModelProductInfo.getDraftOrderWithId(draftOrder.id!!)
 
                             }
 
@@ -398,7 +392,7 @@ binding.progressBar.visibility=View.VISIBLE
 
             viewModelProductInfo.modifydraft.collect { result ->
                 when (result) {
-                    is ApiState.Success<DraftOrdermo> -> {
+                    is ApiState.Success<DraftOrder> -> {
                         println("AAAAAAAAAAAAAAa" + result.data.id)
 
                     }
@@ -424,8 +418,8 @@ binding.progressBar.visibility=View.VISIBLE
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
                         println("12:51" + result.data.id)
-                        result.data.line_items
-                        lineItems = result.data.line_items
+                        result.data.lineItems
+                        lineItems = result.data.lineItems
 
                     }
                     is ApiState.Loading -> {
@@ -444,8 +438,8 @@ binding.progressBar.visibility=View.VISIBLE
     }
 
     private fun addItemToCart() {
-        Log.i(TAG, "addItemToCart: CUSTOMER ID ${Constants.customerID}")
-        viewModelProductInfo.getAllDraftOrdersCartFromNetwork(Constants.customerID)
+        Log.i(TAG, "addItemToCart: CUSTOMER ID ${customerId.toLong()}")
+        viewModelProductInfo.getAllDraftOrdersCartFromNetwork(customerId.toLong())
     }
 
 }

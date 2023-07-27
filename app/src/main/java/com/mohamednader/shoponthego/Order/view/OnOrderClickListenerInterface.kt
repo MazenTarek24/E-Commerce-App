@@ -1,8 +1,7 @@
 package com.mohamednader.shoponthego.Order.view
 
-import com.mohamednader.shoponthego.Model.order.Order
-import com.mohamednader.shoponthego.Model.order.OrderX
+import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 
 interface OnOrderClickListenerInterface {
-    fun onOrderClickListener(order: OrderX)
+    fun onOrderClickListener(order: Order)
 }

@@ -9,16 +9,12 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.mohamednader.shoponthego.Model.Pojo.LineItems
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.R
-import com.mohamednader.shoponthego.databinding.FavitemBinding
-import com.mohamednader.shoponthego.databinding.ListItemsearchBinding
 
-class MyListAdapter (
-    private val context: Context, val Open: (Product)->Unit
-): ListAdapter<Product, MyListAdapter.MyViewHolder>(StringDiffCallback()) {
+class MyListAdapter(
+        private val context: Context, val Open: (Product) -> Unit
+) : ListAdapter<Product, MyListAdapter.MyViewHolder>(StringDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -28,8 +24,8 @@ class MyListAdapter (
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item.title)
-        holder.layout.setOnClickListener{
+        holder.bind(item.title!!)
+        holder.layout.setOnClickListener {
             Open(item)
         }
 
@@ -37,8 +33,7 @@ class MyListAdapter (
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemText: TextView = itemView.findViewById(R.id.itemText)
-         val layout: ConstraintLayout = itemView.findViewById(R.id.layout)
-
+        val layout: ConstraintLayout = itemView.findViewById(R.id.layout)
 
         fun bind(item: String) {
             itemText.text = item
@@ -54,7 +49,8 @@ class MyListAdapter (
         override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
             return oldItem == newItem
         }
-    }}
+    }
+}
 
 //class MyListAdapter(
 //private val context: Context, val open: (Product)->Unit

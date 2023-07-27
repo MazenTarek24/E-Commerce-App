@@ -1,6 +1,5 @@
 package com.mohamednader.shoponthego.Model.Pojo.DraftOrders
 
-
 /*
 
 "title": "title of the discount",
@@ -12,9 +11,9 @@ package com.mohamednader.shoponthego.Model.Pojo.DraftOrders
  */
 
 data class AppliedDiscount(
-    val title: String,
-    val description: String,
-    val value: String,
-    val value_type: String,
-    val amount: String
+        val title: String,
+        val description: String,
+        val value: String,
+        val value_type: String,
+        val amount: String
 )

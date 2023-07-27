@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 
 class GenericViewModelFactory(private val repo: RepositoryInterface) :
-    ViewModelProvider.Factory {
+        ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return try {

@@ -57,8 +57,8 @@ class ConfirmAddress : DialogFragment(), OnMapReadyCallback {
         mapFragment = fm.findFragmentById(R.id.mapp) as? SupportMapFragment
 
         if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.mapp, mapFragment!!).commit();
+            mapFragment = SupportMapFragment.newInstance()
+            fm.beginTransaction().replace(R.id.mapp, mapFragment!!).commit()
         }
 
         mapFragment?.getMapAsync(this)

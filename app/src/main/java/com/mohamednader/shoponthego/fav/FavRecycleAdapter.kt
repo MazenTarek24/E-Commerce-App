@@ -7,17 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mohamednader.shoponthego.Model.Pojo.LineItems
-import com.example.example.SingleProduct
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
 import com.mohamednader.shoponthego.R
 
 import com.mohamednader.shoponthego.databinding.FavitemBinding
 
-
 class FavRecycleAdapter(
-    private val context: Context, val delete: (LineItems)->Unit
-) : ListAdapter<LineItems, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
-
+        private val context: Context, val delete: (LineItem) -> Unit
+) : ListAdapter<LineItem, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
 
     lateinit var binding: FavitemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -27,11 +24,9 @@ class FavRecycleAdapter(
 
     }
 
-
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        if(position+1>0) {
 
-            val currentItem: LineItems = getItem(position)
+            val currentItem: LineItem = getItem(position)
             try {
                 Glide.with(context).load(currentItem.properties?.get(0)?.value)
                     .placeholder(R.drawable.ic_launcher_foreground)
@@ -47,19 +42,19 @@ class FavRecycleAdapter(
             holder.binding.delete.setOnClickListener {
                 delete(currentItem)
             }
-        }
+
     }
 
     inner class ProductViewHolder(var binding: FavitemBinding) :
-        RecyclerView.ViewHolder(binding.root)
+            RecyclerView.ViewHolder(binding.root)
 }
 
-class ProductDiff : DiffUtil.ItemCallback<LineItems>() {
-    override fun areItemsTheSame(oldItem: LineItems, newItem: LineItems): Boolean {
+class ProductDiff : DiffUtil.ItemCallback<LineItem>() {
+    override fun areItemsTheSame(oldItem: LineItem, newItem: LineItem): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: LineItems, newItem: LineItems): Boolean {
+    override fun areContentsTheSame(oldItem: LineItem, newItem: LineItem): Boolean {
         return oldItem == newItem
     }
 

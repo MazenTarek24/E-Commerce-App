@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Profile.ViewModel
 
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
@@ -26,7 +27,6 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
     val customer: StateFlow<ApiState<Customer>>
         get() = _customer
-
 
     private var _updateCustomer: MutableStateFlow<ApiState<Customer>> =
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
@@ -70,8 +70,13 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
+    fun saveStringDS(key: Preferences.Key<String>, value: String) {
+        viewModelScope.launch {
+            repo.saveStringDS(key, value)
+        }
+    }
 
-
+    fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
 
     //To retrieve the all Currencies exchange Rate
     /*

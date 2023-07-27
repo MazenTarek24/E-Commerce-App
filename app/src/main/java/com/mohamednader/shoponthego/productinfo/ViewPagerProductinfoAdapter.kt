@@ -1,24 +1,21 @@
 package com.mohamednader.shoponthego.productinfo
 
-import android.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
-import com.example.example.Images
-import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding.inflate
+import com.mohamednader.shoponthego.Model.Pojo.Products.Image
 
-
-class ViewPagerProductinfoAdapter(photos: ArrayList<Images>) : PagerAdapter() {
-    private val mPhotos: ArrayList<Images>
+class ViewPagerProductinfoAdapter(photos: List<Image>) : PagerAdapter() {
+    private val mPhotos: List<Image>
 
     init {
         mPhotos = photos
     }
-private var images: ArrayList<Images> = mPhotos
 
+    private var images: List<Image> = mPhotos
 
     override fun getCount(): Int {
         return mPhotos.size
@@ -27,10 +24,13 @@ private var images: ArrayList<Images> = mPhotos
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val photo: Images = mPhotos[position]
+        val photo: Image = mPhotos[position]
         val inflater = LayoutInflater.from(container.context)
-        val view: View = inflater.inflate(com.mohamednader.shoponthego.R.layout.productinfoitem, container, false)
-        val imageView: ImageView = view.findViewById(com.mohamednader.shoponthego.R.id.image_viewproductinfo)
+        val view: View = inflater.inflate(com.mohamednader.shoponthego.R.layout.productinfoitem,
+                container,
+                false)
+        val imageView: ImageView =
+            view.findViewById(com.mohamednader.shoponthego.R.id.image_viewproductinfo)
 //        imageView.setImageResource(photo.src)
         Glide.with(imageView)
             .load(photo.src)
