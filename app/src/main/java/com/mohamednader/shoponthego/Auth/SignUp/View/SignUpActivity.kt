@@ -18,6 +18,7 @@ import com.mohamednader.shoponthego.Auth.Login.View.LoginActivity
 import com.mohamednader.shoponthego.Auth.Login.ViewModel.LoginViewModel
 import com.mohamednader.shoponthego.Auth.SignUp.ViewModel.SignUpViewModel
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
 import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
@@ -50,7 +51,7 @@ class SignUpActivity : AppCompatActivity() {
         customer = Customer()
         if (currentUser != null) {
 
-//            startActivity(Intent(this, MainHomeActivity::class.java))
+            startActivity(Intent(this, MainHomeActivity::class.java))
         }
         progressDialog = ProgressDialog(this)
         binding.signup.setOnClickListener {

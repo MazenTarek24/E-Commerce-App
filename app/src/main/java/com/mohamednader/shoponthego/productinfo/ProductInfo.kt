@@ -128,6 +128,7 @@ class ProductInfo : AppCompatActivity() {
                     mutablelist
 
             )), draftOrdersID.toLong())
+            Toast.makeText(this@ProductInfo, "adding to Favourite", Toast.LENGTH_SHORT).show()
 
         }
 

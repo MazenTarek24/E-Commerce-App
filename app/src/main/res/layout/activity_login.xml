@@ -70,8 +70,8 @@
 
     <EditText
         android:id="@+id/passwordEditText"
-        android:layout_width="348dp"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="47dp"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintStart_toStartOf="@+id/textView4"
