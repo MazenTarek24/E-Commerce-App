@@ -383,6 +383,10 @@ class ApiClient : RemoteSource {
 
     }
 
+    override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
+        val response = apiService.deleteUserAddress(customerId, addressId)
+    }
+
     override suspend fun getProductByID(productId: Long): Flow<Product> {
         val response = apiService.getProductByID(productId)
         val product: Flow<Product>

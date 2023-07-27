@@ -70,7 +70,7 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
 
         //Address Bottom Sheet
-        addressAdapter = AddressAdapter(this@PaymentActivity, this)
+        addressAdapter = AddressAdapter(this@PaymentActivity, this, "Payment")
         addressLinearLayoutManager =
             LinearLayoutManager(this@PaymentActivity, RecyclerView.VERTICAL, false)
         addressBottomSheetBinding = BottomSheetDialogAddressesBinding.inflate(layoutInflater)

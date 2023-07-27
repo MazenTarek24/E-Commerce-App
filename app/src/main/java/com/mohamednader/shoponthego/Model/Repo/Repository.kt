@@ -151,4 +151,8 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.updateCustomer(customerId, updatedCustomer)
     }
 
+    override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
+        remoteSource.deleteUserAddress(customerId, addressId)
+    }
+
 }

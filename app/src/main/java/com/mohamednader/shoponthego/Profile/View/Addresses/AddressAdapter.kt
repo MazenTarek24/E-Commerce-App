@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.databinding.ItemAddressBinding
 
-class AddressAdapter(private val context: Context, private val listener: OnAddressClickListener) :
+class AddressAdapter(private val context: Context, private val listener: OnAddressClickListener,val container: String) :
         ListAdapter<Address, AddressViewHolder>(AddressDiffUtil()) {
 
     private lateinit var binding: ItemAddressBinding
@@ -29,16 +29,20 @@ class AddressAdapter(private val context: Context, private val listener: OnAddre
         binding.phoneText.text = address.phone
         binding.nameText.text = "${address.firstName} + ${address.lastName}"
 
-        if(address.province == "Profile"){
-            binding.makeDefaultAddressBtn.visibility = View.VISIBLE
-            binding.deleteAddressBtn.visibility = View.VISIBLE
+        if(container == "Profile"){
 
             if (address.default == true){
                 binding.makeDefaultAddressBtn.visibility = View.GONE
+                binding.deleteAddressBtn.visibility = View.GONE
+
+            }else{
+                binding.makeDefaultAddressBtn.visibility = View.VISIBLE
+                binding.deleteAddressBtn.visibility = View.VISIBLE
+
             }
 
 
-        }else if(address.province == "Payment"){
+        }else if(container == "Payment"){
             binding.makeDefaultAddressBtn.visibility = View.GONE
             binding.makeDefaultAddressBtn.visibility = View.GONE
 

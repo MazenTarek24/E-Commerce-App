@@ -39,4 +39,7 @@
     <string name="favorite">Favorite</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="delete">Delete</string>
+    <string name="google_maps_api_key">AIzaSyAZO_qi1MU0oEo-s8zVGfSS57PQG6acskQ</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
 </resources>

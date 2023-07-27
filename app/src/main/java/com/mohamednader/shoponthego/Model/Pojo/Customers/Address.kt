@@ -20,4 +20,4 @@ data class Address(
         @SerializedName("country_code") val countryCode: String? = null,
         @SerializedName("country_name") val countryName: String? = null,
         var default: Boolean? = false
-)
+): java.io.Serializable

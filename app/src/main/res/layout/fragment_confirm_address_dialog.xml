@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/whitey"
+    android:orientation="vertical"
+    android:padding="@dimen/small_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="use this location "
+        android:textColor="@color/main_color"
+        android:textSize="@dimen/big_text"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/my_address_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/tiny_text" />
+
+
+    <fragment
+        android:id="@+id/mapp"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
+        android:orientation="horizontal"
+        android:padding="@dimen/small_text"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/change_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/tiny_margin"
+            android:layout_weight="1"
+            android:backgroundTint="@color/black"
+            android:text="change"
+            android:textColor="@color/whitey"
+            android:textSize="@dimen/tiny_text"
+              />
+
+        <Button
+            android:id="@+id/select_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/tiny_margin"
+            android:layout_weight="1"
+            android:backgroundTint="@color/main_color"
+            android:text="submit"
+            android:textColor="@color/whitey"
+            android:textSize="@dimen/tiny_text"
+              />
+
+    </LinearLayout>
+</LinearLayout>

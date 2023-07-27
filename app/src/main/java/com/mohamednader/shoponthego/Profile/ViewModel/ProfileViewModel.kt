@@ -27,6 +27,12 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
     val customer: StateFlow<ApiState<Customer>>
         get() = _customer
 
+
+    private var _updateCustomer: MutableStateFlow<ApiState<Customer>> =
+        MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
+    val updateCustomer: StateFlow<ApiState<Customer>>
+        get() = _updateCustomer
+
     fun getAllCurrenciesFromNetwork() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getCurrencyConvertor:  ViewModel")
@@ -51,11 +57,21 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "updateCustomerOnNetwork: HomeViewModel")
             repo.updateCustomer(customerId, updatedCustomer)
-                .catch { e -> _customer.value = ApiState.Failure(e) }.collect { data ->
-                    _customer.value = ApiState.Success(data)
+                .catch { e -> _updateCustomer.value = ApiState.Failure(e) }.collect { data ->
+                    _updateCustomer.value = ApiState.Success(data)
                 }
         }
     }
+
+    fun deleteCustomerAddressOnNetwork(customerId: Long, addressId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "updateCustomerOnNetwork: HomeViewModel")
+            repo.deleteUserAddress(customerId, addressId)
+        }
+    }
+
+
+
 
     //To retrieve the all Currencies exchange Rate
     /*
