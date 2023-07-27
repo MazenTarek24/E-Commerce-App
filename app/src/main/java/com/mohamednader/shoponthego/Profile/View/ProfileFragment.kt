@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Profile.View
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,12 +14,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.mohamednader.shoponthego.AddressConfig.View.AddressConfig
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CurrencyAdapter
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.OnCurrencyClickListener
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
@@ -63,6 +66,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     lateinit var addressesList: List<Address>
     lateinit var customer: Customer
 
+    val ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE: Int = 1234
+
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -99,13 +104,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
         //Address Bottom Sheet
-        addressAdapter = AddressAdapter(requireContext(), this)
+        addressAdapter = AddressAdapter(requireContext(), this, "Profile")
         addressLinearLayoutManager =
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         addressBottomSheetBinding = BottomSheetDialogAddressesBinding.inflate(layoutInflater)
         addressBottomSheetDialog = BottomSheetDialog(requireContext())
         addressBottomSheetDialog.setContentView(addressBottomSheetBinding.root)
-        addressBottomSheetBinding.currenciesRecyclerView.apply {
+        addressBottomSheetBinding.addressesRecyclerView.apply {
             adapter = addressAdapter
             layoutManager = addressLinearLayoutManager
         }
@@ -113,7 +118,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
 
         binding.currency.setOnClickListener {
-            currencyAdapter.submitList(currenciesList)
+//            currencyAdapter.submitList(currenciesList)
             currencyBottomSheetDialog.show()
         }
 
@@ -122,12 +127,19 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             startActivity(intent)
         }
 
-    }
+
 
         binding.address.setOnClickListener {
-            addressAdapter.submitList(addressesList)
+//            addressAdapter.submitList(addressesList)
             addressBottomSheetDialog.show()
         }
+
+        addressBottomSheetBinding.fab.setOnClickListener {
+            val intent = Intent(requireContext(), AddressConfig::class.java)
+            startActivityForResult(intent, ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE)
+            addressBottomSheetDialog.dismiss()
+        }
+
 
         apiRequests()
 
@@ -136,7 +148,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     private fun apiRequests() {
 
         lifecycleScope.launchWhenStarted {
-            profileViewModel.getCustomerByID(Constants.customerID)
+            profileViewModel.getCustomerByIdFromNetwork(Constants.customerID)
             profileViewModel.getAllCurrenciesFromNetwork()
 
         }
@@ -173,13 +185,48 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                     when (result) {
                         is ApiState.Success<Customer> -> {
                             customer = result.data
+
+                            binding.nameText.setText("${customer.firstName} ${customer.lastName}")
+                            binding.emailText.setText(customer.email)
+
+
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
                                 addressAdapter.submitList(addressesList)
                             } else {
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
-                                Toast.makeText(requireContext(), "There is no Address, please add one", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(),
+                                        "There is no Address, please add one",
+                                        Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
 
+
+            launch {
+                profileViewModel.updateCustomer.collect { result ->
+                    when (result) {
+                        is ApiState.Success<Customer> -> {
+                            customer = result.data
+
+                            addressesList = result.data.addresses!!
+                            if (addressesList.isNotEmpty()) {
+                                addressAdapter.submitList(addressesList)
+                            } else {
+                                Log.i(TAG, "onCreate: Success...The list is empty}")
+                                Toast.makeText(requireContext(),
+                                        "There is no Address, please add one",
+                                        Toast.LENGTH_SHORT).show()
                             }
                         }
                         is ApiState.Loading -> {
@@ -197,10 +244,63 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val resultAddress: Address = data?.getSerializableExtra("Address") as Address
+            Log.i(TAG, "onActivityResult: ${resultAddress.toString()}")
+
+            val updatedAddresses = customer.addresses
+            updatedAddresses?.add(resultAddress)
+
+            customer = customer.copy(addresses = updatedAddresses)
+            profileViewModel.updateCustomerOnNetwork(customer.id!!,
+                    SingleCustomerResponse(customer))
+
+/*
+val address = Address(firstName = customer.firstName,
+                                        lastName = customer.lastName,
+                                        country = "Egypt",
+                                        city = "Giza",
+                                        address1 = "Haday2 El Aharm",
+                                        phone = customer.phone)
+ */
+
+        }
+    }
 
     override fun onCurrencyClickListener(currencyISO: String) {
         Toast.makeText(requireContext(), "you Clicked $currencyISO", Toast.LENGTH_SHORT).show()
         currencyBottomSheetDialog.dismiss()
+    }
+
+    override fun onAddressClickListener(addressId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onMakeDefaultClickListener(addressId: Long) {
+        val updatedCustomer = customer
+        updatedCustomer.addresses?.filter { data ->
+            data.default == true
+        }?.map { data ->
+            data.default = false
+        }
+
+        updatedCustomer.addresses?.filter { data ->
+            data.id == addressId
+        }?.map { data ->
+            data.default = true
+        }
+        Log.i(TAG, "onMakeDefaultClickListener: $updatedCustomer")
+        profileViewModel.updateCustomerOnNetwork(customer.id!!, SingleCustomerResponse(customer))
+        addressBottomSheetDialog.dismiss()
+    }
+
+    override fun onDeleteClickListener(addressId: Long) {
+
+        profileViewModel.deleteCustomerAddressOnNetwork(customer.id!!, addressId)
+        profileViewModel.getCustomerByIdFromNetwork(customerID = customer.id!!)
+        addressBottomSheetDialog.dismiss()
     }
 
 }

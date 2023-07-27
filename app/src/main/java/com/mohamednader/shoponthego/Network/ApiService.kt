@@ -12,9 +12,7 @@ import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderRespo
 import com.mohamednader.shoponthego.Model.Pojo.Products.ProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.SingleProductResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.BrandResponse
-import com.mohamednader.shoponthego.Model.Pojo.customer.Customer
 import com.mohamednader.shoponthego.Model.order.Order
-import com.mohamednader.shoponthego.Model.order.OrderX
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -136,6 +134,7 @@ interface ApiService {
     @GET("products/{id}.json")
     suspend fun getProductByID(@Path("id") productId: Long): Response<SingleProductResponse>
 
+    //Customers
     @Headers("X-Shopify-Access-Token: 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")
     @GET("customers.json")
     suspend fun getAllCustomers(): Response<CustomerResponse>
@@ -145,5 +144,14 @@ interface ApiService {
     @GET("customers/{id}.json")
     suspend fun getCustomerByID(@Path("id") customerId: Long): Response<SingleCustomerResponse>
 
+    @Headers("X-Shopify-Access-Token: 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")
+    @PUT("customers/{id}.json")
+    suspend fun updateCustomer(@Path("id") customerId: Long,
+                               @Body updatedCustomer: SingleCustomerResponse): Response<SingleCustomerResponse>
+
+    @Headers("X-Shopify-Access-Token: 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")
+    @DELETE("customers/{customerId}/addresses/{addressId}.json")
+    suspend fun deleteUserAddress(@Path("customerId") customerId: Long,
+                               @Path("addressId") addressId: Long)
 
 }

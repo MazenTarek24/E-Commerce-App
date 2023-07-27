@@ -7,6 +7,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
@@ -18,7 +19,6 @@ import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.Credentials
 
@@ -163,8 +163,6 @@ class ApiClient : RemoteSource {
         }
         return productCategoryList
     }
-
-
 
 //    override suspend fun getAllProductCategoryByType(productType: String): Flow<List<Product>> {
 //        val response = apiService.getAllCategoryProductByType(productType)
@@ -392,6 +390,25 @@ class ApiClient : RemoteSource {
         return customer
     }
 
+    override suspend fun updateCustomer(customerId: Long,
+                                        updatedCustomer: SingleCustomerResponse): Flow<Customer> {
+        val response = apiService.updateCustomer(customerId, updatedCustomer)
+        val customer: Flow<Customer>
+        Log.i(TAG, "updateCustomer: API-Client")
+        if (response.isSuccessful) {
+            customer = flowOf(response.body()!!.customer)
+            Log.i(TAG, "updateCustomer: Done")
+        } else {
+            customer = emptyFlow()
+            Log.i(TAG, "updateCustomer: ${response.errorBody().toString()}")
+        }
+        return customer
+
+    }
+
+    override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
+        val response = apiService.deleteUserAddress(customerId, addressId)
+    }
 
     override suspend fun getProductByID(productId: Long): Flow<Product> {
         val response = apiService.getProductByID(productId)

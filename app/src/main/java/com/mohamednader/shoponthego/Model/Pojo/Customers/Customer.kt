@@ -16,7 +16,7 @@ data class Customer(
         @SerializedName("last_order_name") val lastOrderName: String?,
         val currency: String?,
         @SerializedName("phone") val phone: String?,
-        val addresses: List<Address>?,
+        val addresses: MutableList<Address>?,
         @SerializedName("default_address") val defaultAddress: Address?
 
 
