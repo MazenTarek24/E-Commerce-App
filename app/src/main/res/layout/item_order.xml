@@ -5,29 +5,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <TextView
-        android:id="@+id/order_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="@dimen/_25sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/mid_margin"
-        android:text="Orders"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_20sdp"
-        android:textStyle="bold"
-        />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_220sdp"
+        android:layout_height="@dimen/_200sdp"
         android:layout_margin="@dimen/mid_margin"
         android:layout_marginTop="@dimen/mid_margin"
         app:cardCornerRadius="@dimen/big_margin"
         app:cardElevation="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_text">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -57,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/item_img_card"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />
@@ -68,6 +57,7 @@
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_toEndOf="@id/item_img_card"
                     android:text="$250.00"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />
                 <TextView
@@ -78,6 +68,7 @@
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_toEndOf="@id/item_img_card"
                     android:text="$250.00"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />
                 <TextView
@@ -86,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/item_img_card"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_18sdp" />

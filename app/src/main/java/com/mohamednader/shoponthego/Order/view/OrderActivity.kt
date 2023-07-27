@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -42,13 +43,7 @@ class OrderActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
 
-        ordersAdapter = OrdersAdapter()
-
-        orderLayoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
-        binding.recyclerOrder.apply {
-            adapter = ordersAdapter
-            layoutManager = orderLayoutManager
-        }
+        initRvOrder()
 
 
         factory = OrderViewModelFactory(Repository.getInstance(ApiClient.getInstance() ,
@@ -58,7 +53,18 @@ class OrderActivity : AppCompatActivity()  {
         getAllOrder()
 
 
+        binding.backArrowImg.setOnClickListener {
+            OnBackPressed()
+        }
+
     }
+
+
+    private fun OnBackPressed() {
+        val navController = Navigation.findNavController(binding.root)
+        navController.popBackStack()
+    }
+
 
     private fun getAllOrder()
     {
@@ -86,6 +92,17 @@ class OrderActivity : AppCompatActivity()  {
         }
     }
 
+   private fun initRvOrder()
+    {
+        ordersAdapter = OrdersAdapter()
+
+        orderLayoutManager = LinearLayoutManager(this,RecyclerView.VERTICAL,false)
+        binding.recyclerOrder.apply {
+            adapter = ordersAdapter
+            layoutManager = orderLayoutManager
+        }
+
+    }
 
 
 }
