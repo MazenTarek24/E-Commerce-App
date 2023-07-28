@@ -2,6 +2,8 @@ package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
 import androidx.datastore.preferences.core.Preferences
+import com.example.example.Customers
+import com.example.example.DraftOrders
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
@@ -19,9 +21,11 @@ import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 
-class Repository constructor(remoteSource: RemoteSource,
-                             localSource: LocalSource,
-                             dataStorePrefsSource: DataStoreSource) : RepositoryInterface {
+class Repository constructor(
+    remoteSource: RemoteSource,
+    localSource: LocalSource,
+    dataStorePrefsSource: DataStoreSource,
+) : RepositoryInterface {
 
     private val TAG = "Repository_INFO_TAG"
 
@@ -38,9 +42,11 @@ class Repository constructor(remoteSource: RemoteSource,
 
     companion object {
         private var repo: Repository? = null
-        fun getInstance(remoteSource: RemoteSource,
-                        localSource: LocalSource,
-                        dataStorePrefsSource: DataStoreSource): Repository {
+        fun getInstance(
+            remoteSource: RemoteSource,
+            localSource: LocalSource,
+            dataStorePrefsSource: DataStoreSource,
+        ): Repository {
             return repo ?: synchronized(this) {
                 val instance = Repository(remoteSource, localSource, dataStorePrefsSource)
                 repo = instance
@@ -64,14 +70,17 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getAllPriceRules()
     }
 
-    override suspend fun modifyDraftforfav(draftorder: SingleDraftOrderResponse,
-                                           id: Long): Flow<DraftOrder> {
+    override suspend fun modifyDraftforfav(
+        draftorder: SingleDraftOrderResponse,
+        id: Long,
+    ): Flow<DraftOrder> {
         return remoteSource.modifyDraftforfav(draftorder, id)
     }
 
-    override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
-    return remoteSource.createDraftforfav(draftorder)
-    }
+//    override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
+//        return remoteSource.createDraftforfav(draftorder)
+//    }
+
     override suspend fun createDraftforfav(draftorder: SingleDraftOrderResponse): Flow<DraftOrder> {
         return remoteSource.createDraftforfav(draftorder)
     }
@@ -94,8 +103,10 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getAllCurrencies()
     }
 
-    override suspend fun getAllOrders(): Flow<List<OrderX>> {
-        Timber.i("getAllOrders: REPO")
+    //
+//    override suspend fun getAllOrders(): Flow<List<OrderX>> {
+//        Timber.i("getAllOrders: REPO")
+//    }
     override suspend fun getAllOrders(): Flow<List<Order>> {
         return remoteSource.getAllOrders()
     }
@@ -109,25 +120,28 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getDraftWithId(id)
     }
 
-    override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
-return remoteSource.createCustomer(customer)   }
+//    override suspend fun createCustomer(customer: PostCustomer): Flow<Customerre> {
+//        return remoteSource.createCustomer(customer)
+//    }
 
-    override suspend fun getAllCustomer(): Flow<List<Customers>> {
-        Timber.i("getAllCustomer: REPO")
+//    override suspend fun getAllCustomer(): Flow<List<Customer>> {
+//        Timber.i("getAllCustomer: REPO")
+//
+//        return remoteSource.getAllCustomers()
+//    }
 
-        return remoteSource.getAllCustomer()   }
+//    override suspend fun getAllDraftsOrders(): Flow<List<DraftOrder>> {
+//        Timber.i("getAllDraftOrder: REPO")
+//        return remoteSource.getAllDraftOrders()
+//    }
 
-    override suspend fun getAllDraftsOrders(): Flow<List<DraftOrders>> {
-        Timber.i("getAllDraftOrder: REPO")
-        return remoteSource.getAllDraftsOrders()
-    }
     override suspend fun createCustomer(customer: SingleCustomerResponse): Flow<Customer> {
         return remoteSource.createCustomer(customer)
     }
 
     override suspend fun getAllProductCategory(
-            collectionId: Long,
-            productType: String,
+        collectionId: Long,
+        productType: String,
     ): Flow<List<Product>> {
         Log.i(TAG, "getAllCategoryProducts: REPO")
         return remoteSource.getAllProductCategory(collectionId, productType)
@@ -139,11 +153,14 @@ return remoteSource.createCustomer(customer)   }
 
 
     override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
+        Timber.i("getAllDraftOrder: REPO")
         return remoteSource.getAllDraftOrders()
     }
 
-    override suspend fun updateDraftOrder(draftOrderId: Long,
-                                          updatedDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+    override suspend fun updateDraftOrder(
+        draftOrderId: Long,
+        updatedDraftOrder: SingleDraftOrderResponse,
+    ): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
         return remoteSource.updateDraftOrder(draftOrderId, updatedDraftOrder)
     }
 
@@ -165,8 +182,10 @@ return remoteSource.createCustomer(customer)   }
         return remoteSource.getCustomerByID(customerId)
     }
 
-    override suspend fun updateCustomer(customerId: Long,
-                                        updatedCustomer: SingleCustomerResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> {
+    override suspend fun updateCustomer(
+        customerId: Long,
+        updatedCustomer: SingleCustomerResponse,
+    ): Flow<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> {
         return remoteSource.updateCustomer(customerId, updatedCustomer)
     }
 
@@ -181,5 +200,5 @@ return remoteSource.createCustomer(customer)   }
     override fun getStringDS(key: Preferences.Key<String>): Flow<String?> {
         return dataStorePrefsSource.getStringDS(key)
     }
-
 }
+
