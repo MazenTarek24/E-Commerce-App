@@ -63,9 +63,11 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     lateinit var addressesList: List<Address>
     lateinit var customer: Customer
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -82,8 +84,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
         //View Model
         factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
-                ConcreteLocalSource(requireContext()),
-                ConcreteSharedPrefsSource(requireContext())))
+            ConcreteLocalSource(requireContext()),
+            ConcreteSharedPrefsSource(requireContext())))
         profileViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
 
         //Currency Bottom Sheet
@@ -111,96 +113,97 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
 
-
         binding.currency.setOnClickListener {
             currencyAdapter.submitList(currenciesList)
             currencyBottomSheetDialog.show()
         }
 
         binding.moreText.setOnClickListener {
-            val intent = Intent(requireContext() , OrderActivity::class.java)
+            val intent = Intent(requireContext(), OrderActivity::class.java)
             startActivity(intent)
         }
 
-    }
-
         binding.address.setOnClickListener {
-            addressAdapter.submitList(addressesList)
-            addressBottomSheetDialog.show()
-        }
+
+        addressAdapter.submitList(addressesList)
+        addressBottomSheetDialog.show()
+    }
 
         apiRequests()
 
     }
 
-    private fun apiRequests() {
-
-        lifecycleScope.launchWhenStarted {
-            profileViewModel.getCustomerByID(Constants.customerID)
-            profileViewModel.getAllCurrenciesFromNetwork()
-
-        }
-
-
-        lifecycleScope.launchWhenStarted {
-
-            launch {
-
-                profileViewModel.currencyRes.collect { result ->
-                    when (result) {
-                        is ApiState.Success<List<CurrencyInfo>> -> {
-                            Log.i(TAG, "onCreate: Success...{${result.data.get(0).iso}}")
-                            currenciesList = result.data
-                            currencyAdapter.submitList(currenciesList)
-                        }
-                        is ApiState.Loading -> {
-                            Log.i(TAG, "onCreate: Loading...")
-                        }
-                        is ApiState.Failure -> {
-                            //hideViews()
-                            Toast.makeText(requireContext(),
-                                    "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
 
 
 
-            launch {
-                profileViewModel.customer.collect { result ->
-                    when (result) {
-                        is ApiState.Success<Customer> -> {
-                            customer = result.data
-                            addressesList = result.data.addresses!!
-                            if (addressesList.isNotEmpty()) {
-                                addressAdapter.submitList(addressesList)
-                            } else {
-                                Log.i(TAG, "onCreate: Success...The list is empty}")
-                                Toast.makeText(requireContext(), "There is no Address, please add one", Toast.LENGTH_SHORT).show()
+private fun apiRequests() {
 
-                            }
-                        }
-                        is ApiState.Loading -> {
-                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
-                        }
-                        is ApiState.Failure -> { //hideViews()
-                            Toast.makeText(requireContext(),
-                                    "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
+    lifecycleScope.launchWhenStarted {
+        profileViewModel.getCustomerByID(Constants.customerID)
+        profileViewModel.getAllCurrenciesFromNetwork()
 
-        }
     }
 
 
-    override fun onCurrencyClickListener(currencyISO: String) {
-        Toast.makeText(requireContext(), "you Clicked $currencyISO", Toast.LENGTH_SHORT).show()
-        currencyBottomSheetDialog.dismiss()
+    lifecycleScope.launchWhenStarted {
+
+        launch {
+
+            profileViewModel.currencyRes.collect { result ->
+                when (result) {
+                    is ApiState.Success<List<CurrencyInfo>> -> {
+                        Log.i(TAG, "onCreate: Success...{${result.data.get(0).iso}}")
+                        currenciesList = result.data
+                        currencyAdapter.submitList(currenciesList)
+                    }
+                    is ApiState.Loading -> {
+                        Log.i(TAG, "onCreate: Loading...")
+                    }
+                    is ApiState.Failure -> {
+                        //hideViews()
+                        Toast.makeText(requireContext(), "There Was An Error", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
+
+
+
+        launch {
+            profileViewModel.customer.collect { result ->
+                when (result) {
+                    is ApiState.Success<Customer> -> {
+                        customer = result.data
+                        addressesList = result.data.addresses!!
+                        if (addressesList.isNotEmpty()) {
+                            addressAdapter.submitList(addressesList)
+                        } else {
+                            Log.i(TAG, "onCreate: Success...The list is empty}")
+                            Toast.makeText(requireContext(),
+                                "There is no Address, please add one",
+                                Toast.LENGTH_SHORT).show()
+
+                        }
+                    }
+                    is ApiState.Loading -> {
+                        Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                    }
+                    is ApiState.Failure -> { //hideViews()
+                        Toast.makeText(requireContext(), "There Was An Error", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
+
     }
+}
+
+
+override fun onCurrencyClickListener(currencyISO: String) {
+    Toast.makeText(requireContext(), "you Clicked $currencyISO", Toast.LENGTH_SHORT).show()
+    currencyBottomSheetDialog.dismiss()
+}
 
 }

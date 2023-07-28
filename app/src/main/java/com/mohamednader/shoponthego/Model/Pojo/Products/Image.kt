@@ -8,7 +8,7 @@ data class Image(
     val position: Int,
     @SerializedName("created_at") val createdAt: String,
     @SerializedName("updated_at") val updatedAt: String,
-    val alt: Any,
+    val alt: Any?,
     val width: Int,
     val height: Int,
     val src: String,

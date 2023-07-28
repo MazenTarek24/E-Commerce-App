@@ -17,6 +17,7 @@ import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Network.RemoteSource
 import com.mohamednader.shoponthego.SharedPrefs.SharedPrefsSource
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 
 class Repository constructor(
     remoteSource: RemoteSource, localSource: LocalSource, sharedPrefsSource: SharedPrefsSource
@@ -51,7 +52,7 @@ class Repository constructor(
     }
 
     override suspend fun getAllProducts(): Flow<List<Product>> {
-        Log.i(TAG, "getAllProducts: REPO")
+        Timber.i("getAllProducts: REPO")
         return remoteSource.getAllProducts()
     }
 
@@ -61,7 +62,7 @@ class Repository constructor(
     }
 
     override suspend fun getAllPriceRules(): Flow<List<PriceRules>> {
-        Log.i(TAG, "getAllPriceRules: REPO")
+        Timber.i("getAllPriceRules: REPO")
         return remoteSource.getAllPriceRules()
     }
 
@@ -73,10 +74,11 @@ class Repository constructor(
     }
 
     override suspend fun createDraftforfav(draftorder: PostDraftOrder): Flow<ResponseDraftOrderOb> {
-return remoteSource.createDraftforfav(draftorder)   }
+    return remoteSource.createDraftforfav(draftorder)
+    }
 
     override suspend fun getAllBrands(): Flow<List<SmartCollection>> {
-        Log.i(TAG, "getAllBrands: REPO")
+        Timber.i("getAllBrands: REPO")
         return remoteSource.getAllBrands()
     }
 
@@ -94,6 +96,7 @@ return remoteSource.createDraftforfav(draftorder)   }
     }
 
     override suspend fun getAllOrders(): Flow<List<OrderX>> {
+        Timber.i("getAllOrders: REPO")
         return remoteSource.getAllOrders()
     }
 
@@ -112,10 +115,14 @@ return remoteSource.createDraftforfav(draftorder)   }
 return remoteSource.createCustomer(customer)   }
 
     override suspend fun getAllCustomer(): Flow<List<Customers>> {
-return remoteSource.getAllCustomer()   }
+        Timber.i("getAllCustomer: REPO")
+
+        return remoteSource.getAllCustomer()   }
 
     override suspend fun getAllDraftsOrders(): Flow<List<DraftOrders>> {
-    return remoteSource.getAllDraftsOrders()   }
+        Timber.i("getAllDraftOrder: REPO")
+        return remoteSource.getAllDraftsOrders()
+    }
 
     override suspend fun getAllProductCategory(
         collectionId: Long,
@@ -124,11 +131,6 @@ return remoteSource.getAllCustomer()   }
         Log.i(TAG, "getAllCategoryProducts: REPO")
         return remoteSource.getAllProductCategory(collectionId , productType)
     }
-
-//    override suspend fun getAllProductCategoryByType(collectionId : Long,productType: String): Flow<List<Product>> {
-//        return remoteSource.getAllProductCategoryByType(collectionId,productType)
-//    }
-
 
     override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
         return remoteSource.getAllDraftOrders()
@@ -141,6 +143,8 @@ return remoteSource.getAllCustomer()   }
     }
 
     override suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+        Timber.i("addDraftOrder: REPO")
+
         return remoteSource.addDraftOrder(newDraftOrder)
     }
 
