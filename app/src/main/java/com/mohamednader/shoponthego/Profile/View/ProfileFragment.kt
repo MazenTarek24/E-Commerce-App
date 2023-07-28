@@ -69,9 +69,11 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     val ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE: Int = 1234
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
     }
