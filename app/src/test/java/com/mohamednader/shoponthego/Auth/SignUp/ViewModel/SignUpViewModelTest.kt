@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Auth.SignUp.ViewModel
 
+import app.cash.turbine.test
 import com.mohamednader.shoponthego.MainDispatcherRule
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
@@ -253,63 +254,21 @@ var priceRules= mutableListOf<PriceRules>()
     fun `createCustomer with valid input`() = runBlockingTest {
         // given
 
-        val customer = SingleCustomerResponse(com.mohamednader.shoponthego.Model.Pojo.Customers.Customer(
-            id = 1L,
-            email = "john.doe@example.com",
-            firstName = "John",
-            lastName = "Doe",
-            ordersCount = 5,
-            state = "active",
-            totalSpent = "500.00",
-            lastOrderId = 12345L,
-            note = "Some notes about the customer",
+       var customers = com.mohamednader.shoponthego.Model.Pojo.Customers.Customer(
+            firstName = "mohamed",
+            note = "",
             verifiedEmail = true,
-            lastOrderName = "Order #12345",
-            currency = "USD",
-            phone = "+1-555-555-5555",
-            addresses = mutableListOf(
-                Address(
-                    id = 1L,
-                    address1 = "123 Main St",
-                    address2 = null,
-                    city = "Anytown",
-                    province = "CA",
-                    country = "Canada",
-                    zip = "A1B 2C3",
-                    phone = "+1-555-555-5555",
-                    name = "John Doe",
-                    company = null,
-                    provinceCode = "CA",
-                    countryCode = "CA",
-                    default = true
-                )
-            ),
-            defaultAddress = Address(
-                id = 1L,
-                address1 = "123 Main St",
-                address2 = null,
-                city = "Anytown",
-                province = "CA",
-                country = "Canada",
-                zip = "A1B 2C3",
-                phone = "+1-555-555-5555",
-                name = "John Doe",
-                company = null,
-                provinceCode = "CA",
-                countryCode = "CA",
-                default = true
-            )
-        ))
+            email = ""
+        )
 
-
-
+    var response :ApiState<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> ?=null
         // when
-        viewModel.createCustomer(customer)
-        // Mock the network call to return successfully
+        viewModel.createCustomer(SingleCustomerResponse(customers))
+        viewModel.customer.test {
+            response = this.awaitItem()
+        }
         // then
-        val result = viewModel.customer.value
-        Thread.sleep(1000)
-        assertEquals(ApiState.Success(customer), result)
+        assertEquals(ApiState.Success(customer), response)
     }
 
     @Test
