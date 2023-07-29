@@ -6,10 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ItemProductBinding
 import com.squareup.picasso.Picasso
 
-class CategoryAdapter(val myListener: (id: Long) -> Unit) :
+class CategoryAdapter(val currencyRate: Double,
+                      val currencyISO: String,
+                      val myListener: (id: Long) -> Unit) :
         ListAdapter<Product, CategoryAdapter.ViewHolder>(BrandDiffUtil()) {
 
     class ViewHolder(val binding: ItemProductBinding) :
@@ -26,10 +29,15 @@ class CategoryAdapter(val myListener: (id: Long) -> Unit) :
         val product = getItem(position)
         if (product != null) {
             Picasso.get().load(product.image?.src).into(holder.binding.itemImg)
-            holder.binding.titleProduct.text = product.vendor
+            holder.binding.titleProduct.text = product.title
 
             var price = product.variants?.getOrNull(0)?.price ?: 1.0
-            holder.binding.priceProduct.text = price.toString() + " EGP "
+
+            holder.binding.priceProduct.text = "${
+                convertCurrencyFromEGPTo((price.toString())!!.toDouble(),
+                        currencyRate)
+            } $currencyISO"
+
 
             holder.binding.cardProduct.setOnClickListener {
                 myListener(product.id!!)

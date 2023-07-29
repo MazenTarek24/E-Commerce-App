@@ -28,7 +28,6 @@ class OrdersAdapter(val currencyRate: Double , val currencyISO: String) : ListAd
             itemAddress.text = "order number = ${order.number.toString()}"
             itemPhone.text = "name = ${order.billing_address?.firstName} "
             itemId.text = "order id = ${order.id.toString()}"
-            itemTotalPriceUsd.text = "total price = ${order.current_total_price.toString()}"
 
             itemTotalPriceUsd.text = "Total price = ${
                 convertCurrencyFromEGPTo((order.current_total_price)!!.toDouble(),

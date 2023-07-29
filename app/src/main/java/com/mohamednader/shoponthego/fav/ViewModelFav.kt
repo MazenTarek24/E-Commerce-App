@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.fav
 
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
@@ -61,6 +62,13 @@ class ViewModelFav(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
+    fun deleteDraftOrderByID(draftOrderID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "deleteDraftOrderPending: HomeViewModel")
+            repo.deleteDraftOrder(draftOrderID)
+        }
+    }
+
     fun getProductWithIdFromNetwork(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getProductWithIDFromNetwork: HomeViewModel")
@@ -83,5 +91,7 @@ class ViewModelFav(private val repo: RepositoryInterface) : ViewModel() {
                 }
         }
     }
+
+    fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
 
 }

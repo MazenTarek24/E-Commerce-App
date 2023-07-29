@@ -40,7 +40,7 @@ class ConfirmAddress : DialogFragment(), OnMapReadyCallback {
         lat = requireArguments().getDouble("lat")
         lon = requireArguments().getDouble("long")
         address = requireArguments().getString("address") ?: ""
-        city = requireArguments().getString("street") ?: ""
+        city = requireArguments().getString("city") ?: ""
         country = requireArguments().getString("country") ?: ""
         street = requireArguments().getString("street") ?: ""
         Log.i(TAG, "onCreate: $lat , and $lon , and $address")

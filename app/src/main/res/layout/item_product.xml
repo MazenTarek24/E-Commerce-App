@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_product"
     style="@style/ThemeOverlay.Material3.MaterialCalendar"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_180sdp"
-    android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginTop="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_10sdp"
+    android:layout_marginStart="@dimen/small_margin"
+    android:layout_marginTop="@dimen/small_margin"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:layout_marginBottom="@dimen/small_margin"
     android:padding="@dimen/_8sdp"
     app:cardCornerRadius="@dimen/_5sdp"
     app:strokeColor="@color/dark"
@@ -35,13 +35,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="@dimen/tiny_margin"
             android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/tiny_margin"
             android:gravity="center"
+            android:maxLines="2"
             android:text="cairo"
-            android:textStyle="bold"
             android:textAllCaps="false"
-            android:textColor="#000000"
-            android:textSize="@dimen/_12sdp" />
+            android:textColor="@color/dark"
+            android:textSize="@dimen/tiny_text"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/price_product"
@@ -52,7 +55,7 @@
             android:gravity="center"
             android:text="nike"
             android:textAllCaps="false"
-            android:textColor="#AAAAAA"
+            android:textColor="@color/main_color"
             android:textSize="@dimen/_14sdp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.LinearLayoutCompat>

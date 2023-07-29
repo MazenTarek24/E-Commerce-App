@@ -16,17 +16,19 @@ import com.google.android.material.tabs.TabLayout
 import com.mohamednader.shoponthego.Cart.View.CartActivity
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoriesViewModel
 import com.mohamednader.shoponthego.Categories.ViewModel.CategoryViewModelFactory
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
+import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
 import com.mohamednader.shoponthego.search.SearchActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
@@ -43,6 +45,8 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     val TAG = "CategoryResponseSuccessfully"
     private lateinit var customProgress: CustomProgress
 
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
 
     var categoryId: Long = 0
 
@@ -113,6 +117,31 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
 
         //Progress Bar
         customProgress = CustomProgress.getInstance()
+        lifecycleScope.launch {
+
+            launch {
+                categoryViewModel.getStringDS(Constants.currencyKey).collect { result ->
+                    currencyISO = result ?: ""
+                    cancel()
+                }
+            }.invokeOnCompletion {
+                launch {
+                    categoryViewModel.getStringDS(Constants.rateKey).collect { result ->
+                        currencyRate = result?.toDouble() ?: 1.0
+
+
+                        categoryAdapter = CategoryAdapter(currencyRate, currencyISO) {
+                            val intent = Intent(context, ProductInfo::class.java)
+                            intent.putExtra("id", it)
+                            startActivity(intent)
+
+                        }
+                        initRvCategory()
+                        cancel()
+                    }
+                }
+            }
+        }
 
     }
 
@@ -144,7 +173,7 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
                         customProgress.hideProgress()
                     }
                     is ApiState.Loading -> {
-                        customProgress.showDialog(requireContext(),   false)
+                        customProgress.showDialog(requireContext(), false)
                         Log.i(TAG, "onCreate: LoadingWhenFetchingCategoryProducts...")
                     }
                     is ApiState.Failure -> {
@@ -190,12 +219,6 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     }
 
     private fun initRvCategory() {
-        categoryAdapter = CategoryAdapter {
-            val intent = Intent(context, ProductInfo::class.java)
-            intent.putExtra("id", it)
-            startActivity(intent)
-
-        }
 
         catLayoutManager = GridLayoutManager(context, 2)
         binding.rvCategory.apply {

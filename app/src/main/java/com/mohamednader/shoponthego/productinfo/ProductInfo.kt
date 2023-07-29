@@ -183,6 +183,7 @@ class ProductInfo : AppCompatActivity() {
                             binding.pricetv.text =
                                 convertCurrencyFromEGPTo((result.data.variants?.get(0)?.price)!!.toDouble(),
                                         currencyRate) + " " + currencyISO
+
                             binding.productnametv.text = result.data.title
                             println(result.data.options?.get(0)?.values)
 
@@ -325,6 +326,8 @@ class ProductInfo : AppCompatActivity() {
             }
 
 
+
+
             launch {
                 viewModelProductInfo.updatedDraftCartOrder.collect { result ->
                     when (result) {
@@ -341,6 +344,28 @@ class ProductInfo : AppCompatActivity() {
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(this@ProductInfo,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+
+            launch {
+                viewModelProductInfo.addDraftOrder.collect { result ->
+                    when (result) {
+                        is ApiState.Success<DraftOrder> -> {
+                            draftOrder = result.data
+                            Toast.makeText(this@ProductInfo,
+                                    "Added to wish List",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: newDraftOrder Loading...")
                         }
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(this@ProductInfo,

@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
@@ -20,7 +18,8 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
+import com.mohamednader.shoponthego.Utils.Constants
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityFavActivtyBinding
 import kotlinx.coroutines.launch
@@ -36,8 +35,12 @@ class FavActivty : AppCompatActivity() {
     private lateinit var factory: GenericViewModelFactory
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var myLayoutManager: LinearLayoutManager
+    private lateinit var customProgress: CustomProgress
+
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
+
     private lateinit var binding: ActivityFavActivtyBinding
-    lateinit var draftOrder: DraftOrder
     var listofproduct = mutableListOf<Product>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,29 +51,55 @@ class FavActivty : AppCompatActivity() {
         myLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         firebaseAuth = Firebase.auth
-        recyclerAdapter = FavRecycleAdapter(this) {
-            recyclerAdapter.submitList(listItems)
 
-            listItems?.remove(it)
-            recyclerAdapter.submitList(listItems)
 
-            draftOrder = draftOrder.copy(lineItems = listItems)
-            viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(draftOrder),
-                    draftOrdersID!!.toLong())
+        factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
+                ConcreteLocalSource(this),
+                ConcreteDataStoreSource(this)))
 
-        }
+        viewModelProductInfo = ViewModelProvider(this, factory).get(ViewModelFav::class.java)
 
-        initViews()
+
+        viewModelProductInfo.getStringDS(Constants.currencyKey).asLiveData()
+            .observe(this@FavActivty) { result ->
+                currencyISO = result ?: ""
+
+                viewModelProductInfo.getStringDS(Constants.rateKey).asLiveData()
+                    .observe(this@FavActivty) { result ->
+                        currencyRate = result?.toDouble() ?: 1.0
+
+                        recyclerAdapter = FavRecycleAdapter(this, currencyRate, currencyISO) {
+                            recyclerAdapter.submitList(listItems)
+
+                            listItems?.remove(it)
+                            recyclerAdapter.submitList(listItems)
+
+                            viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(
+                                    DraftOrder(lineItems = listItems)),
+                                    draftOrdersID!!.toLong())
+
+                        }
+
+                        initViews()
+                    }
+            }
+
+
+
+
+
         viewModelProductInfo.getAllDraftsOrder()
 
-        apicallForgetAllDrafts()
-        apicallForgetdraftwithId()
-        apicall()
+        customProgress = CustomProgress.getInstance()
 
-        binding.rcycyfav.apply {
-            adapter = recyclerAdapter
-            layoutManager = myLayoutManager
+
+
+
+        binding.backArrowImg.setOnClickListener {
+            onBackPressed()
         }
+
+
         myLiveData.value = listItems?.toList()
         myLiveData.observe(this, Observer { lineItems ->
 
@@ -79,11 +108,14 @@ class FavActivty : AppCompatActivity() {
 
     private fun initViews() {
 
-        factory = GenericViewModelFactory(Repository.getInstance(ApiClient.getInstance(),
-                ConcreteLocalSource(this),
-                ConcreteDataStoreSource(this)))
+        binding.rcycyfav.apply {
+            adapter = recyclerAdapter
+            layoutManager = myLayoutManager
+        }
 
-        viewModelProductInfo = ViewModelProvider(this, factory).get(ViewModelFav::class.java)
+        apicallForgetAllDrafts()
+        apicallForgetdraftwithId()
+        apicall()
     }
 
     private fun apicallForgetAllDrafts() {
@@ -126,7 +158,6 @@ class FavActivty : AppCompatActivity() {
             viewModelProductInfo.draftwithid.collect { result ->
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
-                        draftOrder = result.data
                         println("12:51" + result.data.id)
                         listItems = result.data.lineItems?.toMutableList()
 
@@ -145,9 +176,13 @@ class FavActivty : AppCompatActivity() {
 
                         }
 
+                        customProgress.hideProgress()
+
                     }
                     is ApiState.Loading -> {
+
                         Log.i(TAG, "onCreate: Loading... in 12:15")
+                        customProgress.showDialog(this@FavActivty, false)
 
                     }
                     is ApiState.Failure -> {

@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.fav
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
 import com.mohamednader.shoponthego.R
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ItemCartBinding
+import com.mohamednader.shoponthego.productinfo.ProductInfo
 
 class FavRecycleAdapter(
-        private val context: Context, val delete: (LineItem) -> Unit
+        private val context: Context,val currencyRate: Double , val currencyISO: String, val delete: (LineItem) -> Unit
 ) : ListAdapter<LineItem, FavRecycleAdapter.ProductViewHolder>(ProductDiff()) {
 
     lateinit var binding: ItemCartBinding
@@ -30,7 +33,13 @@ class FavRecycleAdapter(
 
         binding.itemTitle.text = currentItem.vendor
         binding.itemBrand.text = currentItem.title
-        binding.itemPrice.text = currentItem.price
+
+        binding.itemPrice.text = "${
+            convertCurrencyFromEGPTo((currentItem.price)!!.toDouble(),
+                    currencyRate)
+        } $currencyISO"
+
+
         binding.quantityContainer.visibility = View.GONE
 
         try {
@@ -43,6 +52,12 @@ class FavRecycleAdapter(
                 .into(holder.binding.itemImg)
         }
 
+
+        holder.binding.itemCartCard.setOnClickListener {
+            val intent = Intent(context , ProductInfo::class.java)
+            intent.putExtra("id", currentItem.productId)
+            context.startActivity(intent)
+        }
 
         holder.binding.deleteBtn.setOnClickListener {
             delete(currentItem)

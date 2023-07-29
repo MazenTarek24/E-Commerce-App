@@ -1,175 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
- >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#fff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/home"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/fav"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/fav"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+            <ImageView
+                android:id="@+id/cart"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_60sdp"
+                android:src="@drawable/cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+            <ImageView
+                android:id="@+id/filter_price"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:src="@drawable/ic_baseline_filter_list_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/search"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/cat_tabLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="home"
-            android:textColor="@color/dark"
-            android:textStyle="bold"
-            android:textSize="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/_10sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/constraint"
+            app:tabIndicatorColor="@color/main_color"
+            app:tabSelectedTextColor="@color/main_color" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/mid_margin"
+            android:layout_marginBottom="@dimen/mid_margin"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            app:layout_constraintTop_toBottomOf="@+id/cat_tabLayout">
+
+            <TextView
+                android:id="@+id/accessories_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
+                android:layout_weight="1"
+                android:background="@drawable/product_background"
+                android:padding="@dimen/_3sdp"
+                android:text="Accessory"
+                android:textColor="@color/whitey"
+                android:textSize="@dimen/small_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/shoes_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/tiny_margin"
+                android:layout_weight="1"
+                android:background="@drawable/product_background"
+                android:gravity="center"
+                android:padding="@dimen/_3sdp"
+                android:text="Shoes"
+                android:textColor="@color/whitey"
+                android:textSize="@dimen/small_text"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tshirt_txt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tiny_margin"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:layout_weight="1"
+                android:background="@drawable/product_background"
+                android:gravity="center"
+                android:padding="@dimen/_3sdp"
+                android:text="T-shirt"
+                android:textColor="@color/whitey"
+                android:textSize="@dimen/small_text"
+                android:textStyle="bold" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         <ImageView
-            android:id="@+id/fav"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/fav"
-            android:layout_marginEnd="@dimen/_10sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/dark" />
-
-        <ImageView
-            android:id="@+id/cart"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/cart"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="@dimen/_60sdp"
-            app:tint="@color/dark" />
-
-        <ImageView
-            android:id="@+id/filter_price"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginStart="@dimen/_25sdp"
-            android:src="@drawable/ic_baseline_filter_list_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/search"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/dark" />
-
-
-
-        <ImageView
-            android:id="@+id/search"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/dark" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/cat_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabSelectedTextColor="@color/dark"
-        app:tabIndicatorColor="@color/dark"
-        app:layout_constraintTop_toBottomOf="@+id/constraint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_10sdp"
-    />
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/cat_tabLayout"
-        android:orientation="horizontal"
-        >
-
-    <TextView
-        android:id="@+id/accessories_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="accessories"
-        android:textStyle="bold"
-        android:padding="@dimen/_5sdp"
-        android:textSize="@dimen/_18sdp"
-        android:layout_gravity="center"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:textColor="#000000"
-        android:background="@drawable/product_background"
-        />
-    <TextView
-        android:id="@+id/shoes_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="shoes"
-        android:textStyle="bold"
-        android:padding="@dimen/_5sdp"
-        android:textSize="@dimen/_18sdp"
-        android:layout_gravity="center"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:textColor="#000000"
-        android:background="@drawable/product_background"
-        />
-    <TextView
-        android:id="@+id/tshirt_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="tshirt"
-        android:textStyle="bold"
-        android:padding="@dimen/_5sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textSize="@dimen/_18sdp"
-        android:layout_gravity="center"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:textColor="#000000"
-        android:background="@drawable/product_background"
-        />
-
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-    <ImageView
-        android:id="@+id/img_noProduct"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/no_product"
-        app:layout_constraintTop_toBottomOf="@+id/linear"
-        android:visibility="gone"/>
+            android:id="@+id/img_noProduct"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/no_product"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/linear" />
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/rv_category"
-            app:layout_constraintTop_toBottomOf="@+id/linear"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_margin"
             android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_8sdp"
-            />
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/big_margin"
+            app:layout_constraintBottom_toTopOf="@id/last_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear" />
+
+        <View
+            android:id="@+id/last_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

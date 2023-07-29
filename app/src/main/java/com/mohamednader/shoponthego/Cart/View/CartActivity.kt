@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Cart.View
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,10 +31,10 @@ import com.mohamednader.shoponthego.Payment.View.PaymentActivity
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ActivityCartBinding
 import com.mohamednader.shoponthego.productinfo.ProductInfo
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -57,6 +58,9 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     var continueToCheckOut = false
     var lineItemsList = mutableListOf<LineItem>()
 
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -71,16 +75,11 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                 ConcreteDataStoreSource(this@CartActivity)))
         cartViewModel = ViewModelProvider(this, factory).get(CartViewModel::class.java)
         //Layouts
-        cartAdapter = CartAdapter(this@CartActivity, this, this)
-        cartLayoutManager = LinearLayoutManager(this@CartActivity, RecyclerView.VERTICAL, false)
+
+        getCurrency()
 
         //Progress Bar
         customProgress = CustomProgress.getInstance()
-
-        binding.cartRecyclerView.apply {
-            adapter = cartAdapter
-            layoutManager = cartLayoutManager
-        }
         firebaseAuth = Firebase.auth
 
         binding.backArrowImg.setOnClickListener {
@@ -97,8 +96,30 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
             }
         }
 
-        apiRequests()
     }
+
+    private fun getCurrency() {
+        cartViewModel.getStringDS(Constants.currencyKey).asLiveData()
+            .observe(this@CartActivity) { result ->
+                currencyISO = result ?: ""
+
+                cartViewModel.getStringDS(Constants.rateKey).asLiveData()
+                    .observe(this@CartActivity) { result ->
+                        currencyRate = result?.toDouble() ?: 1.0
+
+                        cartAdapter =
+                            CartAdapter(currencyRate, currencyISO, this@CartActivity, this, this)
+                        cartLayoutManager =
+                            LinearLayoutManager(this@CartActivity, RecyclerView.VERTICAL, false)
+                        binding.cartRecyclerView.apply {
+                            adapter = cartAdapter
+                            layoutManager = cartLayoutManager
+                        }
+                        apiRequests()
+                    }
+            }
+    }
+
 
     private fun apiRequests() {
         lifecycleScope.launchWhenStarted {
@@ -120,7 +141,6 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                         is ApiState.Success<List<DraftOrder>> -> {
                             if (result.data.isNotEmpty()) {
 
-
                                 cartAdapter.submitList(lineItemsList)
                                 draftOrder = result.data.get(0)
                                 lineItemsList = draftOrder.lineItems!!
@@ -137,7 +157,12 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                                     total_items += item.quantity!!
                                 }
                                 binding.totalItemsNumber.text = "Total (${total_items} item):"
-                                binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
+
+                                binding.totalItemsPrice.text = "${
+                                    convertCurrencyFromEGPTo((draftOrder.subtotalPrice)!!.toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
                                 showViews()
                                 customProgress.hideProgress()
                                 continueToCheckOut = true
@@ -179,11 +204,11 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                             Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
                                 draftOrder.lineItems?.get(0)?.quantity
                             }")
-                            try{
+                            try {
                                 Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
                                     draftOrder.lineItems?.get(1)?.quantity
                                 }")
-                            }catch (ex : Exception){
+                            } catch (ex: Exception) {
 
                             }
                             Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
@@ -192,12 +217,16 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
                             cartAdapter.submitList(lineItemsList)
 
-                             var total_items = 0
+                            var total_items = 0
                             for (item in draftOrder.lineItems!!) {
                                 total_items += item.quantity!!
                             }
                             binding.totalItemsNumber.text = "Total (${total_items} item):"
-                            binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
+
+                            binding.totalItemsPrice.text = "${
+                                convertCurrencyFromEGPTo((draftOrder.subtotalPrice)!!.toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
 
                         }
                         is ApiState.Loading -> {
@@ -249,7 +278,7 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     }
 
     override fun onMinusClickListener(id: Long) {
-        var lineItemToUpdate = draftOrder.lineItems!!.find { it.id== id }
+        var lineItemToUpdate = draftOrder.lineItems!!.find { it.id == id }
         if (lineItemToUpdate != null) {
             if (lineItemToUpdate.quantity!! > 1) {
                 updateQuantity(id, false)
@@ -263,29 +292,44 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     }
 
     override fun onDeleteClickListener(id: Long) {
-        val itemToRemove = draftOrder.lineItems!!.find { lineItem ->
-            lineItem.id == id
-        }
 
-        val position = lineItemsList.indexOf(itemToRemove)
+        AlertDialog.Builder(this@CartActivity).setMessage("Do you want to delete this item")
+            .setCancelable(false).setPositiveButton("Yes, Delete it") { dialog, _ ->
 
-        Log.i(TAG, "onDeleteClickListener: ${position}")
-        cartAdapter.deleteItem(position)
 
-        lineItemsList.remove(itemToRemove)
-        Log.i(TAG, "onDeleteClickListener: AFTER UPDATE")
+                val itemToRemove = draftOrder.lineItems!!.find { lineItem ->
+                    lineItem.id == id
+                }
+                val position = lineItemsList.indexOf(itemToRemove)
 
-        if (position == 0){
-            cartViewModel.deleteDraftOrderByID(draftOrder.id!!)
-            binding.emptyMsg.visibility = View.VISIBLE
-            binding.totalPriceContainer.visibility = View.GONE
-        }else{
-            draftOrder = draftOrder.copy(lineItems = lineItemsList)
-            cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
-                    SingleDraftOrderResponse(draftOrder))
-        }
+                try{
+                    Log.i(TAG, "onDeleteClickListener: ${position}")
+                    cartAdapter.deleteItem(position)
+                    lineItemsList.remove(itemToRemove)
+                }catch (ex : Exception){
+                    Toast.makeText(this@CartActivity, "Something Wrong! ", Toast.LENGTH_SHORT).show()
+                    recreate()
+                }
 
-        
+
+                Log.i(TAG, "onDeleteClickListener: AFTER UPDATE")
+
+                if (position == 0) {
+                    cartViewModel.deleteDraftOrderByID(draftOrder.id!!)
+                    binding.emptyMsg.visibility = View.VISIBLE
+                    binding.totalPriceContainer.visibility = View.GONE
+                } else {
+                    draftOrder = draftOrder.copy(lineItems = lineItemsList)
+                    cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                            SingleDraftOrderResponse(draftOrder))
+                }
+
+                
+
+                Toast.makeText(
+                        this@CartActivity, "item Deleted!", Toast.LENGTH_SHORT
+                ).show()
+            }.setNegativeButton("No, Keep it", null).show()
 
     }
 

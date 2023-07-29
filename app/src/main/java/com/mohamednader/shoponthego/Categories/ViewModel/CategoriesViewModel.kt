@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Categories.ViewModel
 
 import android.util.Log
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
@@ -36,4 +37,7 @@ class CategoriesViewModel(val repository: Repository) : ViewModel() {
                 }
         }
     }
+
+    fun getStringDS(key: Preferences.Key<String>) = repository.getStringDS(key)
+
 }

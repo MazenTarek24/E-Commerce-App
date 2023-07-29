@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
 import com.mohamednader.shoponthego.R
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ItemCartBinding
 
-class CartAdapter(private val context: Context,
+class CartAdapter(val currencyRate: Double, val currencyISO: String,
+                  private val context: Context,
                   private val productListener: OnProductClickListener,
                   private val plusMinusListener: OnPlusMinusClickListener) :
         ListAdapter<LineItem, CartViewHolder>(CartDiffUtil()) {
@@ -29,7 +31,11 @@ class CartAdapter(private val context: Context,
 
         binding.itemTitle.text = item.vendor
         binding.itemBrand.text = item.title
-        binding.itemPrice.text = item.price
+        binding.itemPrice.text = "${
+            convertCurrencyFromEGPTo((item.price)!!.toDouble(),
+                    currencyRate)
+        } $currencyISO"
+
         holder.binding.apply {
             binding.tvQuantity.text = item.quantity.toString()
         }
@@ -73,8 +79,6 @@ class CartAdapter(private val context: Context,
     }
 
 }
-
-
 
 class CartViewHolder(var binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root)
 

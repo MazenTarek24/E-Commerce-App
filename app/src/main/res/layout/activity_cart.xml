@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/big_margin"
         android:text="My Cart"
-        android:textColor="@color/dark"
+        android:textColor="@color/main_color"
         android:textSize="@dimen/big_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/back_arrow_img"

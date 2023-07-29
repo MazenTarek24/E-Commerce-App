@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.Profile.View
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -42,6 +43,7 @@ import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.*
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListener {
@@ -72,11 +74,12 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     //Needed Variables
     lateinit var currenciesList: List<CurrencyInfo>
-    lateinit var addressesList: List<Address>
+    lateinit var addressesList: MutableList<Address>
     lateinit var customer: Customer
     lateinit var customerId: String
     private lateinit var customProgress: CustomProgress
     private lateinit var firebaseAuth: FirebaseAuth
+    var totalPriceOrder = 0.0
 
     var currencyISO = "EGP"
     var currencyRate = 1.0
@@ -261,6 +264,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
+                                addressAdapter = AddressAdapter(requireContext(),
+                                        this@ProfileFragment,
+                                        "Profile")
+                                addressBottomSheetBinding.addressesRecyclerView.apply {
+                                    adapter = addressAdapter
+                                    layoutManager = addressLinearLayoutManager
+                                }
                                 addressAdapter.submitList(addressesList)
                                 addressBottomSheetBinding.emptyMsg.visibility = View.GONE
                             } else {
@@ -297,6 +307,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             binding.itemAddress.text = "Order Number = ${order.number.toString()}"
                             binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
                             binding.itemId.text = "Order Id = ${order.id.toString()}"
+                            totalPriceOrder = order.current_total_price!!.toDouble()
                             binding.itemTotalPriceUsd.text = "Total price = ${
                                 convertCurrencyFromEGPTo((order.current_total_price)!!.toDouble(),
                                         currencyRate)
@@ -340,6 +351,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             profileViewModel.saveStringDS(Constants.rateKey,
                                     result.data.get(0).mid.toString())
 
+                            if (totalPriceOrder != 0.0) {
+                                binding.itemTotalPriceUsd.text = "Total price = ${
+                                    convertCurrencyFromEGPTo(totalPriceOrder,
+                                            result.data.get(0).mid)
+                                } ${result.data.get(0).quotecurrency}"
+                            }
+
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -372,6 +390,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
+                                addressAdapter = AddressAdapter(requireContext(),
+                                        this@ProfileFragment,
+                                        "Profile")
+                                addressBottomSheetBinding.addressesRecyclerView.apply {
+                                    adapter = addressAdapter
+                                    layoutManager = addressLinearLayoutManager
+                                }
                                 addressAdapter.submitList(addressesList)
                                 addressBottomSheetBinding.emptyMsg.visibility = View.GONE
                             } else {
@@ -381,6 +406,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                                         "There is no Address, please add one",
                                         Toast.LENGTH_SHORT).show()
                             }
+                            delay(100)
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -443,9 +469,19 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     override fun onDeleteClickListener(addressId: Long) {
 
-        profileViewModel.deleteCustomerAddressOnNetwork(customer.id!!, addressId)
-        profileViewModel.getCustomerByIdFromNetwork(customerID = customer.id!!)
-        addressBottomSheetDialog.dismiss()
+        AlertDialog.Builder(requireContext()).setMessage("Do you want to delete this Address")
+            .setCancelable(false).setPositiveButton("Yes, Delete it") { dialog, _ ->
+
+                profileViewModel.deleteCustomerAddressOnNetwork(customer.id!!, addressId)
+                profileViewModel.getCustomerByIdFromNetwork(customerID = customer.id!!)
+                addressBottomSheetDialog.dismiss()
+
+                Toast.makeText(
+                        requireContext(), "Address Deleted!", Toast.LENGTH_SHORT
+                ).show()
+
+            }.setNegativeButton("No, Keep it", null).show()
+
     }
 
 }

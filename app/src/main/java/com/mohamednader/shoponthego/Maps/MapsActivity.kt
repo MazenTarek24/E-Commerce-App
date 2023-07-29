@@ -166,9 +166,9 @@ class MapsActivity : FragmentActivity(), OnMapReadyCallback, Serializable,
             addresses =
                 geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1) as List<Address>
             val address = addresses[0].countryName + "/" + addresses[0].adminArea
-            val city = addresses[0].locality
+            val city = addresses[0].adminArea
             val country = addresses[0].countryName
-            val street = addresses[0].adminArea
+            val street = addresses[0].thoroughfare
 
             val ft = supportFragmentManager.beginTransaction()
             val prev = fragmentManager.findFragmentByTag("dialog")

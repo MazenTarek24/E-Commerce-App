@@ -6,210 +6,242 @@
     android:layout_height="match_parent"
     tools:context=".AddressConfig.View.AddressConfig">
 
-    <TextView
-        android:id="@+id/address_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_margin"
-        android:layout_marginTop="@dimen/big_margin"
-        android:text="Address"
-        android:textColor="@color/dark"
-        android:textSize="@dimen/_20sdp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/first_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="First Name"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/mid_text"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/address_text" />
-
-    <EditText
-        android:id="@+id/first_name_edit_text"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/first_name_text" />
-
-
-    <TextView
-        android:id="@+id/second_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="Second Name"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/tiny_text"
-        app:layout_constraintEnd_toEndOf="@id/first_name_text"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/first_name_edit_text" />
-
-    <EditText
-        android:id="@+id/second_name_edit_text"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/second_name_text"
-        tools:ignore="TextFields" />
-
-    <TextView
-        android:id="@+id/street_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="Street"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/tiny_text"
-        app:layout_constraintEnd_toEndOf="@id/second_name_text"
-        app:layout_constraintStart_toStartOf="@id/second_name_text"
-        app:layout_constraintTop_toBottomOf="@id/second_name_edit_text" />
-
-    <EditText
-        android:id="@+id/street_edit_text"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/street_text" />
-
-
-    <TextView
-        android:id="@+id/city_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="City"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/tiny_text"
-        app:layout_constraintEnd_toEndOf="@id/street_text"
-        app:layout_constraintStart_toStartOf="@id/street_text"
-        app:layout_constraintTop_toBottomOf="@id/street_edit_text" />
-
-    <EditText
-        android:id="@+id/city_edit_text"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/city_text" />
-
-
-    <TextView
-        android:id="@+id/country_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="Country"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/tiny_text"
-        app:layout_constraintEnd_toEndOf="@id/city_text"
-        app:layout_constraintStart_toStartOf="@id/city_text"
-        app:layout_constraintTop_toBottomOf="@id/city_edit_text" />
-
-    <Spinner
-        android:id="@+id/country_spinner"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="@dimen/_30sdp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/country_text" />
-
-
-    <TextView
-        android:id="@+id/phone_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
-        android:text="Phone"
-        android:textColor="@color/lite_dark"
-        android:textSize="@dimen/tiny_text"
-        app:layout_constraintEnd_toEndOf="@id/country_text"
-        app:layout_constraintStart_toStartOf="@id/country_text"
-        app:layout_constraintTop_toBottomOf="@id/country_spinner" />
-
-    <EditText
-        android:id="@+id/phone_edit_text"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/first_name_text"
-        app:layout_constraintTop_toBottomOf="@id/phone_text" />
-
-    <TextView
-        android:id="@+id/or_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/mid_margin"
-        android:text="OR"
-        android:textSize="@dimen/big_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone_edit_text" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/map_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginStart="@dimen/mid_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/mid_margin"
-        android:backgroundTint="@color/dark"
-        app:cardCornerRadius="@dimen/small_margin"
-        app:cardElevation="@dimen/small_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/or_text"
-        app:rippleColor="@color/main_color">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:drawablePadding="@dimen/tiny_margin"
-            android:gravity="center"
-            android:padding="@dimen/mid_margin"
-            android:text="Use Maps"
-            android:textColor="@color/whitey"
-            android:textSize="@dimen/mid_text"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/save_address_btn"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginStart="@dimen/mid_margin"
-        android:layout_marginEnd="@dimen/mid_margin"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:backgroundTint="@color/dark"
-        app:cardCornerRadius="@dimen/small_margin"
-        app:cardElevation="@dimen/small_margin"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/main_color">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:drawablePadding="@dimen/tiny_margin"
-            android:gravity="center"
-            android:text="Save Address"
-            android:textColor="@color/whitey"
-            android:textSize="@dimen/mid_text"
-            android:textStyle="bold" />
-    </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constrain_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/big_margin"
+                android:layout_marginTop="@dimen/big_margin"
+                android:text="Address"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/first_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/big_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="First Name"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/address_text" />
+
+            <EditText
+                android:id="@+id/first_name_edit_text"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/first_name_text" />
+
+
+            <TextView
+                android:id="@+id/second_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="Second Name"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintEnd_toEndOf="@id/first_name_text"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/first_name_edit_text" />
+
+            <EditText
+                android:id="@+id/second_name_edit_text"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/second_name_text"
+                tools:ignore="TextFields" />
+
+            <TextView
+                android:id="@+id/street_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="Street"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintEnd_toEndOf="@id/second_name_text"
+                app:layout_constraintStart_toStartOf="@id/second_name_text"
+                app:layout_constraintTop_toBottomOf="@id/second_name_edit_text" />
+
+            <EditText
+                android:id="@+id/street_edit_text"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/street_text" />
+
+
+            <TextView
+                android:id="@+id/city_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="City"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintEnd_toEndOf="@id/street_text"
+                app:layout_constraintStart_toStartOf="@id/street_text"
+                app:layout_constraintTop_toBottomOf="@id/street_edit_text" />
+
+            <EditText
+                android:id="@+id/city_edit_text"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/city_text" />
+
+
+            <TextView
+                android:id="@+id/country_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="Country"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintEnd_toEndOf="@id/city_text"
+                app:layout_constraintStart_toStartOf="@id/city_text"
+                app:layout_constraintTop_toBottomOf="@id/city_edit_text" />
+
+            <Spinner
+                android:id="@+id/country_spinner"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="@dimen/_30sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/country_text" />
+
+
+            <TextView
+                android:id="@+id/phone_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="Phone"
+                android:textColor="@color/lite_dark"
+                android:textSize="@dimen/tiny_text"
+                app:layout_constraintEnd_toEndOf="@id/country_text"
+                app:layout_constraintStart_toStartOf="@id/country_text"
+                app:layout_constraintTop_toBottomOf="@id/country_spinner" />
+
+            <EditText
+                android:id="@+id/phone_edit_text"
+                android:layout_width="@dimen/_200sdp"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/first_name_text"
+                app:layout_constraintTop_toBottomOf="@id/phone_text" />
+
+            <TextView
+                android:id="@+id/or_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mid_margin"
+                android:text="OR"
+                android:textSize="@dimen/big_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/phone_edit_text" />
+
+
+            <LinearLayout
+                android:id="@+id/map_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/or_text">
+
+                <ImageView
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_height="@dimen/_90sdp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/map_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Pick a Location"
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/mid_text"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/save_address_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:layout_marginTop="@dimen/double_big_margin"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:backgroundTint="@color/dark"
+                app:cardCornerRadius="@dimen/small_margin"
+                app:cardElevation="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/map_btn"
+                app:rippleColor="@color/main_color">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:drawablePadding="@dimen/tiny_margin"
+                    android:gravity="center"
+                    android:text="Save Address"
+                    android:textColor="@color/whitey"
+                    android:textSize="@dimen/mid_text"
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+
+            <View
+                android:id="@+id/last_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_20sdp"
+                app:layout_constraintTop_toBottomOf="@id/save_address_btn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

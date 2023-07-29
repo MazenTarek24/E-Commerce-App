@@ -6,28 +6,59 @@
     android:layout_height="match_parent"
     tools:context=".fav.FavActivty">
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="173dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bottombar"
-        android:fontFamily="@font/archivo_black"
-        android:gravity="center"
-        android:text="@string/favorite"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/big_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+    <ImageView
+        android:id="@+id/back_arrow_img"
+        android:layout_width="@dimen/mid_icons"
+        android:layout_height="@dimen/mid_icons"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:src="@drawable/back_arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/my_cart_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
+        android:text="My Wish List"
+        android:textColor="@color/main_color"
+        android:textSize="@dimen/big_text"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/back_arrow_img"
+        app:layout_constraintTop_toBottomOf="@id/back_arrow_img" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcycyfav"
         android:layout_width="match_parent"
-        android:layout_height="649dp"
-        android:layout_marginTop="30dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/tiny_margin"
+        app:layout_constraintBottom_toTopOf="@id/last_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@id/my_cart_text" />
+
+    <TextView
+        android:id="@+id/empty_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="There is No Items"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_cart_text" />
+
+    <View
+        android:id="@+id/last_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_20sdp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

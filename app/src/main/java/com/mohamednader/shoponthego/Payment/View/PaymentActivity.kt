@@ -20,6 +20,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.AppliedDiscount
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.ShippingLine
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
@@ -30,6 +31,7 @@ import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListene
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ActivityPaymentBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogPaymentMethodBinding
@@ -75,7 +77,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
     lateinit var priceRuleList: List<PriceRules>
     private lateinit var customProgress: CustomProgress
     private var totalPrice = "0.0"
-    private var currencyUsed = ""
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +100,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
         //Progress Bar
         customProgress = CustomProgress.getInstance()
+
+        getCurrency()
 
         //Address Bottom Sheet
         addressAdapter = AddressAdapter(this@PaymentActivity, this, "Payment")
@@ -143,7 +148,13 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             }
             if (priceRule == null) {
                 Toast.makeText(this@PaymentActivity, "Invalid Code", Toast.LENGTH_SHORT).show()
-            } else {
+            } else if(priceRule.targetType == "shipping_line"){
+                draftOrder = draftOrder.copy(shippingLine = ShippingLine(custome = true, price = "0.0"))
+                Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
+                paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                        SingleDraftOrderResponse(draftOrder))
+                Toast.makeText(this@PaymentActivity, "Accepted Code", Toast.LENGTH_SHORT).show()
+            } else{
                 val appliedDiscount: AppliedDiscount = AppliedDiscount(title = priceRule.title,
                         description = "Given Discount",
                         value = abs(priceRule.value.toDouble()).toString(),
@@ -160,8 +171,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
         binding.placeOrderBtn.setOnClickListener {
             if (addressesList.isNotEmpty()) {
-                    getCompleteDraftOrder()
-                    paymentViewModel.completeDraftOrderPendingByID(draftOrder.id!!)
+                getCompleteDraftOrder()
+                paymentViewModel.completeDraftOrderPendingByID(draftOrder.id!!)
             } else {
                 Toast.makeText(this@PaymentActivity,
                         "There is no Address, please add one",
@@ -179,15 +190,24 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             binding.paymentMethodText.setText("Using PayPal")
             binding.paymentButtonContainer.visibility = View.VISIBLE
             binding.placeOrderBtn.visibility = View.GONE
+            initPayPalPaymentButton()
             paymentMethodBottomSheetDialog.dismiss()
         }
 
-        initPayPalPaymentButton()
-
-        apiRequests()
     }
 
+    private fun getCurrency() {
+        paymentViewModel.getStringDS(Constants.currencyKey).asLiveData()
+            .observe(this@PaymentActivity) { result ->
+                currencyISO = result ?: ""
 
+                paymentViewModel.getStringDS(Constants.rateKey).asLiveData()
+                    .observe(this@PaymentActivity) { result ->
+                        currencyRate = result?.toDouble() ?: 1.0
+                        apiRequests()
+                    }
+            }
+    }
 
     private fun apiRequests() {
 
@@ -219,13 +239,50 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                                     draftOrder.lineItems?.get(0)?.quantity
                                 }")
 
+                                val subtotalValue = "${
+                                    convertCurrencyFromEGPTo((draftOrder.subtotalPrice)!!.toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
 
-                                binding.subtotalValue.text = draftOrder.subtotalPrice
-                                binding.taxValue.text = draftOrder.totalTax
-                                binding.discountValue.text =
-                                    draftOrder.appliedDiscount?.amount ?: "0.0"
-                                binding.shippingValue.text = draftOrder.shippingLine?.price ?: "0.0"
-                                binding.totalValue.text = draftOrder.totalPrice ?: "0.0"
+                                val taxValue = "${
+                                    convertCurrencyFromEGPTo((draftOrder.totalTax)!!.toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
+                                val discountValue = "${
+                                    convertCurrencyFromEGPTo(((draftOrder.appliedDiscount?.amount) ?: "0.0").toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
+                                val shippingValue = "${
+                                    convertCurrencyFromEGPTo(((draftOrder.shippingLine?.price) ?: "0.0").toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
+                                val totalValue = "${
+                                    convertCurrencyFromEGPTo(((draftOrder.totalPrice) ?: "0.0").toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
+
+                                if(draftOrder.shippingLine?.price == "0.00"){
+                                    binding.discountValue.text = "Free Shipping"
+                                    binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "FreeShipping"
+                                }else{
+                                    binding.discountValue.text = discountValue
+                                    binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
+                                }
+
+
+                                binding.subtotalValue.text = subtotalValue
+                                binding.taxValue.text = taxValue
+                                binding.shippingValue.text = shippingValue
+                                binding.totalValue.text = totalValue
+
+                                totalPrice = "${
+                                    convertCurrencyFromEGPTo(((draftOrder.totalPrice) ?: "0.0").toDouble(),
+                                            currencyRate)
+                                }"
 
                             } else {
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
@@ -254,13 +311,50 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                         is ApiState.Success<DraftOrder> -> {
 
                             draftOrder = result.data
-                            binding.subtotalValue.text = draftOrder.subtotalPrice
-                            binding.taxValue.text = draftOrder.totalTax
-                            binding.discountValue.text = draftOrder.appliedDiscount?.amount ?: "0.0"
-                            binding.shippingValue.text = draftOrder.shippingLine?.price ?: "0.0"
-                            binding.totalValue.text = draftOrder.totalPrice ?: "0.0"
-                            binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
-                            totalPrice = draftOrder.totalPrice!!
+
+                            val subtotalValue = "${
+                                convertCurrencyFromEGPTo((draftOrder.subtotalPrice)!!.toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            val taxValue = "${
+                                convertCurrencyFromEGPTo((draftOrder.totalTax)!!.toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            val discountValue = "${
+                                convertCurrencyFromEGPTo(((draftOrder.appliedDiscount?.amount) ?: "0.0").toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            val shippingValue = "${
+                                convertCurrencyFromEGPTo(((draftOrder.shippingLine?.price) ?: "0.0").toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            val totalValue = "${
+                                convertCurrencyFromEGPTo(((draftOrder.totalPrice) ?: "0.0").toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            if(draftOrder.shippingLine?.price == "0.00"){
+                                binding.discountValue.text = "Free Shipping"
+                                binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "FreeShipping"
+                            }else{
+                                binding.discountValue.text = discountValue
+                                binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
+                            }
+
+                            binding.subtotalValue.text = subtotalValue
+                            binding.taxValue.text = taxValue
+                            binding.shippingValue.text = shippingValue
+                            binding.totalValue.text = totalValue
+
+
+                            totalPrice = "${
+                                convertCurrencyFromEGPTo(((draftOrder.totalPrice) ?: "0.0").toDouble(),
+                                        currencyRate)
+                            }"
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -371,7 +465,7 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
     override fun onBackPressed() {
         lifecycleScope.launch {
-            draftOrder = draftOrder.copy(appliedDiscount = AppliedDiscount())
+            draftOrder = draftOrder.copy(appliedDiscount = AppliedDiscount(), shippingLine = ShippingLine())
             Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
             paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
                     SingleDraftOrderResponse(draftOrder))
@@ -443,11 +537,11 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
         }
     }
 
-
     private fun initPayPalPaymentButton() {
         binding.paymentButtonContainer.setup(
                 createOrder =
                 CreateOrder { createOrderActions ->
+                    Log.i(TAG, "initPayPalPaymentButton: $totalPrice")
                     val order =
                         OrderRequest(
                                 intent = OrderIntent.CAPTURE,
@@ -456,7 +550,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                                 listOf(
                                         PurchaseUnit(
                                                 amount =
-                                                Amount(currencyCode = CurrencyCode.USD, value = "10.00")
+                                                Amount(currencyCode = CurrencyCode.USD,
+                                                        value = totalPrice)
                                         )
                                 )
                         )
@@ -470,7 +565,6 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                         getCompleteDraftOrder()
                         paymentViewModel.completeDraftOrderPaidByID(draftOrder.id!!)
 
-
                     }
                 },
                 onCancel = OnCancel {
@@ -483,14 +577,5 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                 }
         )
     }
-
-
-
-
-
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Profile.View.Addresses
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,7 @@ class AddressAdapter(private val context: Context,
         binding.cityText.text = address.city
         binding.countryText.text = address.country
         binding.phoneText.text = address.phone
-        binding.nameText.text = "${address.firstName} + ${address.lastName}"
+        binding.nameText.text = "${address.firstName} ${address.lastName}"
 
         if (container == "Profile") {
 
@@ -61,6 +62,15 @@ class AddressAdapter(private val context: Context,
         }
 
     }
+
+    fun deleteItem(position: Int) {
+        val currentList = currentList.toMutableList()
+        currentList.removeAt(position)
+        Log.i("INFO_TAG", "deleteItem: ${currentList.toString()}")
+        submitList(currentList)
+        notifyDataSetChanged()
+    }
+
 }
 
 class AddressViewHolder(var binding: ItemAddressBinding) : RecyclerView.ViewHolder(binding.root)
