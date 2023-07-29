@@ -158,7 +158,7 @@ class ProductInfo : AppCompatActivity() {
                             binding.descriptiontxv.text = result.data.bodyHtml
                             product = result.data
                             images = result.data.images!!
-                            binding.pricetv.text = result.data.variants?.get(0)?.price
+                            binding.pricetv.text = result.data.variants?.get(0)?.price +" LE"
                             binding.productnametv.text = result.data.title
                             println(result.data.options?.get(0)?.values)
 
