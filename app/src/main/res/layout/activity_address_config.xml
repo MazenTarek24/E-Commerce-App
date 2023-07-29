@@ -165,7 +165,7 @@
         android:layout_marginStart="@dimen/mid_margin"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginEnd="@dimen/mid_margin"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/dark"
         app:cardCornerRadius="@dimen/small_margin"
         app:cardElevation="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -181,7 +181,7 @@
             android:gravity="center"
             android:padding="@dimen/mid_margin"
             android:text="Use Maps"
-            android:textColor="@color/white"
+            android:textColor="@color/whitey"
             android:textSize="@dimen/mid_text"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
@@ -193,7 +193,7 @@
         android:layout_marginStart="@dimen/mid_margin"
         android:layout_marginEnd="@dimen/mid_margin"
         android:layout_marginBottom="@dimen/small_margin"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/dark"
         app:cardCornerRadius="@dimen/small_margin"
         app:cardElevation="@dimen/small_margin"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -208,7 +208,7 @@
             android:drawablePadding="@dimen/tiny_margin"
             android:gravity="center"
             android:text="Save Address"
-            android:textColor="@color/white"
+            android:textColor="@color/whitey"
             android:textSize="@dimen/mid_text"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

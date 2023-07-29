@@ -23,7 +23,7 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:text="Choose your Currency"
-            android:textColor="@color/black"
+            android:textColor="@color/dark"
             android:textSize="@dimen/mid_text"
             android:textStyle="bold" />
 

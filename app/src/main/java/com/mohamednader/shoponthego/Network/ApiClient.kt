@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import okhttp3.Credentials
+import retrofit2.Response
 
 class ApiClient : RemoteSource {
 
@@ -243,14 +244,14 @@ class ApiClient : RemoteSource {
                                            id: Long): Flow<DraftOrder> {
         val response = apiService.modifyDraftOrder(id, draftorder)
         val draftOrder: Flow<DraftOrder>
-        Log.i(TAG, "getAllBrandsProducts API-Client")
+        Log.i(TAG, "modifyDraftforfav API-Client")
         if (response.isSuccessful) {
             draftOrder = flowOf(response.body()!!.draftOrder)
-            Log.i(TAG, "getAllBrandsProducts: Done")
+            Log.i(TAG, "modifyDraftforfav: Done")
 
         } else {
             draftOrder = emptyFlow()
-            Log.i(TAG, "getAllBrandsProducts: ${response.errorBody().toString()}")
+            Log.i(TAG, "modifyDraftforfav: ${response.errorBody().toString()}")
         }
         return draftOrder
     }
@@ -285,7 +286,7 @@ class ApiClient : RemoteSource {
     }
 
     override suspend fun updateDraftOrder(draftOrderId: Long,
-                                          updatedDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+                                          updatedDraftOrder: SingleDraftOrderResponse): Flow<DraftOrder> {
         val response = apiService.updateDraftOrder(draftOrderId, updatedDraftOrder)
         val draftOrder: Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>
         Log.i(TAG, "updateDraftOrder: API-Client")
@@ -315,6 +316,46 @@ class ApiClient : RemoteSource {
         }
         return draftOrder
 
+    }
+
+    override suspend fun completeDraftOrderPaid(draftOrderId: Long): Flow<DraftOrder> {
+        val response = apiService.completeDraftOrderPaid(draftOrderId)
+        val draftOrder: Flow<DraftOrder>
+        Log.i(TAG, "completeDraftOrder: API-Client")
+        if (response.isSuccessful) {
+            draftOrder = flowOf(response.body()!!.draftOrder)
+            Log.i(TAG, "completeDraftOrder: Done")
+        } else {
+            draftOrder = emptyFlow()
+            Log.i(TAG, "completeDraftOrder: ${response.errorBody().toString()}")
+            Log.i(TAG, "completeDraftOrder: ${response.errorBody()?.string()}")
+            Log.i(TAG, "completeDraftOrder: ${response.code()}")
+            Log.i(TAG, "completeDraftOrder: ${response.message()}")
+        }
+        return draftOrder
+    }
+
+    override suspend fun completeDraftOrderPending(draftOrderId: Long,
+                                                   paymentPendingTRUE: Boolean): Flow<DraftOrder> {
+        val response = apiService.completeDraftOrderPending(draftOrderId, paymentPendingTRUE)
+        val draftOrder: Flow<DraftOrder>
+        Log.i(TAG, "completeDraftOrder: API-Client")
+        if (response.isSuccessful) {
+            draftOrder = flowOf(response.body()!!.draftOrder)
+            Log.i(TAG, "completeDraftOrder: Done")
+        } else {
+            draftOrder = emptyFlow()
+            Log.i(TAG, "completeDraftOrder: ${response.errorBody().toString()}")
+            Log.i(TAG, "completeDraftOrder: ${response.errorBody()?.string()}")
+            Log.i(TAG, "completeDraftOrder: ${response.code()}")
+            Log.i(TAG, "completeDraftOrder: ${response.message()}")
+        }
+        return draftOrder
+    }
+
+    override suspend fun deleteDraftOrder(draftOrderId: Long)  {
+        val response = apiService.deleteDraftOrder(draftOrderId)
+        Log.i(TAG, "deleteDraftOrder: ${response.message()}")
     }
 
     //Customers
@@ -364,6 +405,20 @@ class ApiClient : RemoteSource {
 
     override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
         val response = apiService.deleteUserAddress(customerId, addressId)
+    }
+
+    override suspend fun getOrderByID(orderId: Long): Flow<Order> {
+        val response = apiService.getOrderByID(orderId)
+        val order: Flow<Order>
+        Log.i(TAG, "getOrderByID: API-Client")
+        if (response.isSuccessful) {
+            order = flowOf(response.body()!!.order)
+            Log.i(TAG, "getCustomerByID: Done")
+        } else {
+            order = emptyFlow()
+            Log.i(TAG, "getCustomerByID: ${response.errorBody().toString()}")
+        }
+        return order
     }
 
     override suspend fun getProductByID(productId: Long): Flow<Product> {

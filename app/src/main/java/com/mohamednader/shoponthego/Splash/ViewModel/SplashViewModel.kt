@@ -14,5 +14,11 @@ class SplashViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
     private val TAG = "SplashViewModel_INFO_TAG"
 
+    fun saveStringDS(key: Preferences.Key<String>, value: String) {
+        viewModelScope.launch {
+            repo.saveStringDS(key, value)
+        }
+    }
 
+    fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
 }

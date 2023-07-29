@@ -10,10 +10,8 @@ package com.mohamednader.shoponthego.Model.Pojo.DraftOrders
 
  */
 
-data class AppliedDiscount(
-        val title: String,
-        val description: String,
-        val value: String,
-        val value_type: String,
-        val amount: String
-)
+data class AppliedDiscount(var description: String = "",
+                           var value: String = "",
+                           var title: String = " ",
+                           var amount: String = "",
+                           var value_type: String = "")

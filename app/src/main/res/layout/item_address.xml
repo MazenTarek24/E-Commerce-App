@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Street: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chestnut Street 92"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text" />
 
             </LinearLayout>
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="City: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
 
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Louisville"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text" />
 
             </LinearLayout>
@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Country: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="United States"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text" />
 
             </LinearLayout>
@@ -106,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Name: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
 
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/name_tv"
                     android:text="555-625-1199"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text" />
 
 
@@ -134,7 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phone: "
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/ph_text"
                     android:text="555-625-1199"
-                    android:textColor="@color/black"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text" />
             </RelativeLayout>
 
@@ -163,8 +163,11 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/tiny_margin"
                     android:layout_marginEnd="@dimen/tiny_margin"
-                    android:backgroundTint="@color/black"
-                    android:text="Make Default" />
+                    android:text="Make Default"
+                    android:backgroundTint="@color/main_color"
+                    android:textColor="@color/whitey"
+                    android:textStyle="bold"
+                    />
 
 
                 <Button
@@ -175,8 +178,11 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="@dimen/tiny_margin"
                     android:layout_marginEnd="@dimen/tiny_margin"
-                    android:backgroundTint="@color/main_color"
-                    android:text="delete" />
+                    android:text="delete"
+                    android:backgroundTint="@color/dark"
+                    android:textColor="@color/whitey"
+                    android:textStyle="bold"
+                    />
             </RelativeLayout>
 
 

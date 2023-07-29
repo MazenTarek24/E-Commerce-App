@@ -18,18 +18,22 @@ import com.mohamednader.shoponthego.Cart.View.Adapters.CartAdapter
 import com.mohamednader.shoponthego.Cart.View.Adapters.OnPlusMinusClickListener
 import com.mohamednader.shoponthego.Cart.View.Adapters.OnProductClickListener
 import com.mohamednader.shoponthego.Cart.ViewModel.CartViewModel
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Payment.View.PaymentActivity
-import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityCartBinding
 import com.mohamednader.shoponthego.productinfo.ProductInfo
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -47,9 +51,11 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
     private lateinit var firebaseAuth: FirebaseAuth
 
     //Needed Variables
-    val EXTRA_PRODUCT_ID = "productID"
     lateinit var draftOrder: DraftOrder
     lateinit var customerId: String
+    private lateinit var customProgress: CustomProgress
+    var continueToCheckOut = false
+    var lineItemsList = mutableListOf<LineItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +74,9 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         cartAdapter = CartAdapter(this@CartActivity, this, this)
         cartLayoutManager = LinearLayoutManager(this@CartActivity, RecyclerView.VERTICAL, false)
 
+        //Progress Bar
+        customProgress = CustomProgress.getInstance()
+
         binding.cartRecyclerView.apply {
             adapter = cartAdapter
             layoutManager = cartLayoutManager
@@ -79,8 +88,13 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         }
 
         binding.checkOutBtn.setOnClickListener {
-            val intent: Intent = Intent(this@CartActivity, PaymentActivity::class.java)
-            startActivity(intent)
+            if (continueToCheckOut) {
+                val intent: Intent = Intent(this@CartActivity, PaymentActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@CartActivity, "You don't have any items!", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
         apiRequests()
@@ -105,13 +119,19 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                     when (result) {
                         is ApiState.Success<List<DraftOrder>> -> {
                             if (result.data.isNotEmpty()) {
+
+
+                                cartAdapter.submitList(lineItemsList)
                                 draftOrder = result.data.get(0)
-                                Log.i(TAG, "onCreate: Success: Draft Orders:  ${draftOrder.id}")
-                                Log.i(TAG, "onCreate: Success: Draft Orders:  ${draftOrder.email}")
-                                Log.i(TAG, "onCreate: Success: Draft Orders:  ${
+                                lineItemsList = draftOrder.lineItems!!
+                                Log.i(TAG,
+                                        "draftOrdersList: Success: Draft Orders:  ${draftOrder.id}")
+                                Log.i(TAG,
+                                        "draftOrdersList: Success: Draft Orders:  ${draftOrder.email}")
+                                Log.i(TAG, "draftOrdersList: Success: Draft Orders:  ${
                                     draftOrder.lineItems?.get(0)?.quantity
                                 }")
-                                cartAdapter.submitList(draftOrder.lineItems)
+                                cartAdapter.submitList(lineItemsList)
                                 var total_items = 0
                                 for (item in draftOrder.lineItems!!) {
                                     total_items += item.quantity!!
@@ -119,13 +139,18 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                                 binding.totalItemsNumber.text = "Total (${total_items} item):"
                                 binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
                                 showViews()
+                                customProgress.hideProgress()
+                                continueToCheckOut = true
                             } else {
-
                                 Log.i(TAG, "onCreate: Success...The list is empty ${customerId}}")
                                 hideViews()
+                                continueToCheckOut = false
+                                customProgress.hideProgress()
                             }
+                            cancel()
                         }
                         is ApiState.Loading -> {
+                            customProgress.showDialog(this@CartActivity, false)
                             Log.i(TAG, "onCreate: Loading...")
                         }
                         is ApiState.Failure -> {
@@ -141,16 +166,39 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
 
             launch {
-                cartViewModel.updatedDraftCartOrder.collect { result ->
+                cartViewModel.updatedDraftCartOrder.collectLatest { result ->
                     when (result) {
                         is ApiState.Success<DraftOrder> -> {
+                            cartAdapter.submitList(lineItemsList)
                             draftOrder = result.data
+                            lineItemsList = result.data.lineItems!!
                             Log.i(TAG,
-                                    "onCreate: updatedDraftOrder Success: Draft Orders Updated:  ${draftOrder.id}")
+                                    "updatedDraftCartOrder: Success: Draft Orders:  ${draftOrder.id}")
                             Log.i(TAG,
-                                    "onCreate:updatedDraftOrder Success: Draft Orders Updated:  ${draftOrder.email}")
-                            Log.i(TAG,
-                                    "onCreate: Success: updatedDraftOrder Draft Orders Updated:  ${draftOrder.lineItems}")
+                                    "updatedDraftCartOrder: Success: Draft Orders:  ${draftOrder.email}")
+                            Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
+                                draftOrder.lineItems?.get(0)?.quantity
+                            }")
+                            try{
+                                Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
+                                    draftOrder.lineItems?.get(1)?.quantity
+                                }")
+                            }catch (ex : Exception){
+
+                            }
+                            Log.i(TAG, "updatedDraftCartOrder: Success: Draft Orders:  ${
+                                draftOrder.lineItems?.size
+                            }")
+
+                            cartAdapter.submitList(lineItemsList)
+
+                             var total_items = 0
+                            for (item in draftOrder.lineItems!!) {
+                                total_items += item.quantity!!
+                            }
+                            binding.totalItemsNumber.text = "Total (${total_items} item):"
+                            binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
+
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -164,7 +212,6 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                 }
             }
         }
-
 
     }
 
@@ -182,17 +229,15 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
     override fun onProductClickListener(id: Long) {
         val intent: Intent = Intent(this@CartActivity, ProductInfo::class.java)
-        intent.putExtra(EXTRA_PRODUCT_ID, id)
+        intent.putExtra("id", id)
         startActivity(intent)
     }
 
-    override fun onPlusClickListener(productVariantId: Long) {
-        var lineItemToUpdate = draftOrder.lineItems!!.find { it.variantId == productVariantId }
+    override fun onPlusClickListener(id: Long) {
+        var lineItemToUpdate = draftOrder.lineItems!!.find { it.id == id }
         if (lineItemToUpdate != null) {
             if (lineItemToUpdate.quantity!! < lineItemToUpdate.properties?.get(1)?.value?.toInt()!!) {
-                updateQuantity(productVariantId, true)
-                cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
-                        SingleDraftOrderResponse(draftOrder))
+                updateQuantity(id, true)
             } else {
                 Toast.makeText(this@CartActivity,
                         "Available in Stock (${lineItemToUpdate.properties!!.get(1).value.toInt()})",
@@ -203,13 +248,11 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
 
     }
 
-    override fun onMinusClickListener(productVariantId: Long) {
-        var lineItemToUpdate = draftOrder.lineItems!!.find { it.variantId == productVariantId }
+    override fun onMinusClickListener(id: Long) {
+        var lineItemToUpdate = draftOrder.lineItems!!.find { it.id== id }
         if (lineItemToUpdate != null) {
             if (lineItemToUpdate.quantity!! > 1) {
-                updateQuantity(productVariantId, false)
-                cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
-                        SingleDraftOrderResponse(draftOrder))
+                updateQuantity(id, false)
             } else {
                 Toast.makeText(this@CartActivity,
                         "Cannot order less than one item",
@@ -219,9 +262,36 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
         }
     }
 
-    private fun updateQuantity(productVariantId: Long, increment: Boolean) {
+    override fun onDeleteClickListener(id: Long) {
+        val itemToRemove = draftOrder.lineItems!!.find { lineItem ->
+            lineItem.id == id
+        }
+
+        val position = lineItemsList.indexOf(itemToRemove)
+
+        Log.i(TAG, "onDeleteClickListener: ${position}")
+        cartAdapter.deleteItem(position)
+
+        lineItemsList.remove(itemToRemove)
+        Log.i(TAG, "onDeleteClickListener: AFTER UPDATE")
+
+        if (position == 0){
+            cartViewModel.deleteDraftOrderByID(draftOrder.id!!)
+            binding.emptyMsg.visibility = View.VISIBLE
+            binding.totalPriceContainer.visibility = View.GONE
+        }else{
+            draftOrder = draftOrder.copy(lineItems = lineItemsList)
+            cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                    SingleDraftOrderResponse(draftOrder))
+        }
+
+        
+
+    }
+
+    private fun updateQuantity(id: Long, increment: Boolean) {
         val updatedLineItems = draftOrder.lineItems!!.map { lineItem ->
-            if (lineItem.variantId == productVariantId) {
+            if (lineItem.id == id) {
                 val newQuantity =
                     if (increment) (lineItem.quantity ?: 0) + 1 else (lineItem.quantity ?: 0) - 1
                 lineItem.copy(quantity = newQuantity)
@@ -229,15 +299,12 @@ class CartActivity : AppCompatActivity(), OnProductClickListener, OnPlusMinusCli
                 lineItem
             }
         }
-        draftOrder = draftOrder.copy(lineItems = updatedLineItems.toMutableList())
-        cartAdapter.submitList(updatedLineItems)
 
-        var total_items = 0
-        for (item in draftOrder.lineItems!!) {
-            total_items += item.quantity!!
-        }
-        binding.totalItemsNumber.text = "Total (${total_items} item):"
-        binding.totalItemsPrice.text = "${draftOrder.subtotalPrice} EGP"
+        Log.i(TAG, "updateQuantity: ${draftOrder.lineItems.toString()}")
+
+        draftOrder = draftOrder.copy(lineItems = updatedLineItems.toMutableList())
+        cartViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                SingleDraftOrderResponse(draftOrder))
     }
 
 }

@@ -3,6 +3,6 @@
     android:shape="oval">
 
     <!-- Customize the seek bar thumb color -->
-    <solid android:color="@color/black" />
+    <solid android:color="@color/dark" />
     <size android:width="32dp" android:height="32dp" />
 </shape>

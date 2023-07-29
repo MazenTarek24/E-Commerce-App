@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
@@ -65,6 +66,11 @@ class ViewModelProductInfo(private val repo: RepositoryInterface) : ViewModel() 
         MutableStateFlow<ApiState<DraftOrder>>(ApiState.Loading)
     val addDraftOrder: StateFlow<ApiState<DraftOrder>>
         get() = _addDraftOrder
+
+    private var _customer: MutableStateFlow<ApiState<Customer>> =
+        MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
+    val customer: StateFlow<ApiState<Customer>>
+        get() = _customer
 
     fun getAllDraftsOrder() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -172,6 +178,18 @@ class ViewModelProductInfo(private val repo: RepositoryInterface) : ViewModel() 
         }
     }
 
+    fun getCustomerByIdFromNetwork(customerID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "getAllProductsFromNetwork: HomeViewModel")
+            repo.getCustomerByID(customerID)
+                .catch { e -> _customer.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _customer.value = ApiState.Success(data)
+                }
+        }
+    }
+
     fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
+
 
 }

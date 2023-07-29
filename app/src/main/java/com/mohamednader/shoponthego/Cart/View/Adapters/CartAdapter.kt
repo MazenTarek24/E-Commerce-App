@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Cart.View.Adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -29,8 +30,11 @@ class CartAdapter(private val context: Context,
         binding.itemTitle.text = item.vendor
         binding.itemBrand.text = item.title
         binding.itemPrice.text = item.price
-        binding.itemPrice.text = item.price
-        binding.tvQuantity.text = item.quantity.toString()
+        holder.binding.apply {
+            binding.tvQuantity.text = item.quantity.toString()
+        }
+
+        Log.i("INFO_TAG", "onBindViewHolder: ${item.quantity}")
 
         try {
             Glide.with(context).load(item.properties?.get(0)?.value!!)
@@ -47,24 +51,39 @@ class CartAdapter(private val context: Context,
         }
 
         holder.binding.btnPlus.setOnClickListener {
-            plusMinusListener.onPlusClickListener(item.variantId!!)
+            plusMinusListener.onPlusClickListener(item.id!!)
         }
 
         holder.binding.btnMinus.setOnClickListener {
-            plusMinusListener.onMinusClickListener(item.variantId!!)
+            plusMinusListener.onMinusClickListener(item.id!!)
+        }
+
+        holder.binding.deleteBtn.setOnClickListener {
+            plusMinusListener.onDeleteClickListener(item.id!!)
         }
 
     }
+
+    fun deleteItem(position: Int) {
+        val currentList = currentList.toMutableList()
+        currentList.removeAt(position)
+        Log.i("INFO_TAG", "deleteItem: ${currentList.toString()}")
+        submitList(currentList)
+        notifyDataSetChanged()
+    }
+
 }
+
+
 
 class CartViewHolder(var binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root)
 
 class CartDiffUtil : DiffUtil.ItemCallback<LineItem>() {
     override fun areItemsTheSame(oldItem: LineItem, newItem: LineItem): Boolean {
-        return oldItem === newItem
+        return false
     }
 
     override fun areContentsTheSame(oldItem: LineItem, newItem: LineItem): Boolean {
-        return oldItem == newItem
+        return false
     }
 }

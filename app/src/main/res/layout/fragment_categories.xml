@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="home"
-            android:textColor="@color/black"
+            android:textColor="@color/dark"
             android:textStyle="bold"
             android:textSize="@dimen/_20sdp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:tint="@color/dark" />
 
         <ImageView
             android:id="@+id/cart"
@@ -53,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginEnd="@dimen/_60sdp"
-            app:tint="@color/black" />
+            app:tint="@color/dark" />
 
         <ImageView
             android:id="@+id/filter_price"
@@ -64,7 +64,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/search"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:tint="@color/dark" />
 
 
 
@@ -77,7 +77,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:tint="@color/dark" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -86,8 +86,8 @@
         android:id="@+id/cat_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabSelectedTextColor="@color/black"
-        app:tabIndicatorColor="@color/black"
+        app:tabSelectedTextColor="@color/dark"
+        app:tabIndicatorColor="@color/dark"
         app:layout_constraintTop_toBottomOf="@+id/constraint"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

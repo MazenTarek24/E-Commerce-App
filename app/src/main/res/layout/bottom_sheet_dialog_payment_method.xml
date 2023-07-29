@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="Cash On Delivery"
-                android:textColor="@color/black"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/small_text" />
 
             <Button
@@ -48,8 +48,11 @@
                 android:layout_height="@dimen/_35sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:backgroundTint="@color/black"
-                android:text="Select" />
+                android:text="Select"
+                android:backgroundTint="@color/main_color"
+                android:textColor="@color/whitey"
+                android:textStyle="bold"
+                />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -76,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="Using PayPal"
-                android:textColor="@color/black"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/small_text" />
 
             <Button
@@ -85,8 +88,11 @@
                 android:layout_height="@dimen/_35sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:backgroundTint="@color/black"
-                android:text="Select" />
+                android:text="Select"
+                android:backgroundTint="@color/main_color"
+                android:textColor="@color/whitey"
+                android:textStyle="bold"
+                />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

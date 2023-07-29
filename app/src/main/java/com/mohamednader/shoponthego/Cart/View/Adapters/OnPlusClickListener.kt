@@ -1,6 +1,7 @@
 package com.mohamednader.shoponthego.Cart.View.Adapters
 
 interface OnPlusMinusClickListener {
-    fun onPlusClickListener(productVariantId: Long)
-    fun onMinusClickListener(productVariantId: Long)
+    fun onPlusClickListener(id: Long)
+    fun onMinusClickListener(id: Long)
+    fun onDeleteClickListener(id: Long)
 }

@@ -64,7 +64,7 @@
         app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#F30202"
-        app:hintTextColor="@color/white"
+        app:hintTextColor="@color/whitey"
         app:layout_constraintStart_toStartOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView3">
 
@@ -73,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/black"
+            android:textColor="@color/dark"
             android:textSize="16sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -93,11 +93,11 @@
         android:ems="10"
         android:inputType="textPersonName"
         app:boxBackgroundColor="#F5F5F5"
-        app:boxStrokeColor="@color/white"
+        app:boxStrokeColor="@color/whitey"
         app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#EA0505"
-        app:hintTextColor="@color/black"
+        app:hintTextColor="@color/dark"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/black" />
+            android:textColor="@color/dark" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <TextView
@@ -123,10 +123,10 @@
         android:layout_height="55dp"
         android:inputType="textPassword"
         app:boxBackgroundColor="#F5F5F5"
-        app:boxStrokeColor="@color/white"
+        app:boxStrokeColor="@color/whitey"
         app:errorEnabled="true"
         app:errorTextColor="#FB0000"
-        app:hintTextColor="@color/black"
+        app:hintTextColor="@color/dark"
         app:layout_constraintStart_toStartOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
@@ -135,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/black" />
+            android:textColor="@color/dark" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -154,11 +154,11 @@
         android:ems="10"
         android:inputType="textPassword"
         app:boxBackgroundColor="#F5F5F5"
-        app:boxStrokeColor="@color/white"
+        app:boxStrokeColor="@color/whitey"
         app:boxStrokeWidth="2dp"
         app:errorEnabled="true"
         app:errorTextColor="#D80101"
-        app:hintTextColor="@color/black"
+        app:hintTextColor="@color/dark"
         app:layout_constraintStart_toStartOf="@+id/textView6"
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
@@ -167,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@null"
-            android:textColor="@color/black" />
+            android:textColor="@color/dark" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -177,7 +177,7 @@
         android:layout_width="@dimen/_250sdp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/dark"
         app:cardCornerRadius="8dp"
         app:cardElevation="@dimen/small_margin"
         app:layout_constraintEnd_toEndOf="@+id/confrimpasswordEditText"
@@ -191,7 +191,7 @@
             android:drawablePadding="@dimen/tiny_margin"
             android:gravity="center"
             android:text="@string/signup"
-            android:textColor="@color/white"
+            android:textColor="@color/whitey"
             android:textSize="24sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

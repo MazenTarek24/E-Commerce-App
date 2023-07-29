@@ -1,17 +1,17 @@
 package com.mohamednader.shoponthego.Model.Pojo.Products.brand
 
 data class SmartCollection(
-        val admin_graphql_api_id: String,
-        val body_html: String,
-        val disjunctive: Boolean,
-        val handle: String,
-        val id: Long,
-        val image: Image,
-        val published_at: String,
-        val published_scope: String,
-        val rules: List<Rule>,
-        val sort_order: String,
-        val template_suffix: Any,
-        val title: String,
-        val updated_at: String
+        var admin_graphql_api_id: String,
+        var body_html: String,
+        var disjunctive: Boolean,
+        var handle: String,
+        var id: Long,
+        var image: Image,
+        var published_at: String,
+        var published_scope: String,
+        var rules: List<Rule>,
+        var sort_order: String,
+        var template_suffix: Any,
+        var title: String,
+        var updated_at: String
 )

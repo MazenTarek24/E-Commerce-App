@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_130sdp"
         android:layout_margin="@dimen/mid_margin"
-         app:cardCornerRadius="@dimen/big_margin"
+        app:cardCornerRadius="@dimen/big_margin"
         app:cardElevation="@dimen/card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +35,16 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/profiletest" />
             </androidx.cardview.widget.CardView>
+
+
+            <ImageButton
+                android:id="@+id/delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                 android:background="@color/full_transparent"
+                android:src="@drawable/ic_baseline_delete_24" />
 
 
             <TextView
@@ -83,6 +93,7 @@
                 app:cardElevation="@dimen/card_elevation">
 
                 <LinearLayout
+                    android:id="@+id/quantity_container"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -101,16 +112,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:gravity="center"
-                        android:text="1"
                         android:textColor="@color/dark"
                         android:textSize="@dimen/mid_text"
                         android:textStyle="bold" />
 
                     <ImageButton
                         android:id="@+id/btn_plus"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/small_margin"
                         android:layout_height="@dimen/small_icons"
                         android:layout_gravity="center_vertical"
+                       android:layout_marginEnd="@dimen/tiny_margin"
+                        android:layout_marginStart="@dimen/tiny_margin"
                         android:background="@color/full_transparent"
                         android:src="@drawable/ic_baseline_add" />
 
@@ -126,7 +138,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/small_margin"
-        app:layout_constraintTop_toBottomOf="@id/item_cart_card"
-        />
+        app:layout_constraintTop_toBottomOf="@id/item_cart_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

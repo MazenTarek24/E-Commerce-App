@@ -1,89 +1,97 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/order_card_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
-        android:layout_margin="@dimen/mid_margin"
-        android:layout_marginTop="@dimen/mid_margin"
-        app:cardCornerRadius="@dimen/big_margin"
-        app:cardElevation="@dimen/small_margin"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        app:cardCornerRadius="@dimen/mid_margin"
+        app:cardElevation="@dimen/card_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/mid_margin"
+            android:layout_margin="@dimen/small_margin"
             android:orientation="horizontal"
-            >
+            android:padding="@dimen/mid_margin">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/item_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
                     android:layout_toEndOf="@id/item_img_card"
-                    android:text="Item Title"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp"
-                    android:textStyle="bold" />
+                    android:text=""
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/mid_text" />
 
                 <TextView
                     android:id="@+id/item_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/item_img_card"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/mid_text" />
+
                 <TextView
                     android:id="@+id/item_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/item_img_card"
                     android:text="$250.00"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/mid_text"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/item_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_toEndOf="@id/item_img_card"
-                    android:text="$250.00"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                    android:layout_toEndOf="@id/item_img_card"
+                    android:text=""
+                    android:textColor="@color/dark"
+                    android:textSize="@dimen/mid_text" />
+
                 <TextView
                     android:id="@+id/item_total_price_usd"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/item_img_card"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textColor="@color/main_color"
+                    android:textSize="@dimen/mid_text"
+                    android:textStyle="bold" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/small_margin"
+        app:layout_constraintStart_toStartOf="@id/order_card_view"
+        app:layout_constraintEnd_toEndOf="@id/order_card_view"
+        app:layout_constraintTop_toBottomOf="@id/order_card_view"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

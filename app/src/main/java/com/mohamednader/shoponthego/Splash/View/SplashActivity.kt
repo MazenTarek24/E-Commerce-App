@@ -2,9 +2,9 @@ package com.mohamednader.shoponthego.Splash.View
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.mohamednader.shoponthego.Auth.Login.View.LoginActivity
@@ -19,15 +19,20 @@ import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class SplashActivity : AppCompatActivity() {
 
     //    private lateinit var cd: CheckInternetConnection
+    val TAG = "SplashActivity_INFO_TAG"
+
     private lateinit var mAuth: FirebaseAuth
 
     //View Model Members
     private lateinit var splashViewModel: SplashViewModel
     private lateinit var factory: GenericViewModelFactory
+
+    var firstTime: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +45,7 @@ class SplashActivity : AppCompatActivity() {
                 ConcreteDataStoreSource(this@SplashActivity)))
         splashViewModel = ViewModelProvider(this, factory).get(SplashViewModel::class.java)
 
+
         splashTimer()
 
     }
@@ -47,8 +53,34 @@ class SplashActivity : AppCompatActivity() {
     private fun splashTimer() {
         lifecycleScope.launchWhenStarted {
 
-            delay(1000)
-            checkUser()
+            launch {
+                splashViewModel.getStringDS(Constants.firstTimeKey).collect() { result ->
+                    Log.i(TAG, "splashTimer: $result")
+                    when (result) {
+                        "true" -> {
+                            delay(1000)
+                            splashViewModel.saveStringDS(Constants.currencyKey , "EGP")
+                            splashViewModel.saveStringDS(Constants.rateKey , "1.0")
+                            splashViewModel.saveStringDS(Constants.firstTimeKey , "false")
+                            checkUser()
+                         }
+                        "false" -> {
+                            //sad
+                            delay(1000)
+                            checkUser()
+                         }
+                        null ->{
+                            Log.i(TAG, "splashTimer: ")
+                            splashViewModel.saveStringDS(Constants.firstTimeKey , "true")
+                            splashViewModel.saveStringDS(Constants.currencyKey , "EGP")
+                            splashViewModel.saveStringDS(Constants.rateKey , "1.0")
+                            checkUser()
+                        }
+                    }
+                }
+            }
+
+
         }
 
     }
@@ -77,5 +109,9 @@ class SplashActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
+
+
+
+
 
 }

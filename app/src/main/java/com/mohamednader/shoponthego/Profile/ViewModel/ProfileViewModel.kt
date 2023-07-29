@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
+import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +29,11 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
     val customer: StateFlow<ApiState<Customer>>
         get() = _customer
+
+    private var _order: MutableStateFlow<ApiState<Order>> =
+        MutableStateFlow<ApiState<Order>>(ApiState.Loading)
+    val order: StateFlow<ApiState<Order>>
+        get() = _order
 
     private var _updateCustomer: MutableStateFlow<ApiState<Customer>> =
         MutableStateFlow<ApiState<Customer>>(ApiState.Loading)
@@ -70,6 +77,16 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
+    fun getOrderByIdFromNetwork(orderID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "getAllProductsFromNetwork: HomeViewModel")
+            repo.getOrderByID(orderID).catch { e -> _order.value = ApiState.Failure(e) }
+                .collect { data ->
+                    _order.value = ApiState.Success(data)
+                }
+        }
+    }
+
     fun saveStringDS(key: Preferences.Key<String>, value: String) {
         viewModelScope.launch {
             repo.saveStringDS(key, value)
@@ -79,22 +96,23 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
     fun getStringDS(key: Preferences.Key<String>) = repo.getStringDS(key)
 
     //To retrieve the all Currencies exchange Rate
-    /*
 
-    private var _currencyRes: MutableStateFlow<ApiState<List<ToCurrency>>> =
+    private var _currencyRate: MutableStateFlow<ApiState<List<ToCurrency>>> =
         MutableStateFlow<ApiState<List<ToCurrency>>>(ApiState.Loading)
-    val currencyRes: StateFlow<ApiState<List<ToCurrency>>>
-        get() = _currencyRes
+    val currencyRate: StateFlow<ApiState<List<ToCurrency>>>
+        get() = _currencyRate
 
     fun getCurrencyConvertorFromNetwork(from: String, to: String) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.i(TAG, "getCurrencyConvertor:  ViewModel")
             repo.getCurrencyConvertor(from, to)
-                .catch { e -> _currencyRes.value = ApiState.Failure(e) }
+                .catch { e -> _currencyRate.value = ApiState.Failure(e) }
                 .collect { data ->
-                    _currencyRes.value = ApiState.Success(data)
+                    _currencyRate.value = ApiState.Success(data)
                 }
         }
     }
-     */
+
+
+
 }

@@ -1,5 +1,6 @@
 package com.mohamednader.shoponthego.Payment.View
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,9 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.MainHome.View.MainHomeActivity
+import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.AppliedDiscount
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
+import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
@@ -23,12 +28,26 @@ import com.mohamednader.shoponthego.Payment.ViewModel.PaymentViewModel
 import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
 import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
 import com.mohamednader.shoponthego.Utils.Constants
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivityPaymentBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
 import com.mohamednader.shoponthego.databinding.BottomSheetDialogPaymentMethodBinding
+import com.paypal.checkout.approve.OnApprove
+import com.paypal.checkout.cancel.OnCancel
+import com.paypal.checkout.createorder.CreateOrder
+import com.paypal.checkout.createorder.CurrencyCode
+import com.paypal.checkout.createorder.OrderIntent
+import com.paypal.checkout.createorder.UserAction
+import com.paypal.checkout.error.OnError
+import com.paypal.checkout.order.Amount
+import com.paypal.checkout.order.AppContext
+import com.paypal.checkout.order.OrderRequest
+import com.paypal.checkout.order.PurchaseUnit
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
@@ -53,6 +72,10 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
     lateinit var customer: Customer
     lateinit var addressesList: List<Address>
     lateinit var customerId: String
+    lateinit var priceRuleList: List<PriceRules>
+    private lateinit var customProgress: CustomProgress
+    private var totalPrice = "0.0"
+    private var currencyUsed = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +95,9 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                 ConcreteDataStoreSource(this@PaymentActivity)))
         paymentViewModel = ViewModelProvider(this, factory).get(PaymentViewModel::class.java)
 
+        //Progress Bar
+        customProgress = CustomProgress.getInstance()
+
         //Address Bottom Sheet
         addressAdapter = AddressAdapter(this@PaymentActivity, this, "Payment")
         addressLinearLayoutManager =
@@ -87,7 +113,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
 
 
-        paymentMethodBottomSheetBinding = BottomSheetDialogPaymentMethodBinding.inflate(layoutInflater)
+        paymentMethodBottomSheetBinding =
+            BottomSheetDialogPaymentMethodBinding.inflate(layoutInflater)
         paymentMethodBottomSheetDialog = BottomSheetDialog(this@PaymentActivity)
         paymentMethodBottomSheetDialog.setContentView(paymentMethodBottomSheetBinding.root)
 
@@ -109,22 +136,58 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             addressBottomSheetDialog.show()
         }
 
+        binding.applyPromoCodeBtn.setOnClickListener {
+            val code = binding.promoCodeEditText.text.toString()
+            val priceRule: PriceRules? = priceRuleList.find { priceRuleItem ->
+                priceRuleItem.title == code
+            }
+            if (priceRule == null) {
+                Toast.makeText(this@PaymentActivity, "Invalid Code", Toast.LENGTH_SHORT).show()
+            } else {
+                val appliedDiscount: AppliedDiscount = AppliedDiscount(title = priceRule.title,
+                        description = "Given Discount",
+                        value = abs(priceRule.value.toDouble()).toString(),
+                        value_type = priceRule.valueType,
+                        amount = "0.0")
+                draftOrder = draftOrder.copy(appliedDiscount = appliedDiscount)
+                Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
+                paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                        SingleDraftOrderResponse(draftOrder))
+                Toast.makeText(this@PaymentActivity, "Accepted Code", Toast.LENGTH_SHORT).show()
+            }
+
+        }
 
         binding.placeOrderBtn.setOnClickListener {
-
+            if (addressesList.isNotEmpty()) {
+                    getCompleteDraftOrder()
+                    paymentViewModel.completeDraftOrderPendingByID(draftOrder.id!!)
+            } else {
+                Toast.makeText(this@PaymentActivity,
+                        "There is no Address, please add one",
+                        Toast.LENGTH_SHORT).show()
+            }
         }
 
         paymentMethodBottomSheetBinding.cashSelectBtn.setOnClickListener {
             binding.paymentMethodText.setText("Cash On Delivery")
+            binding.paymentButtonContainer.visibility = View.GONE
+            binding.placeOrderBtn.visibility = View.VISIBLE
             paymentMethodBottomSheetDialog.dismiss()
         }
         paymentMethodBottomSheetBinding.paypalSelectBtn.setOnClickListener {
             binding.paymentMethodText.setText("Using PayPal")
+            binding.paymentButtonContainer.visibility = View.VISIBLE
+            binding.placeOrderBtn.visibility = View.GONE
             paymentMethodBottomSheetDialog.dismiss()
         }
 
+        initPayPalPaymentButton()
+
         apiRequests()
     }
+
+
 
     private fun apiRequests() {
 
@@ -138,6 +201,7 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                         customerId = customerID!!
                         paymentViewModel.getAllDraftOrdersFromNetwork(customerId.toLong())
                         paymentViewModel.getCustomerByID(customerId.toLong())
+                        paymentViewModel.getAllPriceRulesFromNetwork()
                     }
             }
 
@@ -155,18 +219,22 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                                     draftOrder.lineItems?.get(0)?.quantity
                                 }")
 
+
                                 binding.subtotalValue.text = draftOrder.subtotalPrice
                                 binding.taxValue.text = draftOrder.totalTax
-                                binding.discountValue.text = draftOrder.appliedDiscount?.amount
-                                binding.shippingValue.text = "20"
-                                binding.totalValue.text = draftOrder.totalPrice
+                                binding.discountValue.text =
+                                    draftOrder.appliedDiscount?.amount ?: "0.0"
+                                binding.shippingValue.text = draftOrder.shippingLine?.price ?: "0.0"
+                                binding.totalValue.text = draftOrder.totalPrice ?: "0.0"
 
                             } else {
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
                             }
+                            customProgress.hideProgress()
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: Loading...")
+                            customProgress.showDialog(this@PaymentActivity, false)
                         }
                         is ApiState.Failure -> {
                             //hideViews()
@@ -185,10 +253,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                     when (result) {
                         is ApiState.Success<DraftOrder> -> {
 
-                            // to update draft order address and discount code
-
                             draftOrder = result.data
-
+                            binding.subtotalValue.text = draftOrder.subtotalPrice
+                            binding.taxValue.text = draftOrder.totalTax
+                            binding.discountValue.text = draftOrder.appliedDiscount?.amount ?: "0.0"
+                            binding.shippingValue.text = draftOrder.shippingLine?.price ?: "0.0"
+                            binding.totalValue.text = draftOrder.totalPrice ?: "0.0"
+                            binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
+                            totalPrice = draftOrder.totalPrice!!
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -213,9 +285,19 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                             binding.countryText.text = customer.defaultAddress?.country
                             binding.phoneText.text = customer.defaultAddress?.phone
                             binding.nameText.text =
-                                "${customer.defaultAddress?.firstName}  ${customer.defaultAddress?.lastName}"
+                                "${customer.defaultAddress?.firstName ?: ""}  ${customer.defaultAddress?.lastName ?: ""}"
                             addressesList = customer.addresses!!
-                            addressAdapter.submitList(addressesList)
+                            if (addressesList.isNotEmpty()) {
+                                addressAdapter.submitList(addressesList)
+                                addressBottomSheetBinding.emptyMsg.visibility = View.GONE
+                            } else {
+                                addressBottomSheetBinding.emptyMsg.visibility = View.VISIBLE
+                                Log.i(TAG, "onCreate: Success...The list is empty}")
+                                Toast.makeText(this@PaymentActivity,
+                                        "There is no Address, please add one",
+                                        Toast.LENGTH_SHORT).show()
+                            }
+
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -228,8 +310,30 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                     }
                 }
             }
-        }
 
+
+            launch {
+                paymentViewModel.priceRulesList.collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<PriceRules>> -> {
+                            priceRuleList = result.data
+                            Log.i(TAG, "apiRequests: $priceRuleList")
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading...")
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+                            Toast.makeText(this@PaymentActivity,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+            }
+
+        }
     }
 
     override fun onAddressClickListener(addressId: Long) {
@@ -240,8 +344,19 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             binding.cityText.text = it.city
             binding.countryText.text = it.country
             binding.phoneText.text = it.phone
-            binding.nameText.text =
-                "${it.firstName} + ${it.lastName}"
+            binding.nameText.text = "${it.firstName} + ${it.lastName}"
+
+            val shippingAddress: Address = Address(address1 = it.address1,
+                    city = it.city,
+                    country = it.country,
+                    phone = it.phone,
+                    firstName = it.firstName,
+                    lastName = it.lastName)
+            draftOrder = draftOrder.copy(shippingAddress = shippingAddress)
+            Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
+            paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                    SingleDraftOrderResponse(draftOrder))
+            Toast.makeText(this@PaymentActivity, "Address Updated", Toast.LENGTH_SHORT).show()
         }
         addressBottomSheetDialog.dismiss()
     }
@@ -253,4 +368,129 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
     override fun onDeleteClickListener(addressId: Long) {
         TODO("Not yet implemented")
     }
+
+    override fun onBackPressed() {
+        lifecycleScope.launch {
+            draftOrder = draftOrder.copy(appliedDiscount = AppliedDiscount())
+            Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
+            paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
+                    SingleDraftOrderResponse(draftOrder))
+            delay(500)
+            super.onBackPressed()
+        }
+    }
+
+    fun getCompleteDraftOrder() {
+
+        lifecycleScope.launch {
+
+            launch {
+                paymentViewModel.completeDraftOrderPaid.collect { result ->
+                    when (result) {
+                        is ApiState.Success<DraftOrder> -> {
+
+                            paymentViewModel.deleteDraftOrderByID(draftOrder.id!!)
+                            Toast.makeText(this@PaymentActivity,
+                                    "Paid Payment using PayPal Done",
+                                    Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@PaymentActivity, MainHomeActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(this@PaymentActivity,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            launch {
+                paymentViewModel.completeDraftOrderPending.collect { result ->
+                    when (result) {
+                        is ApiState.Success<DraftOrder> -> {
+
+                            paymentViewModel.deleteDraftOrderByID(draftOrder.id!!)
+                            Toast.makeText(this@PaymentActivity,
+                                    "Pending Payment Done",
+                                    Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@PaymentActivity, MainHomeActivity::class.java)
+                            intent.flags =
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(this@PaymentActivity,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    private fun initPayPalPaymentButton() {
+        binding.paymentButtonContainer.setup(
+                createOrder =
+                CreateOrder { createOrderActions ->
+                    val order =
+                        OrderRequest(
+                                intent = OrderIntent.CAPTURE,
+                                appContext = AppContext(userAction = UserAction.PAY_NOW),
+                                purchaseUnitList =
+                                listOf(
+                                        PurchaseUnit(
+                                                amount =
+                                                Amount(currencyCode = CurrencyCode.USD, value = "10.00")
+                                        )
+                                )
+                        )
+                    createOrderActions.create(order)
+                },
+                onApprove =
+                OnApprove { approval ->
+                    approval.orderActions.capture { captureOrderResult ->
+                        Log.i(TAG, "CaptureOrderResult: $captureOrderResult")
+                        Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show()
+                        getCompleteDraftOrder()
+                        paymentViewModel.completeDraftOrderPaidByID(draftOrder.id!!)
+
+
+                    }
+                },
+                onCancel = OnCancel {
+                    Log.d(TAG, "Buyer Cancelled This Purchase")
+                    Toast.makeText(this, "Payment Cancelled", Toast.LENGTH_SHORT).show()
+                },
+                onError = OnError { errorInfo ->
+                    Log.d(TAG, "Error: $errorInfo")
+                    Toast.makeText(this, "Payment Error", Toast.LENGTH_SHORT).show()
+                }
+        )
+    }
+
+
+
+
+
+
+
+
+
+
 }

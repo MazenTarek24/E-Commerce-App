@@ -21,6 +21,7 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
@@ -40,6 +41,8 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     lateinit var catLayoutManager: LayoutManager
 
     val TAG = "CategoryResponseSuccessfully"
+    private lateinit var customProgress: CustomProgress
+
 
     var categoryId: Long = 0
 
@@ -108,6 +111,9 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
         categoryViewModel = ViewModelProvider(this, factory)
             .get(CategoriesViewModel::class.java)
 
+        //Progress Bar
+        customProgress = CustomProgress.getInstance()
+
     }
 
     private fun getAllCategory(collectionId: Long, product_type: String) {
@@ -135,9 +141,10 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
                             Log.i(TAG,
                                     "onCreateCategory: ListCategoryIsEmpty")
                         }
-
+                        customProgress.hideProgress()
                     }
                     is ApiState.Loading -> {
+                        customProgress.showDialog(requireContext(),   false)
                         Log.i(TAG, "onCreate: LoadingWhenFetchingCategoryProducts...")
                     }
                     is ApiState.Failure -> {

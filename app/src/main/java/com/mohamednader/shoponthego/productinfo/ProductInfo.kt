@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.*
 import com.mohamednader.shoponthego.Model.Pojo.Products.Image
@@ -27,6 +28,7 @@ import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.Constants.COLORS_TYPE
 import com.mohamednader.shoponthego.Utils.Constants.SIZES_TYPE
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.ActivityProductInfoBinding
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
 import kotlinx.coroutines.launch
@@ -48,6 +50,10 @@ class ProductInfo : AppCompatActivity() {
     var images: List<Image> = emptyList()
     lateinit var draftOrder: DraftOrder
     lateinit var customerId: String
+    lateinit var customer: Customer
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
+
     var productId: Long = 0
 
     private lateinit var binding: ActivityProductInfoBinding
@@ -109,7 +115,9 @@ class ProductInfo : AppCompatActivity() {
 
 
             if (draftOrdersID.isEmpty()) {
-                val draftOrder = DraftOrder(lineItems = mutablelist, customer = Customer(customerId.toLong()), note = "favDraft")
+                val draftOrder = DraftOrder(lineItems = mutablelist,
+                        customer = Customer(customerId.toLong()),
+                        note = "favDraft")
                 viewModelProductInfo.createDraftOrder(SingleDraftOrderResponse(draftOrder))
             } else {
                 viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = mutablelist,
@@ -135,12 +143,26 @@ class ProductInfo : AppCompatActivity() {
         lifecycleScope.launch {
 
             launch {
+                viewModelProductInfo.getStringDS(Constants.currencyKey).collect() { result ->
+                    currencyISO = result ?: ""
+                }
+            }
+
+            launch {
+                viewModelProductInfo.getStringDS(Constants.rateKey).collect() { result ->
+                    currencyRate = result?.toDouble() ?: 1.0
+                }
+            }
+
+
+            launch {
                 viewModelProductInfo.getStringDS(Constants.customerIdKey).asLiveData()
                     .observe(this@ProductInfo) { customerID ->
                         // Update UI with the retrieved name
                         Log.i(TAG, "apiRequests: VIP: $customerID")
                         customerId = customerID!!
 
+                        viewModelProductInfo.getCustomerByIdFromNetwork(customerId.toLong())
                         viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
                         viewModelProductInfo.getProductByIdFromNetwork(productId)
                         apicallForgetdraftwithId()
@@ -158,20 +180,22 @@ class ProductInfo : AppCompatActivity() {
                             binding.descriptiontxv.text = result.data.bodyHtml
                             product = result.data
                             images = result.data.images!!
-                            binding.pricetv.text = result.data.variants?.get(0)?.price
+                            binding.pricetv.text =
+                                convertCurrencyFromEGPTo((result.data.variants?.get(0)?.price)!!.toDouble(),
+                                        currencyRate) + " " + currencyISO
                             binding.productnametv.text = result.data.title
                             println(result.data.options?.get(0)?.values)
 
                             if (result.data.options?.get(0)?.name == "Size") {
-                                sizesAdapter.differ.submitList(result.data.options.get(0)?.values)
+                                sizesAdapter.differ.submitList(result.data.options!!.get(0)?.values)
                             }
                             if (result.data.options?.get(0)?.name == "Color") {
-                                colorsAdapter.differ.submitList(result.data.options.get(0)?.values)
+                                colorsAdapter.differ.submitList(result.data.options!!.get(0)?.values)
                             }
 
                             val springDotsIndicator = findViewById<SpringDotsIndicator>(R.id.dot2)
                             val viewPager = findViewById<ViewPager>(R.id.view_pager)
-                            val adapter = ViewPagerProductinfoAdapter(result.data.images)
+                            val adapter = ViewPagerProductinfoAdapter(result.data.images!!)
                             viewPager.adapter = adapter
                             springDotsIndicator.setViewPager(viewPager)
                             binding.progressBar.visibility = View.GONE
@@ -214,6 +238,25 @@ class ProductInfo : AppCompatActivity() {
                 }
             }
 
+            launch {
+                viewModelProductInfo.customer.collect { result ->
+                    when (result) {
+                        is ApiState.Success<Customer> -> {
+                            customer = result.data
+
+                        }
+                        is ApiState.Loading -> {
+
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(this@ProductInfo,
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
 
 
             launch {
@@ -252,11 +295,18 @@ class ProductInfo : AppCompatActivity() {
                                             quantity = 1,
                                             properties = prop)
 
-                                val customer = Customer(id = customerId.toLong())
+                                val shippingAddress =
+                                    Address(address1 = customer.defaultAddress?.address1,
+                                            city = customer.defaultAddress?.city,
+                                            country = customer.defaultAddress?.country,
+                                            phone = customer.defaultAddress?.phone,
+                                            firstName = customer.defaultAddress?.firstName,
+                                            lastName = customer.defaultAddress?.lastName)
 
                                 draftOrder = DraftOrder(lineItems = mutableListOf(lineItem),
                                         customer = customer,
-                                        note = "cartDraft")
+                                        note = "cartDraft",
+                                        shippingAddress = shippingAddress)
 
                                 viewModelProductInfo.addDraftOrderCartOnNetwork(
                                         SingleDraftOrderResponse(draftOrder))

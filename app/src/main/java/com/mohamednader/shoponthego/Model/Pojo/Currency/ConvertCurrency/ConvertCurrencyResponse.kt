@@ -1,10 +1,10 @@
 package com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency
 
 data class ConvertCurrencyResponse(
-        val terms: String,
-        val privacy: String,
-        val from: String,
-        val amount: Double,
-        val timestamp: String,
-        val to: List<ToCurrency>
+        var terms: String,
+        var privacy: String,
+        var from: String,
+        var amount: Double,
+        var timestamp: String,
+        var to: List<ToCurrency>
 )

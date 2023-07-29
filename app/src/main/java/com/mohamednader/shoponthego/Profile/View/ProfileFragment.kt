@@ -1,7 +1,9 @@
 package com.mohamednader.shoponthego.Profile.View
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,14 +17,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
 import com.mohamednader.shoponthego.AddressConfig.View.AddressConfig
+import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CurrencyAdapter
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.OnCurrencyClickListener
+import com.mohamednader.shoponthego.Model.Pojo.Currency.ConvertCurrency.ToCurrency
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.Customers.Customer
 import com.mohamednader.shoponthego.Model.Pojo.Customers.SingleCustomerResponse
+import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
@@ -30,12 +37,11 @@ import com.mohamednader.shoponthego.Order.view.OrderActivity
 import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
 import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
 import com.mohamednader.shoponthego.Profile.ViewModel.ProfileViewModel
-import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
-import com.mohamednader.shoponthego.databinding.BottomSheetDialogAddressesBinding
-import com.mohamednader.shoponthego.databinding.BottomSheetDialogCurrenciesBinding
-import com.mohamednader.shoponthego.databinding.FragmentProfileBinding
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
+import com.mohamednader.shoponthego.databinding.*
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListener {
@@ -54,6 +60,10 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     private lateinit var currencyAdapter: CurrencyAdapter
     private lateinit var currencyLinearLayoutManager: LinearLayoutManager
 
+    //Language Bottom Sheet
+    lateinit var languageBottomSheetBinding: BottomSheetDialogLanguageBinding
+    lateinit var languageBottomSheetDialog: BottomSheetDialog
+
     //Addresses Bottom Sheet
     lateinit var addressBottomSheetBinding: BottomSheetDialogAddressesBinding
     lateinit var addressBottomSheetDialog: BottomSheetDialog
@@ -65,7 +75,11 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     lateinit var addressesList: List<Address>
     lateinit var customer: Customer
     lateinit var customerId: String
+    private lateinit var customProgress: CustomProgress
+    private lateinit var firebaseAuth: FirebaseAuth
 
+    var currencyISO = "EGP"
+    var currencyRate = 1.0
 
     val ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE: Int = 1234
 
@@ -91,6 +105,10 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                 ConcreteLocalSource(requireContext()),
                 ConcreteDataStoreSource(requireContext())))
         profileViewModel = ViewModelProvider(this, factory).get(ProfileViewModel::class.java)
+
+        //Progress Bar
+        customProgress = CustomProgress.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
 
         //Currency Bottom Sheet
         currencyAdapter = CurrencyAdapter(requireContext(), this)
@@ -118,6 +136,36 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
 
 
+        languageBottomSheetBinding = BottomSheetDialogLanguageBinding.inflate(layoutInflater)
+        languageBottomSheetDialog = BottomSheetDialog(requireContext())
+        languageBottomSheetDialog.setContentView(languageBottomSheetBinding.root)
+
+
+        binding.language.setOnClickListener {
+            languageBottomSheetDialog.show()
+        }
+
+
+        languageBottomSheetBinding.englishSelect.setOnClickListener {
+
+            //Change Language
+
+            languageBottomSheetDialog.dismiss()
+        }
+        languageBottomSheetBinding.arabicSelect.setOnClickListener {
+
+            //Change Language
+
+            languageBottomSheetDialog.dismiss()
+        }
+
+
+        binding.logoutBtn.setOnClickListener {
+            firebaseAuth.signOut()
+            val intent = Intent(requireContext(), SignUpActivity::class.java)
+            requireActivity().finish()
+        }
+
         binding.currency.setOnClickListener {
 //            currencyAdapter.submitList(currenciesList)
             currencyBottomSheetDialog.show()
@@ -128,6 +176,12 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             startActivity(intent)
         }
 
+        binding.helpCenter.setOnClickListener {
+            val url =
+                "https://www.shopify.com/tools/policy-generator/show/JhwuMn7qlBI=--jO2CKCES9S5LzlG+--ph6FD+hOf1wTiILu5k1NpA==?utm_campaign=growth_tools&utm_content=policy&utm_medium=email&utm_source=sendgrid"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        }
 
 
         binding.address.setOnClickListener {
@@ -146,9 +200,9 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun apiRequests() {
         lifecycleScope.launchWhenStarted {
-
 
             launch {
                 profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
@@ -195,18 +249,31 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             binding.nameText.text = customer.firstName
                             binding.emailText.text = customer.email
 
+                            if (customer.lastOrderId != null) {
+                                profileViewModel.getOrderByIdFromNetwork(customer.lastOrderId!!)
+                                binding.emptyOrder.visibility = View.GONE
+                            } else {
+                                binding.orderCardView.visibility = View.INVISIBLE
+                                binding.emptyOrder.visibility = View.VISIBLE
+                            }
+
+
 
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
                                 addressAdapter.submitList(addressesList)
+                                addressBottomSheetBinding.emptyMsg.visibility = View.GONE
                             } else {
+                                addressBottomSheetBinding.emptyMsg.visibility = View.VISIBLE
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
                                 Toast.makeText(requireContext(),
                                         "There is no Address, please add one",
                                         Toast.LENGTH_SHORT).show()
                             }
+
                         }
                         is ApiState.Loading -> {
+
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
                         }
                         is ApiState.Failure -> { //hideViews()
@@ -220,6 +287,84 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
 
             launch {
+                profileViewModel.order.collect { result ->
+                    when (result) {
+                        is ApiState.Success<Order> -> {
+                            val order = result.data
+
+
+                            binding.itemDate.text = "Created At = ${order.created_at}"
+                            binding.itemAddress.text = "Order Number = ${order.number.toString()}"
+                            binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
+                            binding.itemId.text = "Order Id = ${order.id.toString()}"
+                            binding.itemTotalPriceUsd.text = "Total price = ${
+                                convertCurrencyFromEGPTo((order.current_total_price)!!.toDouble(),
+                                        currencyRate)
+                            } $currencyISO"
+
+                            customProgress.hideProgress()
+                            binding.orderCardView.visibility = View.VISIBLE
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                            customProgress.showDialog(requireContext(), false)
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            launch {
+                profileViewModel.getStringDS(Constants.currencyKey).collect() { result ->
+                    currencyISO = result ?: ""
+                }
+            }
+
+            launch {
+                profileViewModel.getStringDS(Constants.rateKey).collect() { result ->
+                    currencyRate = result?.toDouble() ?: 1.0
+                }
+            }
+
+            launch {
+                profileViewModel.currencyRate.collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<ToCurrency>> -> {
+                            Log.i(TAG, "apiRequests: ${result.data}")
+                            profileViewModel.saveStringDS(Constants.currencyKey,
+                                    result.data.get(0).quotecurrency)
+                            profileViewModel.saveStringDS(Constants.rateKey,
+                                    result.data.get(0).mid.toString())
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+            launch {
+                profileViewModel.getStringDS(Constants.currencyKey).collect() { result ->
+                    binding.currency.text = "Currency $result"
+                }
+            }
+
+
+
+
+
+
+            launch {
                 profileViewModel.updateCustomer.collect { result ->
                     when (result) {
                         is ApiState.Success<Customer> -> {
@@ -228,7 +373,9 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
                                 addressAdapter.submitList(addressesList)
+                                addressBottomSheetBinding.emptyMsg.visibility = View.GONE
                             } else {
+                                addressBottomSheetBinding.emptyMsg.visibility = View.VISIBLE
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
                                 Toast.makeText(requireContext(),
                                         "There is no Address, please add one",
@@ -248,6 +395,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             }
 
         }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -262,21 +410,12 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             customer = customer.copy(addresses = updatedAddresses)
             profileViewModel.updateCustomerOnNetwork(customer.id!!,
                     SingleCustomerResponse(customer))
-
-/*
-val address = Address(firstName = customer.firstName,
-                                        lastName = customer.lastName,
-                                        country = "Egypt",
-                                        city = "Giza",
-                                        address1 = "Haday2 El Aharm",
-                                        phone = customer.phone)
- */
-
         }
     }
 
     override fun onCurrencyClickListener(currencyISO: String) {
         Toast.makeText(requireContext(), "you Clicked $currencyISO", Toast.LENGTH_SHORT).show()
+        profileViewModel.getCurrencyConvertorFromNetwork("EGP", currencyISO)
         currencyBottomSheetDialog.dismiss()
     }
 

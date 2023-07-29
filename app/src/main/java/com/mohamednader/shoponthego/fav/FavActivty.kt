@@ -37,6 +37,7 @@ class FavActivty : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var myLayoutManager: LinearLayoutManager
     private lateinit var binding: ActivityFavActivtyBinding
+    lateinit var draftOrder: DraftOrder
     var listofproduct = mutableListOf<Product>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,8 @@ class FavActivty : AppCompatActivity() {
             listItems?.remove(it)
             recyclerAdapter.submitList(listItems)
 
-            viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = listItems)),
+            draftOrder = draftOrder.copy(lineItems = listItems)
+            viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(draftOrder),
                     draftOrdersID!!.toLong())
 
         }
@@ -124,6 +126,7 @@ class FavActivty : AppCompatActivity() {
             viewModelProductInfo.draftwithid.collect { result ->
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
+                        draftOrder = result.data
                         println("12:51" + result.data.id)
                         listItems = result.data.lineItems?.toMutableList()
 

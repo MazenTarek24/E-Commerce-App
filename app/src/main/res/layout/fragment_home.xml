@@ -1,133 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#fff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="home"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/fav"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/fav"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+            <ImageView
+                android:id="@+id/cart"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_60sdp"
+                android:src="@drawable/cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/search"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <TextView
-            android:id="@+id/home"
+            android:id="@+id/coupon_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="home"
-            android:textColor="@color/black"
+            android:layout_marginStart="@dimen/big_margin"
+            android:layout_marginTop="@dimen/big_margin"
+            android:text="Welcome,"
+            android:textColor="@color/dark"
+            android:textSize="@dimen/big_text"
             android:textStyle="bold"
-            android:textSize="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraint" />
+
+
+        <TextView
+            android:id="@+id/coupon_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Our Fashon App"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/small_text"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/coupon_value"
+            app:layout_constraintTop_toBottomOf="@id/coupon_value" />
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/coupon_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/coupon_description" />
 
-        <ImageView
-            android:id="@+id/fav"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/fav"
-            android:layout_marginEnd="@dimen/_10sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
 
-        <ImageView
-            android:id="@+id/cart"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/cart"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="@dimen/_60sdp"
-            app:tint="@color/black" />
-
-        <ImageView
-            android:id="@+id/search"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/search"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <TextView
+            android:id="@+id/brands_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="brands"
+            android:textColor="#000000"
+            android:textSize="@dimen/big_text"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/black" />
+            app:layout_constraintTop_toBottomOf="@+id/coupon_view_pager" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_brand"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/big_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/last_view"
+            app:layout_constraintTop_toBottomOf="@+id/brands_text"
+            tools:listitem="@layout/item_brand"
+
+            />
+
+        <View
+            android:id="@+id/last_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_20sdp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <TextView
-        android:id="@+id/coupon_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/big_margin"
-        android:layout_marginTop="@dimen/big_margin"
-        android:text="Welcome,"
-        android:textColor="@color/black"
-        android:textSize="@dimen/big_text"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraint" />
-
-
-    <TextView
-        android:id="@+id/coupon_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Our Fashon App"
-        android:textColor="@color/gray"
-        android:textSize="@dimen/small_text"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/coupon_value"
-        app:layout_constraintTop_toBottomOf="@id/coupon_value" />
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/coupon_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coupon_description" />
-
-
-    <TextView
-        android:id="@+id/brands_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="brands"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:textSize="@dimen/big_text"
-        app:layout_constraintTop_toBottomOf="@+id/coupon_view_pager"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_brand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/brands_text"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        tools:listitem="@layout/item_brand"
-
-        />
-</androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

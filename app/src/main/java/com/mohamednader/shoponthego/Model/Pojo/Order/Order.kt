@@ -6,18 +6,18 @@ import java.io.Serializable
 
 data class Order(
 
-        val billing_address: Address? = null,
-        val created_at: String? = null,
-        val currency: String? = null,
-        val current_subtotal_price: String? = null,
-        val current_total_discounts: String? = null,
-        val current_total_price: String? = null,
-        val current_total_tax: String? = null,
-        val customer: Customer? = null,
-        val email: String? = null,
-        val id: Long? = null,
-        val name: String? = null,
-        val number: Int? = null,
-        val order_number: Int? = null,
+        var billing_address: Address? = null,
+        var created_at: String? = null,
+        var currency: String? = null,
+        var current_subtotal_price: String? = null,
+        var current_total_discounts: String? = null,
+        var current_total_price: String? = null,
+        var current_total_tax: String? = null,
+        var customer: Customer? = null,
+        var email: String? = null,
+        var id: Long? = null,
+        var name: String? = null,
+        var number: Int? = null,
+        var order_number: Int? = null,
 
         ) : Serializable

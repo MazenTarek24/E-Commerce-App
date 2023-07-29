@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class CartViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
-    private val TAG = "HomeViewModel_INFO_TAG"
+    private val TAG = "CartViewModel_INFO_TAG"
 
     private var _draftOrdersList: MutableStateFlow<ApiState<List<DraftOrder>>> =
         MutableStateFlow<ApiState<List<DraftOrder>>>(ApiState.Loading)
@@ -60,6 +60,12 @@ class CartViewModel(private val repo: RepositoryInterface) : ViewModel() {
         }
     }
 
+    fun deleteDraftOrderByID(draftOrderID: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "deleteDraftOrderPending: HomeViewModel")
+            repo.deleteDraftOrder(draftOrderID)
+        }
+    }
 
     fun saveStringDS(key: Preferences.Key<String>, value: String) {
         viewModelScope.launch {

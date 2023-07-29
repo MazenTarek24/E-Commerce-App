@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:max="1000"
         android:progress="0"
-        android:thumbTint="@color/white"
-        android:progressTint="@color/white"
+        android:thumbTint="@color/whitey"
+        android:progressTint="@color/whitey"
         android:background="@drawable/custom_seekbar_thumb"
         android:layout_gravity="center_horizontal" />
 
@@ -45,8 +45,8 @@
         android:max="1000"
         android:progress="0"
         android:background="@drawable/custom_seekbar_thumb"
-        android:thumbTint="@color/white"
-        android:progressTint="@color/white"
+        android:thumbTint="@color/whitey"
+        android:progressTint="@color/whitey"
         android:layout_gravity="center_horizontal" />
 
     <EditText
@@ -65,7 +65,7 @@
         android:textColor="#fff"
         android:layout_marginTop="@dimen/_10sdp"
         android:background="@drawable/buttonstyle"
-        app:backgroundTint="@color/black"
+        app:backgroundTint="@color/dark"
         android:layout_gravity="center" />
 
 </LinearLayout>

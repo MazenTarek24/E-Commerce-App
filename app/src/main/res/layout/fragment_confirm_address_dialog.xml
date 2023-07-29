@@ -45,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/tiny_margin"
             android:layout_weight="1"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/dark"
             android:text="change"
             android:textColor="@color/whitey"
             android:textSize="@dimen/tiny_text"

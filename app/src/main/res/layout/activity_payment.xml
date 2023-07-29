@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/mid_margin"
                 android:text="Payment"
-                android:textColor="@color/black"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/big_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/back_arrow_img"
@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="Cash On Delivery"
-                        android:textColor="@color/black"
+                        android:textColor="@color/dark"
                         android:textSize="@dimen/small_text" />
 
                     <Button
@@ -76,8 +76,10 @@
                         android:layout_height="@dimen/_35sdp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:backgroundTint="@color/black"
-                        android:text="Change" />
+                        android:backgroundTint="@color/main_color"
+                        android:text="Change"
+                        android:textColor="@color/whitey"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
@@ -89,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 android:text="Address"
-                android:textColor="@color/black"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/big_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/back_arrow_img"
@@ -124,7 +126,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Street: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -133,7 +135,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Chestnut Street 92"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -148,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="City: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -157,7 +159,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Louisville"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -172,7 +174,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Country: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -181,7 +183,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="United States"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -197,7 +199,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Name: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -207,7 +209,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/name_tv"
                             android:text="555-625-1199"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
 
@@ -225,7 +227,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Phone: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -235,7 +237,7 @@
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/ph_text"
                             android:text="555-625-1199"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                         <Button
@@ -246,8 +248,10 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginEnd="@dimen/tiny_margin"
-                            android:backgroundTint="@color/black"
-                            android:text="Change" />
+                            android:backgroundTint="@color/main_color"
+                            android:text="Change"
+                            android:textColor="@color/whitey"
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
 
@@ -263,7 +267,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 android:text="Details"
-                android:textColor="@color/black"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/big_text"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/back_arrow_img"
@@ -298,7 +302,7 @@
                         android:layout_toStartOf="@id/apply_promo_code_btn"
                         android:backgroundTint="@color/full_transparent"
                         android:hint="Promo Code"
-                        android:textColor="@color/black"
+                        android:textColor="@color/dark"
                         android:textSize="@dimen/small_text" />
 
                     <Button
@@ -307,8 +311,10 @@
                         android:layout_height="@dimen/_35sdp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:backgroundTint="@color/black"
-                        android:text="Apply" />
+                        android:backgroundTint="@color/main_color"
+                        android:text="Apply"
+                        android:textColor="@color/whitey"
+                        android:textStyle="bold" />
 
 
                 </RelativeLayout>
@@ -343,7 +349,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sub Total: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -352,7 +358,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="ُEGP 100"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -367,7 +373,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Shipping Fees: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -376,7 +382,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EGP 15"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -392,7 +398,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Taxs Fees: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -401,7 +407,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EGP 15"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -415,8 +421,34 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Applied Code: "
+                            android:textColor="@color/dark"
+                            android:textSize="@dimen/mid_text"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/applied_code"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="None"
+                            android:textColor="@color/dark"
+                            android:textSize="@dimen/mid_text" />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/mid_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="Discount: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -425,7 +457,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.0"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text" />
 
                     </LinearLayout>
@@ -442,7 +474,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Grand Total: "
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/mid_text"
                             android:textStyle="bold" />
 
@@ -451,7 +483,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EGP 115"
-                            android:textColor="@color/black"
+                            android:textColor="@color/dark"
                             android:textSize="@dimen/big_text"
                             android:textStyle="bold" />
 
@@ -467,7 +499,8 @@
                 android:layout_marginStart="@dimen/mid_margin"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/mid_margin"
-                android:backgroundTint="@color/black"
+                android:layout_marginBottom="@dimen/tiny_margin"
+                android:backgroundTint="@color/dark"
                 app:cardCornerRadius="@dimen/small_margin"
                 app:cardElevation="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -482,10 +515,29 @@
                     android:drawablePadding="@dimen/tiny_margin"
                     android:gravity="center"
                     android:text="Place Order"
-                    android:textColor="@color/white"
+                    android:textColor="@color/whitey"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
+
+            <com.paypal.checkout.paymentbutton.PaymentButtonContainer
+                android:id="@+id/payment_button_container"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:layout_marginBottom="@dimen/tiny_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/payments_card"
+                app:paypal_button_color="blue"
+                android:visibility="gone"
+                app:paypal_button_enabled="true"
+                app:paypal_button_label="pay"
+                app:paypal_button_shape="rectangle"
+                app:paypal_button_size="large" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -32,6 +32,7 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
+import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.FragmentHomeBinding
 import com.mohamednader.shoponthego.fav.FavActivty
@@ -51,10 +52,10 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
     //Needed Variables
     private var couponList: MutableList<Coupon> = mutableListOf()
     var coupon: Coupon = Coupon("", "", "")
+    private lateinit var customProgress: CustomProgress
 
     //RecyclerViews
     lateinit var couponAdapter: CouponAdapter
-
     lateinit var brandAdapter: BrandAdapter
     lateinit var brandLayoutManager: LayoutManager
 
@@ -95,6 +96,8 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
         //ViewPager Components
         couponAdapter = CouponAdapter(requireContext(), this)
 
+        //Progress Bar
+        customProgress = CustomProgress.getInstance()
 
         binding.couponViewPager.apply {
             adapter = couponAdapter
@@ -131,9 +134,11 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                     when (result) {
                         is ApiState.Success<List<Product>> -> {
                             Log.i(TAG, "onCreate: Success...{${result.data.get(0).id}}")
+                            customProgress.hideProgress()
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: Loading...")
+                            customProgress.showDialog(requireContext(),   false)
                         }
                         is ApiState.Failure -> {
                             //hideViews()
@@ -145,7 +150,7 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                 }
             }
 
-            val job = launch {
+            launch {
                 homeViewModel.discountCodesList.collect { result ->
                     when (result) {
                         is ApiState.Success<List<DiscountCodes>> -> {

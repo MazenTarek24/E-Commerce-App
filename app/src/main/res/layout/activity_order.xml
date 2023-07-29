@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="@dimen/mid_margin"
         android:text="Orders"
-        android:textColor="@color/black"
+        android:textColor="@color/dark"
         android:textSize="@dimen/_24sdp"
         android:textStyle="bold"
         />
@@ -35,10 +35,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_margin="@dimen/mid_margin"
         tools:listitem="itemo"
+
         app:layout_constraintTop_toBottomOf="@+id/order_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
     />
 </androidx.constraintlayout.widget.ConstraintLayout>

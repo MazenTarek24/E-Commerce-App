@@ -12,6 +12,8 @@ import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
+import retrofit2.http.Path
 
 interface RemoteSource {
 
@@ -48,6 +50,14 @@ interface RemoteSource {
 
     suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<DraftOrder>
 
+    suspend fun completeDraftOrderPaid(draftOrderId: Long): Flow<DraftOrder>
+
+    suspend fun completeDraftOrderPending(draftOrderId: Long,
+                                          paymentPendingTRUE: Boolean):Flow<DraftOrder>
+
+    suspend fun deleteDraftOrder(draftOrderId: Long)
+
+
     suspend fun getProductByID(productId: Long): Flow<Product>
 
     //Customers
@@ -57,5 +67,7 @@ interface RemoteSource {
                                updatedCustomer: SingleCustomerResponse): Flow<Customer>
 
     suspend fun deleteUserAddress(customerId: Long, addressId: Long)
+
+    suspend fun getOrderByID(orderId: Long): Flow<Order>
 
 }

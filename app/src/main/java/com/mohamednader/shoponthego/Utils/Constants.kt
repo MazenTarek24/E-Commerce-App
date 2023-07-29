@@ -24,7 +24,9 @@ object Constants {
     const val SIZES_TYPE = "sizes"
 
     val customerIdKey = stringPreferencesKey("customer_id_key")
+    val firstTimeKey = stringPreferencesKey("first_time")
     val languageKey = stringPreferencesKey("customer_language_key")
     val currencyKey = stringPreferencesKey("customer_currency_key")
+    val rateKey = stringPreferencesKey("customer_rate_key")
 
 }

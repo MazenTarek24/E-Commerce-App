@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.Model.Repo
 
 import android.util.Log
 import androidx.datastore.preferences.core.Preferences
+import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.DiscountCodes.DiscountCodes
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
@@ -15,7 +16,6 @@ import com.mohamednader.shoponthego.Model.Pojo.Order.Order
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Network.RemoteSource
-import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import kotlinx.coroutines.flow.Flow
 
 class Repository constructor(remoteSource: RemoteSource,
@@ -131,6 +131,19 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.addDraftOrder(newDraftOrder)
     }
 
+    override suspend fun completeDraftOrderPaid(draftOrderId: Long): Flow<DraftOrder> {
+        return remoteSource.completeDraftOrderPaid(draftOrderId)
+    }
+
+    override suspend fun completeDraftOrderPending(draftOrderId: Long,
+                                                   paymentPendingTRUE: Boolean): Flow<DraftOrder> {
+        return remoteSource.completeDraftOrderPending(draftOrderId, paymentPendingTRUE)
+    }
+
+    override suspend fun deleteDraftOrder(draftOrderId: Long) {
+        remoteSource.deleteDraftOrder(draftOrderId)
+    }
+
     override suspend fun getProductByID(productId: Long): Flow<Product> {
         return remoteSource.getProductByID(productId)
     }
@@ -150,6 +163,10 @@ class Repository constructor(remoteSource: RemoteSource,
 
     override suspend fun deleteUserAddress(customerId: Long, addressId: Long) {
         remoteSource.deleteUserAddress(customerId, addressId)
+    }
+
+    override suspend fun getOrderByID(orderId: Long): Flow<Order> {
+        return remoteSource.getOrderByID(orderId)
     }
 
     override suspend fun saveStringDS(key: Preferences.Key<String>, value: String) {
