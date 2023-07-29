@@ -1,10 +1,7 @@
-package com.mohamednader.shoponthego.fake
+package com.mohamednader.shoponthego.repo
 
-import android.location.Address
 import com.example.example.AddressesCustomers
 import com.example.example.CustomerDraftsOrders
-import com.example.example.Customers
-import com.example.example.DraftOrders
 import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
@@ -21,7 +18,6 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Model.order.BillingAddress
 import com.mohamednader.shoponthego.Model.order.Customer
 import com.mohamednader.shoponthego.Model.order.LineItem
-import com.mohamednader.shoponthego.Model.order.OrderX
 import com.mohamednader.shoponthego.Network.RemoteSource
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.flowOf

@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class AddressesCustomers (
 
+
   @SerializedName("id"            ) var id           : Int?     = null,
   @SerializedName("customer_id"   ) var customerId   : Int?     = null,
   @SerializedName("first_name"    ) var firstName    : String?  = null,
