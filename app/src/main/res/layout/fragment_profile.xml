@@ -223,7 +223,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/small_margin"
                     android:padding="@dimen/mid_margin"
-                    android:text="Language"
+                    android:text="Language: English"
                     android:textColor="@color/dark"
                     android:textSize="@dimen/mid_text"
                     android:textStyle="bold"

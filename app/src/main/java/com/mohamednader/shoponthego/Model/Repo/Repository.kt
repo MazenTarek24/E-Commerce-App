@@ -48,17 +48,17 @@ class Repository constructor(remoteSource: RemoteSource,
     }
 
     override suspend fun getAllProducts(): Flow<List<Product>> {
-        Log.i(TAG, "getAllProducts: REPO")
+//        Log.i(TAG, "getAllProducts: REPO")
         return remoteSource.getAllProducts()
     }
 
     override suspend fun getDiscountCodesByPriceRuleID(priceRuleId: Long): Flow<List<DiscountCodes>> {
-        Log.i(TAG, "getDiscountCodesByPriceRuleID: REPO")
+//        Log.i(TAG, "getDiscountCodesByPriceRuleID: REPO")
         return remoteSource.getDiscountCodesByPriceRuleID(priceRuleId)
     }
 
     override suspend fun getAllPriceRules(): Flow<List<PriceRules>> {
-        Log.i(TAG, "getAllPriceRules: REPO")
+//        Log.i(TAG, "getAllPriceRules: REPO")
         return remoteSource.getAllPriceRules()
     }
 
@@ -72,12 +72,12 @@ class Repository constructor(remoteSource: RemoteSource,
     }
 
     override suspend fun getAllBrands(): Flow<List<SmartCollection>> {
-        Log.i(TAG, "getAllBrands: REPO")
+//        Log.i(TAG, "getAllBrands: REPO")
         return remoteSource.getAllBrands()
     }
 
     override suspend fun getAllProductBrands(id: String): Flow<List<Product>> {
-        Log.i(TAG, "getAllBrandsProducts: REPO")
+//        Log.i(TAG, "getAllBrandsProducts: REPO")
         return remoteSource.getAllProductBrands(id)
     }
 
@@ -94,7 +94,7 @@ class Repository constructor(remoteSource: RemoteSource,
     }
 
     override suspend fun getProductWithId(id: String): Flow<Product> {
-        Log.i(TAG, "getProductWithId: REPO")
+//        Log.i(TAG, "getProductWithId: REPO")
         return remoteSource.getProductWithId(id)
     }
 
@@ -110,7 +110,7 @@ class Repository constructor(remoteSource: RemoteSource,
             collectionId: Long,
             productType: String,
     ): Flow<List<Product>> {
-        Log.i(TAG, "getAllCategoryProducts: REPO")
+//        Log.i(TAG, "getAllCategoryProducts: REPO")
         return remoteSource.getAllProductCategory(collectionId, productType)
     }
 
@@ -118,16 +118,16 @@ class Repository constructor(remoteSource: RemoteSource,
 //        return remoteSource.getAllProductCategoryByType(collectionId,productType)
 //    }
 
-    override suspend fun getAllDraftOrders(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder>> {
+    override suspend fun getAllDraftOrders(): Flow<List<DraftOrder>> {
         return remoteSource.getAllDraftOrders()
     }
 
     override suspend fun updateDraftOrder(draftOrderId: Long,
-                                          updatedDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+                                          updatedDraftOrder: SingleDraftOrderResponse): Flow<DraftOrder> {
         return remoteSource.updateDraftOrder(draftOrderId, updatedDraftOrder)
     }
 
-    override suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> {
+    override suspend fun addDraftOrder(newDraftOrder: SingleDraftOrderResponse): Flow<DraftOrder> {
         return remoteSource.addDraftOrder(newDraftOrder)
     }
 
@@ -148,16 +148,16 @@ class Repository constructor(remoteSource: RemoteSource,
         return remoteSource.getProductByID(productId)
     }
 
-    override suspend fun getAllCustomers(): Flow<List<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer>> {
+    override suspend fun getAllCustomers(): Flow<List<Customer>> {
         return remoteSource.getAllCustomers()
     }
 
-    override suspend fun getCustomerByID(customerId: Long): Flow<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> {
+    override suspend fun getCustomerByID(customerId: Long): Flow<Customer> {
         return remoteSource.getCustomerByID(customerId)
     }
 
     override suspend fun updateCustomer(customerId: Long,
-                                        updatedCustomer: SingleCustomerResponse): Flow<com.mohamednader.shoponthego.Model.Pojo.Customers.Customer> {
+                                        updatedCustomer: SingleCustomerResponse): Flow<Customer> {
         return remoteSource.updateCustomer(customerId, updatedCustomer)
     }
 

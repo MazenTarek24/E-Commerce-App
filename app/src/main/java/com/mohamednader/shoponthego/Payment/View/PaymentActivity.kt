@@ -148,13 +148,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
             }
             if (priceRule == null) {
                 Toast.makeText(this@PaymentActivity, "Invalid Code", Toast.LENGTH_SHORT).show()
-            } else if(priceRule.targetType == "shipping_line"){
-                draftOrder = draftOrder.copy(shippingLine = ShippingLine(custome = true, price = "0.0"))
+            } else if (priceRule.targetType == "shipping_line") {
+                draftOrder =
+                    draftOrder.copy(shippingLine = ShippingLine(custome = true, price = "0.0"))
                 Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
                 paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
                         SingleDraftOrderResponse(draftOrder))
                 Toast.makeText(this@PaymentActivity, "Accepted Code", Toast.LENGTH_SHORT).show()
-            } else{
+            } else {
                 val appliedDiscount: AppliedDiscount = AppliedDiscount(title = priceRule.title,
                         description = "Given Discount",
                         value = abs(priceRule.value.toDouble()).toString(),
@@ -171,8 +172,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
         binding.placeOrderBtn.setOnClickListener {
             if (addressesList.isNotEmpty()) {
-                getCompleteDraftOrder()
-                paymentViewModel.completeDraftOrderPendingByID(draftOrder.id!!)
+                if (totalPrice.toDouble() > 2000.00) {
+                    Toast.makeText(this@PaymentActivity,
+                            "Cannot use COD for orders > 2000, Please use PayPal",
+                            Toast.LENGTH_LONG).show()
+                } else {
+                    getCompleteDraftOrder()
+                    paymentViewModel.completeDraftOrderPendingByID(draftOrder.id!!)
+                }
             } else {
                 Toast.makeText(this@PaymentActivity,
                         "There is no Address, please add one",
@@ -265,12 +272,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                                 } $currencyISO"
 
 
-                                if(draftOrder.shippingLine?.price == "0.00"){
+                                if (draftOrder.shippingLine?.price == "0.00") {
                                     binding.discountValue.text = "Free Shipping"
-                                    binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "FreeShipping"
-                                }else{
+                                    binding.appliedCode.text =
+                                        draftOrder.appliedDiscount?.title ?: "FreeShipping"
+                                } else {
                                     binding.discountValue.text = discountValue
-                                    binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
+                                    binding.appliedCode.text =
+                                        draftOrder.appliedDiscount?.title ?: "None"
                                 }
 
 
@@ -337,12 +346,14 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
                                         currencyRate)
                             } $currencyISO"
 
-                            if(draftOrder.shippingLine?.price == "0.00"){
+                            if (draftOrder.shippingLine?.price == "0.00") {
                                 binding.discountValue.text = "Free Shipping"
-                                binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "FreeShipping"
-                            }else{
+                                binding.appliedCode.text =
+                                    draftOrder.appliedDiscount?.title ?: "FreeShipping"
+                            } else {
                                 binding.discountValue.text = discountValue
-                                binding.appliedCode.text = draftOrder.appliedDiscount?.title ?: "None"
+                                binding.appliedCode.text =
+                                    draftOrder.appliedDiscount?.title ?: "None"
                             }
 
                             binding.subtotalValue.text = subtotalValue
@@ -465,7 +476,8 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
 
     override fun onBackPressed() {
         lifecycleScope.launch {
-            draftOrder = draftOrder.copy(appliedDiscount = AppliedDiscount(), shippingLine = ShippingLine())
+            draftOrder =
+                draftOrder.copy(appliedDiscount = AppliedDiscount(), shippingLine = ShippingLine())
             Log.i(TAG, "initViews: DRAFT ORDER $draftOrder")
             paymentViewModel.updateDraftOrderCartOnNetwork(draftOrder.id!!,
                     SingleDraftOrderResponse(draftOrder))
@@ -538,44 +550,28 @@ class PaymentActivity : AppCompatActivity(), OnAddressClickListener {
     }
 
     private fun initPayPalPaymentButton() {
-        binding.paymentButtonContainer.setup(
-                createOrder =
-                CreateOrder { createOrderActions ->
-                    Log.i(TAG, "initPayPalPaymentButton: $totalPrice")
-                    val order =
-                        OrderRequest(
-                                intent = OrderIntent.CAPTURE,
-                                appContext = AppContext(userAction = UserAction.PAY_NOW),
-                                purchaseUnitList =
-                                listOf(
-                                        PurchaseUnit(
-                                                amount =
-                                                Amount(currencyCode = CurrencyCode.USD,
-                                                        value = totalPrice)
-                                        )
-                                )
-                        )
-                    createOrderActions.create(order)
-                },
-                onApprove =
-                OnApprove { approval ->
-                    approval.orderActions.capture { captureOrderResult ->
-                        Log.i(TAG, "CaptureOrderResult: $captureOrderResult")
-                        Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show()
-                        getCompleteDraftOrder()
-                        paymentViewModel.completeDraftOrderPaidByID(draftOrder.id!!)
+        binding.paymentButtonContainer.setup(createOrder = CreateOrder { createOrderActions ->
+            Log.i(TAG, "initPayPalPaymentButton: $totalPrice")
+            val order = OrderRequest(intent = OrderIntent.CAPTURE,
+                    appContext = AppContext(userAction = UserAction.PAY_NOW),
+                    purchaseUnitList = listOf(PurchaseUnit(amount = Amount(currencyCode = CurrencyCode.USD,
+                            value = totalPrice))))
+            createOrderActions.create(order)
+        }, onApprove = OnApprove { approval ->
+            approval.orderActions.capture { captureOrderResult ->
+                Log.i(TAG, "CaptureOrderResult: $captureOrderResult")
+                Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show()
+                getCompleteDraftOrder()
+                paymentViewModel.completeDraftOrderPaidByID(draftOrder.id!!)
 
-                    }
-                },
-                onCancel = OnCancel {
-                    Log.d(TAG, "Buyer Cancelled This Purchase")
-                    Toast.makeText(this, "Payment Cancelled", Toast.LENGTH_SHORT).show()
-                },
-                onError = OnError { errorInfo ->
-                    Log.d(TAG, "Error: $errorInfo")
-                    Toast.makeText(this, "Payment Error", Toast.LENGTH_SHORT).show()
-                }
-        )
+            }
+        }, onCancel = OnCancel {
+            Log.d(TAG, "Buyer Cancelled This Purchase")
+            Toast.makeText(this, "Payment Cancelled", Toast.LENGTH_SHORT).show()
+        }, onError = OnError { errorInfo ->
+            Log.d(TAG, "Error: $errorInfo")
+            Toast.makeText(this, "Payment Error", Toast.LENGTH_SHORT).show()
+        })
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Repo.Repository
+import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import com.mohamednader.shoponthego.Network.ApiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(val repository: Repository) : ViewModel() {
+class CategoriesViewModel(val repository: RepositoryInterface) : ViewModel() {
     private val TAG = "CategoryProductViewModel_INFO_TAG"
 
     private val _productCategory: MutableStateFlow<ApiState<List<Product>>> =

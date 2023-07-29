@@ -152,21 +152,31 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         languageBottomSheetBinding.englishSelect.setOnClickListener {
 
             //Change Language
-
+            binding.language.text = "Language: English"
             languageBottomSheetDialog.dismiss()
         }
         languageBottomSheetBinding.arabicSelect.setOnClickListener {
 
             //Change Language
-
+            binding.language.text = "Language: Arabic"
             languageBottomSheetDialog.dismiss()
         }
 
 
         binding.logoutBtn.setOnClickListener {
-            firebaseAuth.signOut()
-            val intent = Intent(requireContext(), SignUpActivity::class.java)
-            requireActivity().finish()
+
+            AlertDialog.Builder(requireContext()).setMessage("Do you want logout?")
+                .setCancelable(false).setPositiveButton("Yes, Log me Out!") { dialog, _ ->
+
+                    firebaseAuth.signOut()
+                    val intent = Intent(requireContext(), SignUpActivity::class.java)
+                    requireActivity().finish()
+
+                    Toast.makeText(
+                            requireContext(), "Nice to Meet You!", Toast.LENGTH_SHORT
+                    ).show()
+                }.setNegativeButton("No, Stay here", null).show()
+
         }
 
         binding.currency.setOnClickListener {
@@ -373,7 +383,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
             launch {
                 profileViewModel.getStringDS(Constants.currencyKey).collect() { result ->
-                    binding.currency.text = "Currency $result"
+                    binding.currency.text = "Currency: $result"
                 }
             }
 

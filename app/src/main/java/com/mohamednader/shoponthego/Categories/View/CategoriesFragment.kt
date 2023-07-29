@@ -23,6 +23,7 @@ import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
+import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.FragmentCategoriesBinding
 import com.mohamednader.shoponthego.fav.FavActivty
 import com.mohamednader.shoponthego.productinfo.ProductInfo
@@ -263,7 +264,8 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     private fun filterByPrice(priceFrom: Double, priceTo: Double) {
         categoryAdapter.deleteProductBrand()
         val filteredProducts = categoryAdapter.currentList.filter { product ->
-            product.variants?.get(0)?.price!!.toDouble() in priceFrom..priceTo
+            convertCurrencyFromEGPTo(product.variants?.get(0)?.price!!.toDouble(),
+                    currencyRate).toDouble() in priceFrom..priceTo
         }
         categoryAdapter.submitList(filteredProducts)
     }
