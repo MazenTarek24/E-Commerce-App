@@ -28,7 +28,6 @@ class SignUpViewModel(private val repo: RepositoryInterface) : ViewModel() {
             repo.createCustomer(customer).catch { e -> _customer.value = ApiState.Failure(e) }
                 .collect { data ->
                     _customer.value = ApiState.Success(data)
-                    println("aaaaaaaaaaaaaaaaaaaaaaaa" + data.id)
                 }
         }
     }
