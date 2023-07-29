@@ -1,11 +1,11 @@
 package com.mohamednader.shoponthego.repo
 
-import com.example.example.AddressesCustomers
-import com.example.example.CustomerDraftsOrders
+
 import com.mohamednader.shoponthego.DataStore.DataStoreSource
 import com.mohamednader.shoponthego.Database.LocalSource
 import com.mohamednader.shoponthego.Model.Pojo.Coupon.PriceRules.PriceRules
 import com.mohamednader.shoponthego.Model.Pojo.Currency.Currencies.CurrencyInfo
+import com.mohamednader.shoponthego.Model.Pojo.Customers.Address
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.AppliedDiscount
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder
 import com.mohamednader.shoponthego.Model.Pojo.DraftOrders.SingleDraftOrderResponse
@@ -15,9 +15,7 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.Product
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.Rule
 import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Repo.Repository
-import com.mohamednader.shoponthego.Model.order.BillingAddress
-import com.mohamednader.shoponthego.Model.order.Customer
-import com.mohamednader.shoponthego.Model.order.LineItem
+
 import com.mohamednader.shoponthego.Network.RemoteSource
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.flowOf
@@ -136,10 +134,8 @@ class RepoTest {
 
     @Test
     fun getAllOrders() = runBlocking {
-        val billingAdrees = BillingAddress("", "", "", "", "", "", "", "")
-        val customer = Customer("", "", "", "", 1, "", 2, "", "", true)
-        val lineItems = listOf(LineItem(1, "", "", 2, "", "", 2, "", ""))
-        val mockOrders = listOf(Order(com.mohamednader.shoponthego.Model.Pojo.Customers.Address(),"","",
+
+        val mockOrders = listOf(Order(Address(),"","",
         "","","","",
             com.mohamednader.shoponthego.Model.Pojo.Customers.Customer(),
             "",1,"",1,1))
@@ -153,8 +149,9 @@ class RepoTest {
     @Test
     fun getAllCustomer() = runBlocking {
 
-        val addressList = ArrayList<AddressesCustomers>()
-        addressList.add(AddressesCustomers(1, 1, "", "", "", "", "", "", "", ""))
+        val addressList = ArrayList<Address>()
+        addressList.add(Address(1, 1, "",
+            "", "", "", "", "", "", ""))
 
         val customer = listOf(com.mohamednader.shoponthego.Model.Pojo.Customers.Customer())
 
@@ -169,9 +166,11 @@ class RepoTest {
     fun getAllDraftsOrders() = runBlocking {
 
         val customerDraftsOrders =
-            CustomerDraftsOrders(1, "", true, "", "", "", "", 1, "", "", 1, true, "", "")
+            DraftOrder(1,"","",true,"",true,"","",
+                mutableListOf(),Address(), Address(),"",null,1,"","",
+                "")
 
-        val lineItem = mutableListOf(com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem(
+        val lineItem = mutableListOf( com.mohamednader.shoponthego.Model.Pojo.DraftOrders.LineItem(
             1,1,1,"","","","",1,true,true,
         true,"",1, AppliedDiscount("","","","",
                 ""), "", listOf(),true,""))
@@ -207,9 +206,9 @@ class RepoTest {
 @Test
 fun getAllCustomerById() = runBlocking {
 
-    val addressList = ArrayList<AddressesCustomers>()
+    val addressList = ArrayList<Address>()
     addressList.add(
-        AddressesCustomers(1,
+        Address(1,
             1, "", "", "", "",
             "", "", "", "")
     )
