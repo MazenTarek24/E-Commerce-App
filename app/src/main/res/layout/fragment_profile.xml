@@ -4,13 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/_40sdp"
+     android:layout_marginBottom="@dimen/_40sdp"
     tools:context=".Profile.View.ProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constrain_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#fff"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/mid_text"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/fav"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/ic_baseline_favorite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/main_color" />
+
+            <ImageView
+                android:id="@+id/cart"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_marginEnd="@dimen/_60sdp"
+                android:src="@drawable/cart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/dark" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profile_card_view"
@@ -21,7 +68,7 @@
             app:cardElevation="@dimen/card_elevation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/constraint">
 
             <ImageView
                 android:id="@+id/profile_img"
@@ -286,6 +333,7 @@
             android:backgroundTint="@color/dark"
             app:cardCornerRadius="@dimen/small_margin"
             app:cardElevation="@dimen/card_elevation"
+            app:layout_constraintBottom_toTopOf="@id/last_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/settings_card"
@@ -303,6 +351,13 @@
                 android:textSize="@dimen/mid_text"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
+
+
+        <View
+            android:id="@+id/last_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

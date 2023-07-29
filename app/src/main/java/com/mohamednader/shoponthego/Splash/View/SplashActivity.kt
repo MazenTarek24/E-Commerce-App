@@ -58,7 +58,7 @@ class SplashActivity : AppCompatActivity() {
                     Log.i(TAG, "splashTimer: $result")
                     when (result) {
                         "true" -> {
-                            delay(1000)
+                            delay(2000)
                             splashViewModel.saveStringDS(Constants.currencyKey , "EGP")
                             splashViewModel.saveStringDS(Constants.rateKey , "1.0")
                             splashViewModel.saveStringDS(Constants.firstTimeKey , "false")
@@ -66,7 +66,7 @@ class SplashActivity : AppCompatActivity() {
                          }
                         "false" -> {
                             //sad
-                            delay(1000)
+                            delay(2000)
                             checkUser()
                          }
                         null ->{

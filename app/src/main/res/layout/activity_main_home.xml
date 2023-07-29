@@ -20,17 +20,17 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="#ffff"
-        app:itemIconSize="20dp"
-        app:itemTextAppearanceActive="@style/Widget.MaterialComponents.CardView"
-        app:labelVisibilityMode="labeled"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@color/dark"
+        app:itemIconTint="@color/bottom_nav_icon_colors"
+        app:itemRippleColor="@color/lite_gray"
+        app:itemTextColor="@color/bottom_nav_icon_colors"
+        app:labelVisibilityMode="unlabeled"
+        app:elevation="@dimen/card_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:itemIconTint="@color/bottom_nav_item_selected"
         app:menu="@menu/bottom_navigation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

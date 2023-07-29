@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MainActivity">
 
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
@@ -30,12 +31,32 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="60dp"
-            app:dotsColor="#373737"
+            android:layout_marginBottom="@dimen/big_margin"
+            app:dotsColor="@color/main_color"
             app:dotsSize="15dp"
             app:dotsSpacing="5dp"
-            app:selectedDotColor="#070707"
+            app:selectedDotColor="@color/main_color"
             app:stiffness="300" />
+
+        <ImageView
+            android:id="@+id/back_img"
+            android:layout_width="@dimen/mid_icons"
+            android:layout_height="@dimen/mid_icons"
+            android:layout_marginLeft="@dimen/mid_margin"
+            android:layout_marginStart="@dimen/mid_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:src="@drawable/back_arrow"
+            android:layout_gravity="start" />
+
+
+        <ImageView
+            android:id="@+id/Addtofav"
+            android:layout_width="@dimen/mid_icons"
+            android:layout_height="@dimen/mid_icons"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:src="@drawable/ic_baseline_favorite"
+            android:layout_gravity="end" />
 
 
     </FrameLayout>
@@ -61,32 +82,37 @@
                 android:id="@+id/textView50"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/reviews"
-                android:textColor="#040404"
-                android:textSize="@dimen/mid_text"
+                 android:text="@string/reviews"
+                android:layout_marginTop="@dimen/tiny_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cd" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
-                android:layout_width="393dp"
+                android:layout_width="match_parent"
                 android:layout_height="98dp"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:layout_marginTop="@dimen/tiny_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.666"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView50" />
 
             <TextView
                 android:id="@+id/productnametv"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/mid_margin"
                 android:layout_marginTop="15dp"
-                android:fontFamily="@font/archivo_black"
-                android:textColor="#040404"
-                android:textSize="20sp"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:drawableTint="@color/main_color"
+                android:textColor="@color/main_color"
+                android:textSize="@dimen/_18sdp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,12 +120,13 @@
                 android:id="@+id/pricetv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/mid_margin"
                 android:layout_marginTop="15dp"
-                android:fontFamily="@font/gfs_neohellenic"
                 android:scrollbarSize="@dimen/mid_text"
-                android:textColor="#040404"
+                android:drawableTint="@color/main_color"
+                android:textColor="@color/dark"
                 android:textSize="@dimen/mid_text"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productnametv" />
 
@@ -129,11 +156,11 @@
                 android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="sans-serif-black"
+                android:layout_marginStart="@dimen/small_margin"
                 android:text="@string/description"
-                android:textColor="#040404"
-                android:textSize="@dimen/mid_text"
+                android:textColor="@color/dark"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear" />
 
@@ -141,20 +168,20 @@
                 android:id="@+id/cd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_margin="@dimen/mid_margin"
+                android:background="@drawable/card_background"
+                app:cardCornerRadius="@dimen/big_margin"
+                app:cardElevation="@dimen/card_elevation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView13">
 
                 <TextView
                     android:id="@+id/descriptiontxv"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="monospace"
-                    android:textColor="#474747"
+                    android:padding="@dimen/small_margin"
+                    android:textColor="@color/dark"
                     android:textSize="@dimen/small_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -188,10 +215,25 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
-                            android:fontFamily="@font/archivo_black"
                             android:text="@string/g_color"
+                            android:visibility="gone"
                             android:textColor="@color/dark"
                             android:textSize="@dimen/_15sdp" />
+
+                        <TextView
+                            android:id="@+id/available_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/mid_margin"
+                            android:drawableLeft="@drawable/right"
+                            android:drawablePadding="@dimen/tiny_margin"
+                            android:layout_marginTop="15dp"
+                            android:text="Availabe In Stock (17)"
+                            android:drawableTint="@color/main_color"
+                            android:textColor="@color/lite_dark"
+                            android:textSize="@dimen/small_text"
+                            android:textStyle="bold"
+                            />
 
                         <TextView
                             android:id="@+id/tv_color_error"
@@ -202,7 +244,7 @@
                             android:text="@string/g_please_select_color"
                             android:textColor="@color/g_red"
                             android:textSize="@dimen/_9sdp"
-                            android:visibility="invisible" />
+                            android:visibility="gone" />
 
                     </LinearLayout>
 
@@ -211,6 +253,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
+                        android:visibility="gone"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -233,10 +276,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
-                            android:fontFamily="@font/archivo_black"
                             android:text="@string/g_size"
-                            android:textColor="@color/dark"
-                            android:textSize="@dimen/_15sdp" />
+                            android:drawableTint="@color/main_color"
+                            android:textColor="@color/lite_dark"
+                            android:textSize="@dimen/small_text"
+                            android:textStyle="bold"
+                            />
 
                         <TextView
                             android:id="@+id/tv_size_unit"
@@ -263,6 +308,7 @@
                         android:id="@+id/rv_sizes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/tiny_margin"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -270,43 +316,36 @@
                 </LinearLayout>
             </LinearLayout>
 
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/button"
+                android:id="@+id/addtocart"
                 android:layout_width="0dp"
-                android:layout_height="63dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
-                android:backgroundTint="@color/dark"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="@dimen/small_margin"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/mid_margin"
+                android:layout_marginEnd="@dimen/mid_margin"
+                android:layout_marginTop="@dimen/mid_margin"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/main_color"
+                app:cardCornerRadius="@dimen/small_margin"
+                app:cardElevation="@dimen/card_elevation"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recyclerView">
 
                 <TextView
-                    android:id="@+id/addtocart"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
+                    android:drawableStart="@drawable/cart"
                     android:drawablePadding="@dimen/tiny_margin"
+                    android:drawableTint="@color/whitey"
                     android:gravity="center"
-                    android:text="@string/addtocart"
+                    android:text="Add To Cart"
                     android:textColor="@color/whitey"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/mid_text"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
-
-            <ImageView
-                android:id="@+id/Addtofav"
-                android:layout_width="61dp"
-                android:layout_height="61dp"
-                android:layout_marginStart="10dp"
-                android:backgroundTint="#131313"
-                android:scaleType="fitXY"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button"
-                app:srcCompat="@drawable/heart" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

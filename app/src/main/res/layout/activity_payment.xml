@@ -495,7 +495,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/place_order_btn"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/mid_margin"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/mid_margin"

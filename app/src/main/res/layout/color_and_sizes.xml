@@ -34,7 +34,6 @@
         app:layout_constraintBottom_toBottomOf="@id/img_content"
         app:layout_constraintEnd_toEndOf="@id/img_content"
         android:textColor="@color/whitey"
-        android:fontFamily="@font/archivo_black"
         android:visibility="visible"/>
 
     <ImageView

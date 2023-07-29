@@ -31,16 +31,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Review content"
-            android:textColor="#090909"
-            android:textSize="16sp" />
+            android:textColor="@color/dark"
+            android:textStyle="bold"
+            android:textSize="@dimen/small_text" />
 
         <TextView
             android:id="@+id/review_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Author"
-            android:textColor="#050505"
-            android:textSize="14sp"
+            android:textColor="@color/main_color"
+            android:textSize="@dimen/_16sdp"
             android:textStyle="bold" />
 
     </LinearLayout>

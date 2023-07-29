@@ -14,7 +14,7 @@ android {
 
     defaultConfig {
         applicationId "com.mohamednader.shoponthego"
-        minSdk 24
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -132,6 +132,8 @@ dependencies {
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    //Lottie
+    implementation 'com.airbnb.android:lottie:4.2.0'
 
     //testing
     // Dependencies for local unit tests

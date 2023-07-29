@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+  >
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -23,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:text="Home"
                 android:textColor="@color/dark"
-                android:textSize="@dimen/_20sdp"
+                android:textSize="@dimen/mid_text"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,11 +36,11 @@
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:src="@drawable/fav"
+                android:src="@drawable/ic_baseline_favorite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/dark" />
+                app:tint="@color/main_color" />
 
             <ImageView
                 android:id="@+id/cart"
@@ -61,7 +62,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/dark" />
+                app:tint="@color/main_color" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -122,9 +123,9 @@
             android:layout_marginTop="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/big_margin"
+            app:layout_constraintBottom_toTopOf="@id/last_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/last_view"
             app:layout_constraintTop_toBottomOf="@+id/brands_text"
             tools:listitem="@layout/item_brand"
 

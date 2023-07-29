@@ -63,7 +63,6 @@ class ProductInfo : AppCompatActivity() {
         setContentView(binding.root)
         binding.addtocart.setOnClickListener {
             addItemToCart()
-            Toast.makeText(this@ProductInfo, "adding to dav", Toast.LENGTH_SHORT).show()
         }
         firebaseAuth = Firebase.auth
         val intent = intent
@@ -90,6 +89,10 @@ class ProductInfo : AppCompatActivity() {
         viewModelProductInfo.getAllDraftsOrder()
 
         apicall()
+
+        binding.backImg.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.Addtofav.setOnClickListener {
             val mutablelist = lineItems?.toMutableList()
@@ -122,7 +125,7 @@ class ProductInfo : AppCompatActivity() {
             } else {
                 viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = mutablelist,
                         note = "favDraft")), draftOrdersID.toLong())
-                Toast.makeText(this@ProductInfo, "adding to Favourite", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ProductInfo, "Added Favourite!", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -186,6 +189,11 @@ class ProductInfo : AppCompatActivity() {
 
                             binding.productnametv.text = result.data.title
                             println(result.data.options?.get(0)?.values)
+
+
+                            binding.availableText.text =
+                                "Availabe In Stock (${product.variants!!.get(0).inventoryQuantity})"
+
 
                             if (result.data.options?.get(0)?.name == "Size") {
                                 sizesAdapter.differ.submitList(result.data.options!!.get(0)?.values)
@@ -331,7 +339,7 @@ class ProductInfo : AppCompatActivity() {
             launch {
                 viewModelProductInfo.updatedDraftCartOrder.collect { result ->
                     when (result) {
-                        is ApiState.Success<com.mohamednader.shoponthego.Model.Pojo.DraftOrders.DraftOrder> -> {
+                        is ApiState.Success<DraftOrder> -> {
                             val draftOrder = result.data
                             Log.i(TAG,
                                     "onCreate: updatedDraftOrder Success: Draft Orders Updated:  ${draftOrder.id}")
@@ -339,8 +347,8 @@ class ProductInfo : AppCompatActivity() {
                                     "onCreate:updatedDraftOrder Success: Draft Orders Updated:  ${draftOrder.email}")
                             Log.i(TAG,
                                     "onCreate: Success: updatedDraftOrder Draft Orders Updated:  ${draftOrder.lineItems}")
-//                            Toast.makeText(this@ProductInfo, "Added to Cart", Toast.LENGTH_SHORT)
-//                                .show()
+                            Toast.makeText(this@ProductInfo, "Added to Cart", Toast.LENGTH_SHORT)
+                                .show()
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -388,7 +396,7 @@ class ProductInfo : AppCompatActivity() {
                                     "onCreate:newDraftOrder Success: Draft Orders Updated:  ${draftOrder.email}")
                             Log.i(TAG,
                                     "onCreate: Success: newDraftOrder Draft Orders Updated:  ${draftOrder.lineItems}")
-                            Toast.makeText(this@ProductInfo, "Added to Cart", Toast.LENGTH_SHORT)
+                            Toast.makeText(this@ProductInfo, "Added to Cart!", Toast.LENGTH_SHORT)
                                 .show()
                         }
                         is ApiState.Loading -> {

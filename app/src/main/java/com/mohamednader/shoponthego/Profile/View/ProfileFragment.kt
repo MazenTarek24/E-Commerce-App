@@ -21,6 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.mohamednader.shoponthego.AddressConfig.View.AddressConfig
 import com.mohamednader.shoponthego.Auth.SignUp.View.SignUpActivity
+import com.mohamednader.shoponthego.Cart.View.CartActivity
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CurrencyAdapter
@@ -43,8 +44,12 @@ import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.Utils.convertCurrencyFromEGPTo
 import com.mohamednader.shoponthego.databinding.*
+import com.mohamednader.shoponthego.fav.FavActivty
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListener {
 
@@ -162,6 +167,15 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             languageBottomSheetDialog.dismiss()
         }
 
+        binding.fav.setOnClickListener {
+            val intent = Intent(requireContext(), FavActivty::class.java)
+            startActivity(intent)
+        }
+
+        binding.cart.setOnClickListener {
+            val intent = Intent(requireContext(), CartActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.logoutBtn.setOnClickListener {
 
@@ -313,7 +327,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             val order = result.data
 
 
-                            binding.itemDate.text = "Created At = ${order.created_at}"
+                            val timestamp = order.created_at
+                            val formatter = DateTimeFormatter.ofPattern("MM/dd hh:mm a")
+                            val zonedDateTime = ZonedDateTime.parse(timestamp)
+                            val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+                            val formattedDateTime = localDateTime.format(formatter)
+
+                            binding.itemDate.text = "created at = ${formattedDateTime}"
                             binding.itemAddress.text = "Order Number = ${order.number.toString()}"
                             binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
                             binding.itemId.text = "Order Id = ${order.id.toString()}"
