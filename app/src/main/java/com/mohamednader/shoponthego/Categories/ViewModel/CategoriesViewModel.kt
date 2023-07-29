@@ -28,7 +28,7 @@ class CategoriesViewModel(val repository: RepositoryInterface) : ViewModel() {
 
     fun getAllProductCategory(collectionId: Long, productType: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.i(TAG, "getAllCategoryProducts: ")
+//            Log.i(TAG, "getAllCategoryProducts: ")
             repository.getAllProductCategory(collectionId, productType)
                 .catch { error ->
                     _productCategory.value = ApiState.Failure(error)

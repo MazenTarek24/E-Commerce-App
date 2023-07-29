@@ -27,6 +27,7 @@ import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
+import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySignUpBinding
 import kotlinx.coroutines.launch
@@ -105,10 +106,7 @@ class SignUpActivity : AppCompatActivity() {
                             "Account successfully created",
                             Toast.LENGTH_LONG).show()
 
-                    val intent = Intent(this, LoginActivity::class.java).apply {
-                        putExtra("CustomerID", CustomerID)
-                    }
-                    startActivity(intent)
+
                 } else if (password.length < 6) {
                     Toast.makeText(this, "Password must be greater than 6", Toast.LENGTH_SHORT)
                         .show()
@@ -149,9 +147,12 @@ class SignUpActivity : AppCompatActivity() {
                                             quantity = 2)),
                                     customer = Customer(result.data.id!!),
                                     note = "favDraft")
+                        loginViewModel.saveStringDS(Constants.customerIdKey , CustomerID.toString())
 
-
-                        //loginViewModel.createDraftOrder(SingleDraftOrderResponse(draftOrder))
+                        val intent = Intent(this@SignUpActivity, LoginActivity::class.java).apply {
+                            putExtra("CustomerID", CustomerID)
+                        }
+                        startActivity(intent)
 
                     }
                     is ApiState.Loading -> {

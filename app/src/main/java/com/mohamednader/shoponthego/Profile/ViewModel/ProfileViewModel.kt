@@ -15,10 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
     private val TAG = "ProfileViewModel_INFO_TAG"
+
+    private val _ordersList: MutableStateFlow<ApiState<List<Order>>> =
+        MutableStateFlow(ApiState.Loading)
+    val orderList: StateFlow<ApiState<List<Order>>> get() = _ordersList
 
     private var _currencyRes: MutableStateFlow<ApiState<List<CurrencyInfo>>> =
         MutableStateFlow<ApiState<List<CurrencyInfo>>>(ApiState.Loading)
@@ -109,6 +114,25 @@ class ProfileViewModel(private val repo: RepositoryInterface) : ViewModel() {
                 .catch { e -> _currencyRate.value = ApiState.Failure(e) }
                 .collect { data ->
                     _currencyRate.value = ApiState.Success(data)
+                }
+        }
+    }
+
+    fun getAllOrders(customerID : Long) {
+        viewModelScope.launch {
+            repo.getAllOrders().catch { error ->
+                _ordersList.value = ApiState.Failure(error)}
+                .map { data ->
+                    data.filter {
+                        try {
+                            it.customer!!.id == customerID
+                        } catch (e: Exception) {
+                            false
+                        }
+                    }
+                }
+                .collect { data ->
+                    _ordersList.value = ApiState.Success(data)
                 }
         }
     }

@@ -16,15 +16,22 @@ import com.mohamednader.shoponthego.Model.Repo.RepositoryInterface
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import retrofit2.Response
 
-
-class FakeRepo (var products:List<Product>, var brand :List<SmartCollection>,var discountCodes: List<DiscountCodes> ,var priceRules: List<PriceRules>,
-var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrder> ,var customer:Customer
-,var customers :List<Customer> ,var orders :List<Order>,var cust: Customer
-                ): RepositoryInterface {
+class FakeRepo(var products: List<Product>,
+               var brand: List<SmartCollection>,
+               var discountCodes: List<DiscountCodes>,
+               var priceRules: List<PriceRules>,
+               var draftorders: DraftOrder,
+               var product: Product,
+               var draftOrder: List<DraftOrder>,
+               var customer: Customer,
+               var customers: List<Customer>,
+               var orders: List<Order>,
+               var cust: Customer
+) : RepositoryInterface {
     override suspend fun getAllProducts(): Flow<List<Product>> {
-        return flow { emit(products) }     }
+        return flow { emit(products) }
+    }
 
     override suspend fun getDiscountCodesByPriceRuleID(priceRuleId: Long): Flow<List<DiscountCodes>> {
         return flow { emit(discountCodes) }
@@ -35,8 +42,8 @@ var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrd
     }
 
     override suspend fun modifyDraftforfav(
-        draftorder: SingleDraftOrderResponse,
-        id: Long
+            draftorder: SingleDraftOrderResponse,
+            id: Long
     ): Flow<DraftOrder> {
         return flow { emit(draftorders) }
     }
@@ -62,12 +69,16 @@ var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrd
     }
 
     override suspend fun createCustomer(customer: SingleCustomerResponse): Flow<Customer> {
-        return flow { emit(cust) }
+        if (customer.customer.email == null) {
+            throw IllegalArgumentException("Invalid input")
+        } else {
+            return flowOf(cust)
+        }
     }
 
     override suspend fun getAllProductCategory(
-        collectionId: Long,
-        productType: String
+            collectionId: Long,
+            productType: String
     ): Flow<List<Product>> {
         return flow { emit(products) }
     }
@@ -89,8 +100,8 @@ var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrd
     }
 
     override suspend fun updateDraftOrder(
-        draftOrderId: Long,
-        updatedDraftOrder: SingleDraftOrderResponse
+            draftOrderId: Long,
+            updatedDraftOrder: SingleDraftOrderResponse
     ): Flow<DraftOrder> {
         return flow { emit(draftorders) }
     }
@@ -125,8 +136,8 @@ var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrd
     }
 
     override suspend fun updateCustomer(
-        customerId: Long,
-        updatedCustomer: SingleCustomerResponse
+            customerId: Long,
+            updatedCustomer: SingleCustomerResponse
     ): Flow<Customer> {
         return flow { emit(customer) }
     }
@@ -146,6 +157,5 @@ var draftorders :DraftOrder, var product: Product ,var draftOrder: List<DraftOrd
     override fun getStringDS(key: Preferences.Key<String>): Flow<String?> {
         TODO("Not yet implemented")
     }
-
 
 }

@@ -227,6 +227,20 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+            .observe(requireActivity()) { customerID ->
+                // Update UI with the retrieved name
+                Log.i(TAG, "apiRequests: VIP: $customerID")
+                customerId = customerID!!
+                profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
+                profileViewModel.getAllCurrenciesFromNetwork()
+            }
+
+    }
+
     @SuppressLint("SetTextI18n")
     private fun apiRequests() {
         lifecycleScope.launchWhenStarted {
@@ -239,6 +253,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         customerId = customerID!!
                         profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
                         profileViewModel.getAllCurrenciesFromNetwork()
+                        profileViewModel.getAllOrders(customerId.toLong())
                     }
             }
 
@@ -265,6 +280,55 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                 }
             }
 
+            launch {
+                profileViewModel.orderList.collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<Order>> -> {
+
+                            if (result.data.size != 0) {
+                                val order = result.data.get(0)
+
+                                val timestamp = order.created_at
+                                val formatter = DateTimeFormatter.ofPattern("MM/dd hh:mm a")
+                                val zonedDateTime = ZonedDateTime.parse(timestamp)
+                                val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+                                val formattedDateTime = localDateTime.format(formatter)
+
+                                binding.itemDate.text = "created at = ${formattedDateTime}"
+                                binding.itemAddress.text = "Order Number = ${order.number.toString()}"
+                                binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
+                                binding.itemId.text = "Order Id = ${order.id.toString()}"
+                                totalPriceOrder = order.current_total_price!!.toDouble()
+                                binding.itemTotalPriceUsd.text = "Total price = ${
+                                    convertCurrencyFromEGPTo((order.current_total_price)!!.toDouble(),
+                                            currencyRate)
+                                } $currencyISO"
+
+
+                                binding.orderCardView.visibility = View.VISIBLE
+
+
+                                binding.emptyOrder.visibility = View.GONE
+                            } else {
+                                binding.orderCardView.visibility = View.INVISIBLE
+                                binding.emptyOrder.visibility = View.VISIBLE
+                            }
+
+
+                        }
+
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading...")
+                        }
+                        is ApiState.Failure -> {
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                }
+            }
 
 
             launch {
@@ -275,15 +339,6 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
                             binding.nameText.text = customer.firstName
                             binding.emailText.text = customer.email
-
-                            if (customer.lastOrderId != null) {
-                                profileViewModel.getOrderByIdFromNetwork(customer.lastOrderId!!)
-                                binding.emptyOrder.visibility = View.GONE
-                            } else {
-                                binding.orderCardView.visibility = View.INVISIBLE
-                                binding.emptyOrder.visibility = View.VISIBLE
-                            }
-
 
 
                             addressesList = result.data.addresses!!
@@ -305,9 +360,11 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                                         Toast.LENGTH_SHORT).show()
                             }
 
+                            customProgress.hideProgress()
+
                         }
                         is ApiState.Loading -> {
-
+                            customProgress.showDialog(requireContext(), false)
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
                         }
                         is ApiState.Failure -> { //hideViews()
@@ -327,28 +384,11 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             val order = result.data
 
 
-                            val timestamp = order.created_at
-                            val formatter = DateTimeFormatter.ofPattern("MM/dd hh:mm a")
-                            val zonedDateTime = ZonedDateTime.parse(timestamp)
-                            val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
-                            val formattedDateTime = localDateTime.format(formatter)
 
-                            binding.itemDate.text = "created at = ${formattedDateTime}"
-                            binding.itemAddress.text = "Order Number = ${order.number.toString()}"
-                            binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
-                            binding.itemId.text = "Order Id = ${order.id.toString()}"
-                            totalPriceOrder = order.current_total_price!!.toDouble()
-                            binding.itemTotalPriceUsd.text = "Total price = ${
-                                convertCurrencyFromEGPTo((order.current_total_price)!!.toDouble(),
-                                        currencyRate)
-                            } $currencyISO"
-
-                            customProgress.hideProgress()
-                            binding.orderCardView.visibility = View.VISIBLE
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
-                            customProgress.showDialog(requireContext(), false)
+
                         }
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(requireContext(),
@@ -432,9 +472,6 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             } else {
                                 addressBottomSheetBinding.emptyMsg.visibility = View.VISIBLE
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
-                                Toast.makeText(requireContext(),
-                                        "There is no Address, please add one",
-                                        Toast.LENGTH_SHORT).show()
                             }
                             delay(100)
                         }

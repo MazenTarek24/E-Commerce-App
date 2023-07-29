@@ -24,7 +24,7 @@ class SignUpViewModel(private val repo: RepositoryInterface) : ViewModel() {
 
     fun createCustomer(customer: SingleCustomerResponse) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.i(TAG, "getProductWithIDFromNetwork: HomeViewModel")
+//            Log.i(TAG, "getProductWithIDFromNetwork: HomeViewModel")
             repo.createCustomer(customer).catch { e -> _customer.value = ApiState.Failure(e) }
                 .collect { data ->
                     _customer.value = ApiState.Success(data)
