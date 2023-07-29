@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".productinfo.ProductInfo">
 
+    <TextView
+        android:id="@+id/productnametv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/archivo_black"
+        android:textColor="#040404"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
@@ -15,8 +26,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:context=".MainActivity">
+app:layout_constraintTop_toBottomOf="@id/productnametv"        tools:context=".MainActivity">
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
@@ -78,30 +88,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView50" />
 
-            <TextView
-                android:id="@+id/productnametv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/archivo_black"
-                android:textColor="#040404"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/pricetv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp"
-                android:fontFamily="@font/gfs_neohellenic"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/saira_stencil_one"
                 android:scrollbarSize="@dimen/mid_text"
                 android:textColor="#040404"
                 android:textSize="@dimen/mid_text"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/productnametv" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RatingBar
                 android:id="@+id/ratingBar"

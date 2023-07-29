@@ -4,48 +4,56 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_shadow"
-        android:layout_width="@dimen/_25sdp"
-        android:layout_height="@dimen/_25sdp"
-        android:src="#B8D9FA"
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_shadow"
+            android:layout_width="25dp"
+            android:layout_height="28dp"
+            android:src="#4A4A4A"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/img_content"
-        android:layout_width="@dimen/_21sdp"
-        android:layout_height="@dimen/_21sdp"
-        android:src="@color/g_blue"
-        app:layout_constraintStart_toStartOf="@+id/img_shadow"
-        app:layout_constraintTop_toTopOf="@+id/img_shadow"
-        app:layout_constraintBottom_toBottomOf="@+id/img_shadow"
-        app:layout_constraintEnd_toEndOf="@+id/img_shadow"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_content"
+            android:layout_width="@dimen/_21sdp"
+            android:layout_height="@dimen/_21sdp"
+            android:src="@color/g_blue"
+            app:layout_constraintBottom_toBottomOf="@+id/img_shadow"
+            app:layout_constraintEnd_toEndOf="@+id/img_shadow"
+            app:layout_constraintStart_toStartOf="@+id/img_shadow"
+            app:layout_constraintTop_toTopOf="@+id/img_shadow" />
 
 
-    <TextView
-        android:id="@+id/tv_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="@dimen/_11sdp"
-        app:layout_constraintStart_toStartOf="@id/img_content"
-        app:layout_constraintTop_toTopOf="@id/img_content"
-        app:layout_constraintBottom_toBottomOf="@id/img_content"
-        app:layout_constraintEnd_toEndOf="@id/img_content"
-        android:textColor="@color/white"
-        android:fontFamily="@font/archivo_black"
-        android:visibility="visible"/>
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/archivo_black"
+            android:text=""
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/img_content"
+            app:layout_constraintEnd_toEndOf="@id/img_content"
+            app:layout_constraintStart_toStartOf="@id/img_content"
+            app:layout_constraintTop_toTopOf="@id/img_content" />
 
-    <ImageView
-        android:id="@+id/img_done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_picked"
-        app:layout_constraintTop_toTopOf="@id/img_content"
-        app:layout_constraintBottom_toBottomOf="@id/img_content"
-        app:layout_constraintStart_toStartOf="@id/img_content"
-        app:layout_constraintEnd_toEndOf="@id/img_content"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/img_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_picked"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/img_content"
+            app:layout_constraintEnd_toEndOf="@id/img_content"
+            app:layout_constraintStart_toStartOf="@id/img_content"
+            app:layout_constraintTop_toTopOf="@id/img_content" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

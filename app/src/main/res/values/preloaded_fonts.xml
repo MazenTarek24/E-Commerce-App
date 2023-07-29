@@ -3,6 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/archivo</item>
         <item>@font/archivo_black</item>
+        <item>@font/black_han_sans</item>
         <item>@font/gfs_neohellenic</item>
         <item>@font/saira_stencil_one</item>
     </array>
