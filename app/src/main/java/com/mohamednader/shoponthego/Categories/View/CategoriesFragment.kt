@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -50,6 +51,8 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     var currencyRate = 1.0
 
     var categoryId: Long = 0
+
+    var isGuest: String = "true"
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -115,6 +118,12 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
         ))
         categoryViewModel = ViewModelProvider(this, factory)
             .get(CategoriesViewModel::class.java)
+
+
+        categoryViewModel.getStringDS(Constants.isGuestUser).asLiveData()
+            .observe(requireActivity()) { result ->
+                isGuest = result ?: "true"
+            }
 
         //Progress Bar
         customProgress = CustomProgress.getInstance()
@@ -291,15 +300,23 @@ class CategoriesFragment : Fragment(), TabLayout.OnTabSelectedListener,
     }
 
     private fun Navigation() {
-        binding.fav.setOnClickListener {
-            val intent = Intent(requireContext(), FavActivty::class.java)
-            startActivity(intent)
-        }
-
 
         binding.cart.setOnClickListener {
-            val intent = Intent(requireContext(), CartActivity::class.java)
-            startActivity(intent)
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), CartActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.fav.setOnClickListener {
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), FavActivty::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.search.setOnClickListener {

@@ -54,27 +54,31 @@ class SplashActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
 
             launch {
-                splashViewModel.getStringDS(Constants.firstTimeKey).collect() { result ->
-                    Log.i(TAG, "splashTimer: $result")
+                splashViewModel.getStringDS(Constants.isGuestUser).collect() { result ->
                     when (result) {
                         "true" -> {
+                            Log.i(TAG, "splashTimer: isGuestUser: true")
                             delay(3000)
+                            splashViewModel.saveStringDS(Constants.firstTimeKey , "false")
                             splashViewModel.saveStringDS(Constants.currencyKey , "EGP")
                             splashViewModel.saveStringDS(Constants.rateKey , "1.0")
-                            splashViewModel.saveStringDS(Constants.firstTimeKey , "false")
-                            checkUser()
-                         }
+                            splashViewModel.saveStringDS(Constants.isGuestUser , "true")
+                            sendUserToHome()
+
+                        }
                         "false" -> {
-                            //sad
+                            Log.i(TAG, "splashTimer: isGuestUser: false")
                             delay(3000)
                             checkUser()
-                         }
+                        }
                         null ->{
-                            Log.i(TAG, "splashTimer: ")
+                            delay(3000)
+                            Log.i(TAG, "splashTimer: isGuestUser: NULL")
                             splashViewModel.saveStringDS(Constants.firstTimeKey , "true")
                             splashViewModel.saveStringDS(Constants.currencyKey , "EGP")
                             splashViewModel.saveStringDS(Constants.rateKey , "1.0")
-                            checkUser()
+                            splashViewModel.saveStringDS(Constants.isGuestUser , "false")
+                            sendUserToLogin()
                         }
                     }
                 }

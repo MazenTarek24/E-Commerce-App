@@ -17,7 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.mohamednader.shoponthego.Cart.View.CartActivity
-
+import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Database.ConcreteLocalSource
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.CouponAdapter
 import com.mohamednader.shoponthego.Home.View.Adapters.Coupons.OnGetNowClickListener
@@ -30,7 +30,6 @@ import com.mohamednader.shoponthego.Model.Pojo.Products.brand.SmartCollection
 import com.mohamednader.shoponthego.Model.Repo.Repository
 import com.mohamednader.shoponthego.Network.ApiClient
 import com.mohamednader.shoponthego.Network.ApiState
-import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
@@ -59,6 +58,10 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
     lateinit var brandAdapter: BrandAdapter
     lateinit var brandLayoutManager: LayoutManager
 
+
+
+    var isGuest: String = "true"
+
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
             savedInstanceState: Bundle?,
@@ -72,6 +75,8 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
 
         initRvBrands()
         initViews()
+
+
 
         Navigation()
     }
@@ -103,11 +108,13 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
             adapter = couponAdapter
         }
 
+        homeViewModel.getStringDS(Constants.isGuestUser).asLiveData()
+            .observe(requireActivity()) { result ->
+                isGuest = result ?: "true"
+            }
 
-        binding.cart.setOnClickListener {
-            val intent = Intent(requireContext(), CartActivity::class.java)
-            startActivity(intent)
-        }
+
+
 
 
 
@@ -128,6 +135,13 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
             }
 
 
+
+
+
+
+
+
+
             launch {
 
                 homeViewModel.productList.collect { result ->
@@ -138,7 +152,7 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: Loading...")
-                            customProgress.showDialog(requireContext(),   false)
+                            customProgress.showDialog(requireContext(), false)
                         }
                         is ApiState.Failure -> {
                             //hideViews()
@@ -245,16 +259,25 @@ class HomeFragment : Fragment(), OnGetNowClickListener {
     }
 
     private fun Navigation() {
-        binding.fav.setOnClickListener {
-            val intent = Intent(requireContext(), FavActivty::class.java)
-            startActivity(intent)
-        }
-
 
         binding.cart.setOnClickListener {
-            val intent = Intent(requireContext(), CartActivity::class.java)
-            startActivity(intent)
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), CartActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
         }
+
+        binding.fav.setOnClickListener {
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), FavActivty::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         binding.search.setOnClickListener {
             val intent = Intent(requireContext(), SearchActivity::class.java)

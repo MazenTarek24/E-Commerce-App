@@ -340,6 +340,7 @@
             app:rippleColor="@color/main_color">
 
             <TextView
+                android:id="@+id/logout_btn_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

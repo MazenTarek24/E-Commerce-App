@@ -44,4 +44,15 @@
     <string name="loading_dialog_text">Loading..</string>
 
 
+
+    <string name="privacy_policy_part">Welcome to Shop On the Go! This Privacy Policy is designed to help you understand how your personal information is collected, used, and shared when you use our mobile application "Shop On the Go" (hereinafter referred to as the "App").</string>
+
+    <string name="privacy_policy_part2">Contact Us:
+        Mohamed Nader,
+        Mazen Tarek,
+        Mohamed Taha
+ </string>s
+
+
+
 </resources>

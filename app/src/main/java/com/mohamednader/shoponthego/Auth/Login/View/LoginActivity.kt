@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.tasks.Task
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -67,6 +68,13 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, SignUpActivity::class.java))
             finish()
         }
+        binding.googlebutton.setOnClickListener {
+            loginViewModel.saveStringDS(Constants.isGuestUser, "true")
+            val intent = Intent(this@LoginActivity , MainHomeActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
 
         apicall()
 
@@ -175,7 +183,7 @@ class LoginActivity : AppCompatActivity() {
                             Log.i(TAG,
                                     "onCreate: Success Customer ID IS ...{${result.data.get(0).id}")
                             val customerID = result.data.get(0).id!!.toString()
-                            loginViewModel.saveStringDS(Constants.customerIdKey , customerID)
+                            loginViewModel.saveStringDS(Constants.customerIdKey, customerID)
                             val preferences = getSharedPreferences("user", MODE_PRIVATE)
                             preferences.edit().putLong("customerId", result.data.get(0).id!!)
                                 .apply()
@@ -185,7 +193,6 @@ class LoginActivity : AppCompatActivity() {
                                     "Logged in successfully",
                                     Toast.LENGTH_SHORT).show()
                             finish()
-
 
                         }
                         is ApiState.Loading -> {

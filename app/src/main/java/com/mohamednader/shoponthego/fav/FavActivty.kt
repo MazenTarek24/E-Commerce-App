@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.fav
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
@@ -158,31 +159,33 @@ class FavActivty : AppCompatActivity() {
             viewModelProductInfo.draftwithid.collect { result ->
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
-                        println("12:51" + result.data.id)
-                        listItems = result.data.lineItems?.toMutableList()
 
-                        println("lissssssssssstItttttem" + listItems)
+                        if(result.data != null){
+
+                            println("12:51" + result.data.id)
+                            listItems = result.data.lineItems?.toMutableList()
+
+                            println("lissssssssssstItttttem" + listItems)
 //                        listItems?.removeAt(0)
-                        recyclerAdapter.submitList(listItems)
+                            recyclerAdapter.submitList(listItems)
 
-                        val list = result.data.lineItems
-                        listItems = result.data.lineItems?.toMutableList()
-                        val lineItems = result.data.lineItems
-                        val lineItemsIterator = result.data.lineItems?.iterator()
-                        while (lineItemsIterator!!.hasNext()) {
-                            val lineItem = lineItemsIterator.next()
-                            lineItem.productId
-                            viewModelProductInfo.getProductWithIdFromNetwork(lineItem.productId.toString())
+                            val list = result.data.lineItems
+                            listItems = result.data.lineItems?.toMutableList()
+                            val lineItems = result.data.lineItems
+                            val lineItemsIterator = result.data.lineItems?.iterator()
+                            while (lineItemsIterator!!.hasNext()) {
+                                val lineItem = lineItemsIterator.next()
+                                lineItem.productId
+                                viewModelProductInfo.getProductWithIdFromNetwork(lineItem.productId.toString())
+
+                            }
 
                         }
-
-                        customProgress.hideProgress()
-
                     }
                     is ApiState.Loading -> {
 
                         Log.i(TAG, "onCreate: Loading... in 12:15")
-                        customProgress.showDialog(this@FavActivty, false)
+//                        customProgress.showDialog(this@FavActivty, false)
 
                     }
                     is ApiState.Failure -> {

@@ -169,7 +169,7 @@
             android:layout_gravity="center"
             android:drawablePadding="@dimen/tiny_margin"
             android:gravity="center"
-            android:text="@string/continuewithgoogle"
+            android:text="Continue as a Guest"
             android:textColor="@color/whitey"
             android:textSize="24sp"
             android:textStyle="bold" />

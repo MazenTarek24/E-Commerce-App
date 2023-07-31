@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
@@ -55,15 +56,29 @@ class ProductInfo : AppCompatActivity() {
     var currencyRate = 1.0
 
     var productId: Long = 0
+    var isGuest: String = "true"
 
     private lateinit var binding: ActivityProductInfoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+
         binding.addtocart.setOnClickListener {
-            addItemToCart()
+
+            if (isGuest == "false") {
+                addItemToCart()
+            } else {
+                Toast.makeText(this@ProductInfo, "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+
+
         }
+
+
         firebaseAuth = Firebase.auth
         val intent = intent
 
@@ -86,6 +101,13 @@ class ProductInfo : AppCompatActivity() {
 
         initViews()
 
+
+        viewModelProductInfo.getStringDS(Constants.isGuestUser).asLiveData()
+            .observe(this@ProductInfo) { result ->
+                isGuest = result ?: "true"
+            }
+
+
         viewModelProductInfo.getAllDraftsOrder()
 
         apicall()
@@ -95,37 +117,48 @@ class ProductInfo : AppCompatActivity() {
         }
 
         binding.Addtofav.setOnClickListener {
-            val mutablelist = lineItems?.toMutableList()
-            mutablelist?.add(LineItem(productId,
-                    product.variants?.get(0)?.id,
-                    productId,
-                    product.title,
-                    "",
-                    product.bodyHtml,
-                    "",
-                    1,
-                    true,
-                    true,
-                    true,
-                    "",
-                    1,
-                    AppliedDiscount("", "", "", "", ""),
-                    product.title,
-                    listOf(LineItemProperties("img_src", product.image?.src!!)),
-                    true,
-                    ""))
+
+
+            if (isGuest == "false") {
+
+
+                val mutablelist = lineItems?.toMutableList()
+                mutablelist?.add(LineItem(productId,
+                        product.variants?.get(0)?.id,
+                        productId,
+                        product.title,
+                        "",
+                        product.bodyHtml,
+                        "",
+                        1,
+                        true,
+                        true,
+                        true,
+                        "",
+                        1,
+                        AppliedDiscount("", "", "", "", ""),
+                        product.title,
+                        listOf(LineItemProperties("img_src", product.image?.src!!)),
+                        true,
+                        ""))
 
 
 
-            if (draftOrdersID.isEmpty()) {
-                val draftOrder = DraftOrder(lineItems = mutablelist,
-                        customer = Customer(customerId.toLong()),
-                        note = "favDraft")
-                viewModelProductInfo.createDraftOrder(SingleDraftOrderResponse(draftOrder))
+                if (draftOrdersID.isEmpty()) {
+                    val draftOrder = DraftOrder(lineItems = mutablelist,
+                            customer = Customer(customerId.toLong()),
+                            note = "favDraft")
+                    Log.i(TAG, "onCreate: Add FAV isEmpty")
+                    viewModelProductInfo.createDraftOrder(SingleDraftOrderResponse(draftOrder))
+                 } else {
+                    Log.i(TAG, "onCreate: Add FAV else")
+                    viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = mutablelist,
+                            note = "favDraft")), draftOrdersID.toLong())
+                 }
+
+
             } else {
-                viewModelProductInfo.modifyDraftsOrder(SingleDraftOrderResponse(DraftOrder(lineItems = mutablelist,
-                        note = "favDraft")), draftOrdersID.toLong())
-                Toast.makeText(this@ProductInfo, "Added Favourite!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ProductInfo, "Please Login First!", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -163,14 +196,18 @@ class ProductInfo : AppCompatActivity() {
                     .observe(this@ProductInfo) { customerID ->
                         // Update UI with the retrieved name
                         Log.i(TAG, "apiRequests: VIP: $customerID")
-                        customerId = customerID!!
+                        if (customerID != null){
+                            customerId = customerID
 
-                        viewModelProductInfo.getCustomerByIdFromNetwork(customerId.toLong())
+                            viewModelProductInfo.getCustomerByIdFromNetwork(customerId.toLong())
+                            apicallForgetdraftwithId()
+                            apicallForgetAllDrafts()
+                            apicallForModifyDrafts()
+                        }
+
                         viewModelProductInfo.getProductWithIdFromNetwork(productId.toString())
                         viewModelProductInfo.getProductByIdFromNetwork(productId)
-                        apicallForgetdraftwithId()
-                        apicallForgetAllDrafts()
-                        apicallForModifyDrafts()
+
 
                     }
             }
@@ -367,13 +404,14 @@ class ProductInfo : AppCompatActivity() {
                 viewModelProductInfo.addDraftOrder.collect { result ->
                     when (result) {
                         is ApiState.Success<DraftOrder> -> {
+                            Log.i(TAG, "onCreate: addDraftOrder Success...")
                             draftOrder = result.data
                             Toast.makeText(this@ProductInfo,
                                     "Added to wish List",
                                     Toast.LENGTH_SHORT).show()
                         }
                         is ApiState.Loading -> {
-                            Log.i(TAG, "onCreate: newDraftOrder Loading...")
+                            Log.i(TAG, "onCreate: addDraftOrder Loading...")
                         }
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(this@ProductInfo,
@@ -424,10 +462,11 @@ class ProductInfo : AppCompatActivity() {
                         for (draftOrder in result.data) {
                             val currentUser = firebaseAuth.currentUser
                             if (currentUser?.email == draftOrder.customer?.email && draftOrder.note == "favDraft") {
+                                Log.i(TAG, "apicallForgetAllDrafts: $draftOrder")
                                 draftOrdersID = draftOrder.id.toString()
                                 println(draftOrder.id)
                                 viewModelProductInfo.getDraftOrderWithId(draftOrder.id!!)
-
+                                Log.i(TAG, "apicallForgetAllDrafts: in loop $draftOrder")
                             }
 
                         }
@@ -477,6 +516,9 @@ class ProductInfo : AppCompatActivity() {
                 when (result) {
                     is ApiState.Success<DraftOrder> -> {
                         println("AAAAAAAAAAAAAAa" + result.data.id)
+                        Toast.makeText(this@ProductInfo,
+                                "Added to wish List",
+                                Toast.LENGTH_SHORT).show()
 
                     }
                     is ApiState.Loading -> {

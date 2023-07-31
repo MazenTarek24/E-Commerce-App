@@ -2,6 +2,7 @@ package com.mohamednader.shoponthego.Order.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -104,9 +105,19 @@ class OrderActivity : AppCompatActivity() {
             viewModel.orderList.collect { result ->
                 when (result) {
                     is ApiState.Success<List<Order>> -> {
-                        ordersAdapter.submitList(result.data)
-                        Log.i(TAG, "fetch orders successfully: Loading...")
-                        customProgress.hideProgress()
+
+                        if(result.data.isNotEmpty()){
+
+                            ordersAdapter.submitList(result.data)
+                            Log.i(TAG, "fetch orders successfully: Loading...")
+                            customProgress.hideProgress()
+                            binding.emptyMsg.visibility = View.GONE
+                        }else{
+                            customProgress.hideProgress()
+                            binding.emptyMsg.visibility = View.VISIBLE
+                        }
+
+
                     }
 
                     is ApiState.Loading -> {

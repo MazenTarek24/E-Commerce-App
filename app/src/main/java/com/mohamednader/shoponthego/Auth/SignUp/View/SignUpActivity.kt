@@ -30,6 +30,7 @@ import com.mohamednader.shoponthego.DataStore.ConcreteDataStoreSource
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
 import com.mohamednader.shoponthego.databinding.ActivitySignUpBinding
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -153,6 +154,8 @@ class SignUpActivity : AppCompatActivity() {
                             putExtra("CustomerID", CustomerID)
                         }
                         startActivity(intent)
+                        delay(100)
+//                        finish()
 
                     }
                     is ApiState.Loading -> {

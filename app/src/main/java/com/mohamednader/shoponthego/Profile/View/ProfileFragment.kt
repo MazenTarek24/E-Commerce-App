@@ -38,7 +38,9 @@ import com.mohamednader.shoponthego.Network.ApiState
 import com.mohamednader.shoponthego.Order.view.OrderActivity
 import com.mohamednader.shoponthego.Profile.View.Addresses.AddressAdapter
 import com.mohamednader.shoponthego.Profile.View.Addresses.OnAddressClickListener
+import com.mohamednader.shoponthego.Profile.View.Privacy.PrivacyActivity
 import com.mohamednader.shoponthego.Profile.ViewModel.ProfileViewModel
+import com.mohamednader.shoponthego.Splash.View.SplashActivity
 import com.mohamednader.shoponthego.Utils.Constants
 import com.mohamednader.shoponthego.Utils.CustomProgress
 import com.mohamednader.shoponthego.Utils.GenericViewModelFactory
@@ -91,10 +93,12 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
     val ADDRESS_CONFIG_ACTIVITY_REQUEST_CODE: Int = 1234
 
+    var isGuest: String = "true"
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         return binding.root
@@ -152,7 +156,13 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
 
         binding.language.setOnClickListener {
-            languageBottomSheetDialog.show()
+
+            if (isGuest == "false") {
+                languageBottomSheetDialog.show()
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
@@ -170,28 +180,50 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
         binding.fav.setOnClickListener {
-            val intent = Intent(requireContext(), FavActivty::class.java)
-            startActivity(intent)
+
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), FavActivty::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.cart.setOnClickListener {
-            val intent = Intent(requireContext(), CartActivity::class.java)
-            startActivity(intent)
+
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), CartActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+
         }
+
+
 
         binding.logoutBtn.setOnClickListener {
 
-            AlertDialog.Builder(requireContext()).setMessage("Do you want logout?")
-                .setCancelable(false).setPositiveButton("Yes, Log me Out!") { dialog, _ ->
+            if (isGuest == "false") {
+                AlertDialog.Builder(requireContext()).setMessage("Do you want logout?")
+                    .setCancelable(false).setPositiveButton("Yes, Log me Out!") { dialog, _ ->
 
-                    firebaseAuth.signOut()
-                    val intent = Intent(requireContext(), SignUpActivity::class.java)
-                    requireActivity().finish()
+                        firebaseAuth.signOut()
+                        val intent = Intent(requireContext(), SignUpActivity::class.java)
+                        requireContext().startActivity(intent)
+                        requireActivity().finish()
 
-                    Toast.makeText(
-                            requireContext(), "Nice to Meet You!", Toast.LENGTH_SHORT
-                    ).show()
-                }.setNegativeButton("No, Stay here", null).show()
+                        Toast.makeText(requireContext(), "Nice to Meet You!", Toast.LENGTH_SHORT)
+                            .show()
+                    }.setNegativeButton("No, Stay here", null).show()
+            } else {
+                Log.i(TAG, "logoutBtn: Goging To Splash  ")
+                profileViewModel.saveStringDS(Constants.isGuestUser, "false")
+                val intent = Intent(requireContext(), SplashActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+
+            }
 
         }
 
@@ -201,21 +233,31 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
         binding.moreText.setOnClickListener {
-            val intent = Intent(requireContext(), OrderActivity::class.java)
-            startActivity(intent)
+
+            if (isGuest == "false") {
+                val intent = Intent(requireContext(), OrderActivity::class.java)
+                startActivity(intent)
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         binding.helpCenter.setOnClickListener {
-            val url =
-                "https://www.shopify.com/tools/policy-generator/show/JhwuMn7qlBI=--jO2CKCES9S5LzlG+--ph6FD+hOf1wTiILu5k1NpA==?utm_campaign=growth_tools&utm_content=policy&utm_medium=email&utm_source=sendgrid"
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            val intent = Intent(requireContext(), PrivacyActivity::class.java)
             startActivity(intent)
         }
 
 
         binding.address.setOnClickListener {
 //            addressAdapter.submitList(addressesList)
-            addressBottomSheetDialog.show()
+
+            if (isGuest == "false") {
+                addressBottomSheetDialog.show()
+            } else {
+                Toast.makeText(requireContext(), "Please Login First!", Toast.LENGTH_SHORT).show()
+            }
+
         }
 
         addressBottomSheetBinding.fab.setOnClickListener {
@@ -225,47 +267,33 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
         }
 
 
-        apiRequests()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
-            .observe(requireActivity()) { customerID ->
-                // Update UI with the retrieved name
-                Log.i(TAG, "apiRequests: VIP: $customerID")
-                customerId = customerID!!
-                profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
-                profileViewModel.getAllCurrenciesFromNetwork()
+        profileViewModel.getStringDS(Constants.isGuestUser).asLiveData()
+            .observe(requireActivity()) { result ->
+                isGuest = result ?: "true"
+                if (isGuest == "true") {
+                    getCurrencyToGuest()
+                    binding.nameText.text = "Guest User"
+                    binding.emailText.text = "guest.user@example.com"
+                    binding.orderCardView.visibility = View.INVISIBLE
+                    binding.emptyOrder.visibility = View.VISIBLE
+                    binding.logoutBtnText.text = "Sign Up Now!"
+                    profileViewModel.getAllCurrenciesFromNetwork()
+                } else {
+                    apiRequests()
+                }
             }
 
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun apiRequests() {
-        lifecycleScope.launchWhenStarted {
+    fun getCurrencyToGuest() {
+
+        lifecycleScope.launch {
 
             launch {
-                profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
-                    .observe(requireActivity()) { customerID ->
-                        // Update UI with the retrieved name
-                        Log.i(TAG, "apiRequests: VIP: $customerID")
-                        customerId = customerID!!
-                        profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
-                        profileViewModel.getAllCurrenciesFromNetwork()
-                        profileViewModel.getAllOrders(customerId.toLong())
-                    }
-            }
-
-
-            launch {
-
                 profileViewModel.currencyRes.collect { result ->
                     when (result) {
                         is ApiState.Success<List<CurrencyInfo>> -> {
-                            Log.i(TAG, "onCreate: Success...{${result.data.get(0).iso}}")
+                            Log.i(TAG, "onCreate: Success.: CURRENCY..{${result.data.get(0).iso}}")
                             currenciesList = result.data
                             currencyAdapter.submitList(currenciesList)
                         }
@@ -283,6 +311,104 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
             }
 
             launch {
+                profileViewModel.currencyRate.collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<ToCurrency>> -> {
+                            Log.i(TAG, "apiRequests: ${result.data}")
+                            profileViewModel.saveStringDS(Constants.currencyKey,
+                                    result.data.get(0).quotecurrency)
+                            profileViewModel.saveStringDS(Constants.rateKey,
+                                    result.data.get(0).mid.toString())
+
+                            if (totalPriceOrder != 0.0) {
+                                binding.itemTotalPriceUsd.text = "Total price = ${
+                                    convertCurrencyFromEGPTo(totalPriceOrder,
+                                            result.data.get(0).mid)
+                                } ${result.data.get(0).quotecurrency}"
+                            }
+
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
+                        }
+                        is ApiState.Failure -> { //hideViews()
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+            .observe(requireActivity()) { customerID ->
+                // Update UI with the retrieved name
+                Log.i(TAG, "apiRequests: VIP: $customerID")
+                if (customerID != null) {
+                    customerId = customerID
+                    profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
+                }
+
+                profileViewModel.getAllCurrenciesFromNetwork()
+            }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun apiRequests() {
+        lifecycleScope.launchWhenStarted {
+
+            launch {
+                profileViewModel.getStringDS(Constants.customerIdKey).asLiveData()
+                    .observe(requireActivity()) { customerID ->
+                        // Update UI with the retrieved name
+                        Log.i(TAG, "apiRequests: VIP: $customerID")
+
+
+                        if (customerID != null) {
+                            customerId = customerID
+                            profileViewModel.getCustomerByIdFromNetwork(customerId.toLong())
+                            profileViewModel.getAllOrders(customerId.toLong())
+                        }
+
+                        profileViewModel.getAllCurrenciesFromNetwork()
+                    }
+
+            }
+
+
+
+            launch {
+
+                profileViewModel.currencyRes.collect { result ->
+                    when (result) {
+                        is ApiState.Success<List<CurrencyInfo>> -> {
+                            Log.i(TAG, "onCreate: Success.: CURRENCY..{${result.data.get(0).iso}}")
+                            currenciesList = result.data
+                            currencyAdapter.submitList(currenciesList)
+                        }
+                        is ApiState.Loading -> {
+                            Log.i(TAG, "onCreate: Loading...")
+                        }
+                        is ApiState.Failure -> {
+                            //hideViews()
+                            Toast.makeText(requireContext(),
+                                    "There Was An Error",
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                }
+            }
+
+            launch {
                 profileViewModel.orderList.collect { result ->
                     when (result) {
                         is ApiState.Success<List<Order>> -> {
@@ -293,12 +419,16 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                                 val timestamp = order.created_at
                                 val formatter = DateTimeFormatter.ofPattern("MM/dd hh:mm a")
                                 val zonedDateTime = ZonedDateTime.parse(timestamp)
-                                val localDateTime = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+                                val localDateTime =
+                                    zonedDateTime.withZoneSameInstant(ZoneId.systemDefault())
+                                        .toLocalDateTime()
                                 val formattedDateTime = localDateTime.format(formatter)
 
                                 binding.itemDate.text = "created at = ${formattedDateTime}"
-                                binding.itemAddress.text = "Order Number = ${order.number.toString()}"
-                                binding.itemPhone.text = "Name = ${order.billing_address?.firstName} "
+                                binding.itemAddress.text =
+                                    "Order Number = ${order.number.toString()}"
+                                binding.itemPhone.text =
+                                    "Name = ${order.billing_address?.firstName} "
                                 binding.itemId.text = "Order Id = ${order.id.toString()}"
                                 totalPriceOrder = order.current_total_price!!.toDouble()
                                 binding.itemTotalPriceUsd.text = "Total price = ${
@@ -316,7 +446,6 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                                 binding.emptyOrder.visibility = View.VISIBLE
                             }
 
-
                         }
 
                         is ApiState.Loading -> {
@@ -325,7 +454,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Failure -> {
                             Toast.makeText(requireContext(),
                                     "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
 
@@ -345,9 +475,10 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
-                                addressAdapter = AddressAdapter(requireContext(),
-                                        this@ProfileFragment,
-                                        "Profile")
+                                addressAdapter =
+                                    AddressAdapter(requireContext(),
+                                            this@ProfileFragment,
+                                            "Profile")
                                 addressBottomSheetBinding.addressesRecyclerView.apply {
                                     adapter = addressAdapter
                                     layoutManager = addressLinearLayoutManager
@@ -357,9 +488,6 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                             } else {
                                 addressBottomSheetBinding.emptyMsg.visibility = View.VISIBLE
                                 Log.i(TAG, "onCreate: Success...The list is empty}")
-                                Toast.makeText(requireContext(),
-                                        "There is no Address, please add one",
-                                        Toast.LENGTH_SHORT).show()
                             }
 
                             customProgress.hideProgress()
@@ -372,7 +500,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(requireContext(),
                                     "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -385,8 +514,6 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Success<Order> -> {
                             val order = result.data
 
-
-
                         }
                         is ApiState.Loading -> {
                             Log.i(TAG, "onCreate: updatedDraftOrder Loading...")
@@ -395,7 +522,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(requireContext(),
                                     "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -437,7 +565,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(requireContext(),
                                     "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -462,9 +591,10 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
 
                             addressesList = result.data.addresses!!
                             if (addressesList.isNotEmpty()) {
-                                addressAdapter = AddressAdapter(requireContext(),
-                                        this@ProfileFragment,
-                                        "Profile")
+                                addressAdapter =
+                                    AddressAdapter(requireContext(),
+                                            this@ProfileFragment,
+                                            "Profile")
                                 addressBottomSheetBinding.addressesRecyclerView.apply {
                                     adapter = addressAdapter
                                     layoutManager = addressLinearLayoutManager
@@ -483,7 +613,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                         is ApiState.Failure -> { //hideViews()
                             Toast.makeText(requireContext(),
                                     "There Was An Error",
-                                    Toast.LENGTH_SHORT).show()
+                                    Toast.LENGTH_SHORT)
+                                .show()
                         }
                     }
                 }
@@ -509,7 +640,8 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
     }
 
     override fun onCurrencyClickListener(currencyISO: String) {
-        Toast.makeText(requireContext(), "you Clicked $currencyISO", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Currency Changed to $currencyISO", Toast.LENGTH_SHORT)
+            .show()
         profileViewModel.getCurrencyConvertorFromNetwork("EGP", currencyISO)
         currencyBottomSheetDialog.dismiss()
     }
@@ -545,9 +677,7 @@ class ProfileFragment : Fragment(), OnCurrencyClickListener, OnAddressClickListe
                 profileViewModel.getCustomerByIdFromNetwork(customerID = customer.id!!)
                 addressBottomSheetDialog.dismiss()
 
-                Toast.makeText(
-                        requireContext(), "Address Deleted!", Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), "Address Deleted!", Toast.LENGTH_SHORT).show()
 
             }.setNegativeButton("No, Keep it", null).show()
 
