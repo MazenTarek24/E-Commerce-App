@@ -42,8 +42,7 @@
             android:id="@+id/back_img"
             android:layout_width="@dimen/mid_icons"
             android:layout_height="@dimen/mid_icons"
-            android:layout_marginLeft="@dimen/mid_margin"
-            android:layout_marginStart="@dimen/mid_margin"
+            android:layout_marginStart="45dp"
             android:layout_marginTop="@dimen/small_margin"
             android:src="@drawable/back_arrow"
             android:layout_gravity="start" />
